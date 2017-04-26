@@ -1,0 +1,70 @@
+<script>
+	'use strict';
+
+	if (typeof Cosmoz === 'undefined') {
+		var Cosmoz = {};
+	}
+
+	/**
+	 *
+	 * @constructor
+	 */
+	Cosmoz.Tree = function (node) {
+		this._node = node;
+		this._flattenedTree = this._flattenTree(node);
+		this._pathLocatorSeparator = '.';
+	};
+
+	Cosmoz.Tree.prototype = {
+
+		constructor: Cosmoz.Tree,
+
+		findNodeById: function (id) {
+			return this._flattenedTree[id];
+		},
+
+		getPath: function (nodeId) {
+			var node, currentNode, pathLocator, i, path;
+
+			path = [];
+			node = this.findNodeById(nodeId);
+			pathLocator = node.pathLocator.split(this._pathLocatorSeparator);
+			currentNode = this._node;
+
+			for (i = 0; i < pathLocator.length; i+=1) {
+				currentNode = currentNode[pathLocator[i]];
+				path.push(currentNode);
+				currentNode = currentNode.children;
+			}
+
+			return path;
+		},
+
+		/**
+		 * Utility function to flatten the tree to ease node lookup.
+		 */
+		_flattenTree: function (tree, flattened) {
+			if (!flattened) {
+				flattened = {};
+			}
+
+			if (tree === undefined) {
+				return flattened;
+			}
+
+			Object.keys(tree).forEach(function (key) {
+				var node = tree[key];
+				flattened[node.id] = node;
+
+				if (node.children && Object.keys(node.children).length > 0) {
+					this._flattenTree(node.children, flattened);
+				}
+
+			}, this);
+
+			return flattened;
+		},
+	};
+
+
+</script>
