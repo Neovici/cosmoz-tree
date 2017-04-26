@@ -40,6 +40,16 @@
 			return path;
 		},
 
+		getPathString: function (nodeId, separator) {
+			var path = this.getPath(nodeId);
+			return path.reduce(function (pathString, node) {
+				if (pathString.length > 0) {
+					pathString = pathString + separator;
+				}
+				return pathString + node.name;
+			}, '');
+		},
+
 		/**
 		 * Utility function to flatten the tree to ease node lookup.
 		 */
