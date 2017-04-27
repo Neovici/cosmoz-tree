@@ -24,6 +24,9 @@
 		},
 
 		findNodeByPathLocator: function (pathLocator) {
+			if (!pathLocator) {
+				return;
+			}
 			return pathLocator
 				.split(this._pathLocatorSeparator)
 				.reduce(function (node, part) {
