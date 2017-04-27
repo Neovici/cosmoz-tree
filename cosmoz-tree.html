@@ -23,6 +23,23 @@
 			return this._flattenedTree[id];
 		},
 
+		findNodeByPathLocator: function (pathLocator) {
+			var path, i, node;
+
+			path = pathLocator.split(this._pathLocatorSeparator);
+
+			node = this._node;
+			for (i = 0; i < path.length; i+=1) {
+				if (i == 0) {
+					node = node[path[i]];
+				} else {
+					node = node.children[path[i]];
+				}
+			}
+
+			return node;
+		},
+
 		getPath: function (nodeId) {
 			var node, currentNode, pathLocator, i, path;
 
