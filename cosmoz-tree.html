@@ -24,37 +24,41 @@
 		},
 
 		findNodeByPathLocator: function (pathLocator) {
-			var path, i, node;
-
-			path = pathLocator.split(this._pathLocatorSeparator);
-
-			node = this._node;
-			for (i = 0; i < path.length; i+=1) {
-				if (i == 0) {
-					node = node[path[i]];
-				} else {
-					node = node.children[path[i]];
-				}
-			}
-
-			return node;
+			return pathLocator
+				.split(this._pathLocatorSeparator)
+				.reduce(function (node, part) {
+					if (node.children) {
+						node = node.children;
+					}
+					if (node[part]) {
+						node = node[part];
+					}
+					return node;
+				}, this._node);
 		},
 
 		getPath: function (nodeId) {
-			var node, currentNode, pathLocator, i, path;
+			var node = this.findNodeById(nodeId),
+				currentNode = this._node;
 
-			path = [];
-			node = this.findNodeById(nodeId);
-			pathLocator = node.pathLocator.split(this._pathLocatorSeparator);
-			currentNode = this._node;
-
-			for (i = 0; i < pathLocator.length; i+=1) {
-				currentNode = currentNode[pathLocator[i]];
-				path.push(currentNode);
-				currentNode = currentNode.children;
-			}
-
-			return path;
+			return node.pathLocator
+				.split(this._pathLocatorSeparator)
+				.map(function (part) {
+					var ret = currentNode;
+					if (currentNode.children) {
+						currentNode = currentNode.children;
+					}
+					if (currentNode[part]) {
+						currentNode = currentNode[part];
+					}
+					if (ret === currentNode) {
+						return;
+					}
+					return currentNode;
+				})
+				.filter(function (part) {
+					return part !== undefined;
+				});
 		},
 
 		getPathString: function (nodeId, separator) {
