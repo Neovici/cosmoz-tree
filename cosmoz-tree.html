@@ -41,9 +41,12 @@
 		},
 
 		getPath: function (nodeId) {
-			var node = this.findNodeById(nodeId),
-				currentNode = this._node;
+			var node = this.findNodeById(nodeId);
+			return this.getPathByNode(node);
+		},
 
+		getPathByNode: function (node) {
+			var currentNode = node;
 			return node.pathLocator
 				.split(this._pathLocatorSeparator)
 				.map(function (part) {
@@ -62,6 +65,11 @@
 				.filter(function (part) {
 					return part !== undefined;
 				});
+		},
+
+		getPathByLocator: function (locator) {
+			var node = this.findNodeByPathLocator(locator);
+			return this.getPathByNode(node);
 		},
 
 		getPathString: function (nodeId, separator) {
