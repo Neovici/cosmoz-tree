@@ -46,6 +46,9 @@
 		},
 
 		getPathByNode: function (node) {
+			if (!node || !node.pathLocator) {
+				return;
+			}
 			var currentNode = this._node;
 			return node.pathLocator
 				.split(this._pathLocatorSeparator)
@@ -107,6 +110,4 @@
 			return flattened;
 		},
 	};
-
-
 </script>
