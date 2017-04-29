@@ -1,0 +1,30 @@
+{
+  "name": "cosmoz-tree",
+  "version": "1.0.0",
+  "description": "[![Build Status](https://travis-ci.org/Neovici/cosmoz-tree.svg?branch=master)](https://travis-ci.org/Neovici/cosmoz-tree)",
+  "main": "cosmoz-tree.html",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "eslint": "^3.9.1",
+    "eslint-plugin-html": "^1.5.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neovici/cosmoz-tree.git"
+  },
+  "keywords": [
+    "polymer",
+    "web-components"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/neovici/cosmoz-tree/issues"
+  },
+  "homepage": "https://github.com/neovici/cosmoz-tree#readme"
+}
