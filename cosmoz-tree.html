@@ -83,6 +83,9 @@
 		},
 
 		getPathString: function (path, separator) {
+			if (!path || !Array.isArray(path) || !path.length < 1) {
+				return;
+			}
 			return path.map(function (part) {
 				return part.name;
 			}).join(separator);
