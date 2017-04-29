@@ -40,9 +40,11 @@
 				}, this._node);
 		},
 
-		getPath: function (nodeId) {
-			var node = this.findNodeById(nodeId);
-			return this.getPathByNode(node);
+		getPath: function (keyId) {
+			if (this.isGuid(keyId)) {
+				return this.getPathByNodeId(keyId);
+			}
+			return this.getPathByLocator(keyId);
 		},
 
 		getPathByNode: function (node) {
@@ -70,19 +72,24 @@
 				});
 		},
 
+		getPathByNodeId: function (nodeId) {
+			var node = this.findNodeById(nodeId);
+			return this.getPathByNode(node);
+		},
+
 		getPathByLocator: function (locator) {
 			var node = this.findNodeByPathLocator(locator);
 			return this.getPathByNode(node);
 		},
 
-		getPathString: function (nodeId, separator) {
-			var path = this.getPath(nodeId);
-			return path.reduce(function (pathString, node) {
-				if (pathString.length > 0) {
-					pathString = pathString + separator;
-				}
-				return pathString + node.name;
-			}, '');
+		getPathString: function (path, separator) {
+			return path.map(function (part) {
+				return part.name;
+			}).join(separator);
+		},
+
+		isGuid: function (input) {  // FIXME: GUID Check
+			return input.length === 36;
 		},
 
 		/**
