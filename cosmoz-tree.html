@@ -83,7 +83,7 @@
 		},
 
 		getPathString: function (path, separator) {
-			if (!path || !Array.isArray(path) || !path.length < 1) {
+			if (!path || !Array.isArray(path) || path.length < 1) {
 				return;
 			}
 			return path.map(function (part) {
