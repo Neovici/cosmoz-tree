@@ -1,0 +1,138 @@
+<link rel="import" href="cosmoz-tree.html">
+<script>
+	'use strict';
+
+	window.Cosmoz = window.Cosmoz || {};
+
+	function _objectValues(obj) {
+		return Object.keys(obj).map(function (key) {
+			return obj[key];
+		});
+	}
+
+	/**
+	 * Cosmoz.DefaultTree
+	 *
+	 * @constructor
+	 */
+	Cosmoz.DefaultTree = function (treeData) {
+		Cosmoz.Tree.apply(this, arguments);
+		this._treeData = treeData;
+		this._roots = _objectValues(treeData);
+	};
+
+	Cosmoz.DefaultTree.prototype = Object.create(Cosmoz.Tree.prototype);
+
+	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyName, propertyValue) {
+		if (propertyName === 'pathLocator') {
+			return this._getNodeByPathLocator(propertyValue);
+		}
+
+		return this._searchAllRoots(propertyName, propertyValue);
+	};
+
+	Cosmoz.DefaultTree.prototype.getPath = function (node) {
+		return this._getPathByPathLocator(node.pathLocator);
+	};
+
+	Cosmoz.DefaultTree.prototype.getPathByProperty = function (propertyName, propertyValue) {
+		if (propertyName === 'pathLocator') {
+			return this._getPathByPathLocator(propertyValue);
+		}
+
+		var node = this._searchAllRoots(propertyName, propertyValue);
+		if (node !== undefined) {
+			return this._getPathByPathLocator(node.pathLocator);
+		}
+	};
+
+	Cosmoz.DefaultTree.prototype.getChildren = function (node) {
+		return _objectValues(node.children);
+	};
+
+	Cosmoz.DefaultTree.prototype.getProperty = function (node, propertyName) {
+		return node[propertyName];
+	};
+
+	Cosmoz.DefaultTree.prototype._searchAllRoots = function (propertyName, propertyValue) {
+		var i,
+			node;
+
+		for (i = 0; i < this._roots.length; i+=1) {
+			node = this.search(this._roots[i], propertyName, propertyValue);
+			if (node !== undefined) {
+				return node;
+			}
+		}
+	};
+
+	Cosmoz.DefaultTree.prototype._getNodeByPathLocator = function (pathLocator) {
+		var	node,
+			path,
+			i;
+
+		for (i = 0; i < this._roots.length; i+=1) {
+			node = this._roots[i];
+			if (node.pathLocator === pathLocator) {
+				return node;
+			}
+
+			if (pathLocator.indexOf(node.pathLocator + '.') === 0) {
+				path = pathLocator.slice(node.pathLocator.length + 1).split('.');
+				for (i = 0; i < path.length; i+=1) {
+					if (node.children) {
+						node = node.children[path[i]];
+					} else {
+						node = null;
+					}
+					if (node === undefined ||  node === null) {
+						break;
+					}
+				}
+
+				if (node !== undefined && node !== null) {
+					return node;
+				}
+			}
+		}
+	};
+
+	Cosmoz.DefaultTree.prototype._getPathByPathLocator = function (pathLocator) {
+		var	node,
+			path,
+			subPath,
+			i;
+
+		for (i = 0; i < this._roots.length; i+=1) {
+			node = this._roots[i];
+			path = [node];
+
+			if (node.pathLocator === pathLocator) {
+				return path;
+			}
+
+			if (pathLocator.indexOf(node.pathLocator + '.') === 0) {
+				subPath = pathLocator.slice(node.pathLocator.length + 1).split('.');
+				for (i = 0; i < subPath.length; i+=1) {
+					if (node.children) {
+						node = node.children[subPath[i]];
+					} else {
+						node = null;
+					}
+					if (node === undefined ||  node === null) {
+						path = null;
+						break;
+					} else {
+						path.push(node);
+					}
+				}
+
+				if (path !== null) {
+					return path;
+				}
+			}
+		}
+	};
+
+
+</script>

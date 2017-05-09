@@ -1,123 +1,77 @@
 <script>
 	'use strict';
 
-	if (typeof Cosmoz === 'undefined') {
-		var Cosmoz = {};
-	}
+	window.Cosmoz = window.Cosmoz || {};
+
+
+	/* eslint-disable no-unused-vars */
 
 	/**
+	 * Cosmoz.Tree
 	 *
 	 * @constructor
 	 */
-	Cosmoz.Tree = function (node) {
-		this._node = node;
-		this._flattenedTree = this._flattenTree(node);
-		this._pathLocatorSeparator = '.';
+	Cosmoz.Tree = function () {
+		if (this.constructor === Cosmoz.Tree) {
+			throw new Error('abstract');
+		}
 	};
 
 	Cosmoz.Tree.prototype = {
-
-		constructor: Cosmoz.Tree,
-
-		findNodeById: function (id) {
-			return this._flattenedTree[id];
+		getNodeByProperty: function (propertyName, propertyValue) {
+			throw new Error('Must be implemented in derived object');
 		},
 
-		findNodeByPathLocator: function (pathLocator) {
-			if (!pathLocator) {
-				return;
+		getPath: function (node) {
+			throw new Error('Must be implemented in derived object');
+		},
+
+		getPathByProperty: function (propertyName, propertyValue) {
+			throw new Error('Must be implemented in derived object');
+		},
+
+		getChildren: function (node) {
+			throw new Error('Must be implemented in derived object');
+		},
+
+		getProperty: function (node, propertyName) {
+			throw new Error('Must be implemented in derived object');
+		},
+
+		getPathString: function (node, textPropertyName, separator) {
+			var path = this.getPath(node);
+			return path.map(function (n) {
+				return this.getProperty(n, textPropertyName);
+			}, this).join(separator);
+		},
+
+		getPathStringByProperty: function (propertyName, propertyValue, textPropertyName, separator) {
+			var node = this.getNodeByProperty(propertyName, propertyValue);
+			if (node !== undefined) {
+				return this.getPathString(node, textPropertyName, separator);
 			}
-			return pathLocator
-				.split(this._pathLocatorSeparator)
-				.reduce(function (node, part) {
-					if (node.children) {
-						node = node.children;
-					}
-					if (node[part]) {
-						node = node[part];
-					}
-					return node;
-				}, this._node);
-		},
-
-		getPath: function (keyId) {
-			if (this.isGuid(keyId)) {
-				return this.getPathByNodeId(keyId);
-			}
-			return this.getPathByLocator(keyId);
-		},
-
-		getPathByNode: function (node) {
-			if (!node || !node.pathLocator) {
-				return;
-			}
-			var currentNode = this._node;
-			return node.pathLocator
-				.split(this._pathLocatorSeparator)
-				.map(function (part) {
-					var ret = currentNode;
-					if (currentNode.children && currentNode.children[part]) {
-						currentNode = currentNode.children[part];
-					}
-					if (currentNode[part]) {
-						currentNode = currentNode[part];
-					}
-					if (ret === currentNode) {
-						return;
-					}
-					return currentNode;
-				})
-				.filter(function (part) {
-					return part !== undefined;
-				});
-		},
-
-		getPathByNodeId: function (nodeId) {
-			var node = this.findNodeById(nodeId);
-			return this.getPathByNode(node);
-		},
-
-		getPathByLocator: function (locator) {
-			var node = this.findNodeByPathLocator(locator);
-			return this.getPathByNode(node);
-		},
-
-		getPathString: function (path, separator) {
-			if (!path || !Array.isArray(path) || path.length < 1) {
-				return;
-			}
-			return path.map(function (part) {
-				return part.name;
-			}).join(separator);
-		},
-
-		isGuid: function (input) {  // FIXME: GUID Check
-			return input && input.length === 36;
 		},
 
 		/**
-		 * Utility function to flatten the tree to ease node lookup.
+		 * Basic search for a node by one of its property
 		 */
-		_flattenTree: function (tree, flattened) {
-			if (!flattened) {
-				flattened = {};
+		search: function (node, propertyName, propertyValue) {
+			if (this.getProperty(node, propertyName) === propertyValue) {
+				return node;
 			}
 
-			if (tree === undefined) {
-				return flattened;
-			}
+			var children = this.getChildren(node),
+				i = 0,
+				n;
 
-			Object.keys(tree).forEach(function (key) {
-				var node = tree[key];
-				flattened[node.id] = node;
-
-				if (node.children && Object.keys(node.children).length > 0) {
-					this._flattenTree(node.children, flattened);
+			if (children) {
+				for (i = 0; i < children.length; i+=1) {
+					n = this.search(children[i], propertyName, propertyValue);
+					if (n !== undefined) {
+						return n;
+					}
 				}
-
-			}, this);
-
-			return flattened;
-		},
+			}
+		}
 	};
 </script>
