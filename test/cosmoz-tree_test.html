@@ -115,16 +115,11 @@
 
 			});
 
-			test('getPathText', function () {
+			test('getPathString', function () {
 				var	node301 = basicTree.getNodeByProperty('pathLocator', '1.2.3.301'),
-					node301PathText = basicTree.getPathText(node301, 'name');
+					node301PathString = basicTree.getPathString(node301, 'name', '/');
 
-				assert.equal(node301PathText.length, 4);
-				assert.equal(node301PathText[0], 'Root');
-				assert.equal(node301PathText[1], 'Node2');
-				assert.equal(node301PathText[2], 'Node3');
-				assert.equal(node301PathText[3], 'Node301');
-
+				assert.equal(node301PathString, 'Root/Node2/Node3/Node301');
 			});
 		});
 
