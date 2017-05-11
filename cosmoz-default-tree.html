@@ -24,6 +24,10 @@
 	Cosmoz.DefaultTree.prototype = Object.create(Cosmoz.Tree.prototype);
 
 	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyName, propertyValue) {
+		if (propertyName === undefined || propertyValue === undefined) {
+			return;
+		}
+
 		if (propertyName === 'pathLocator') {
 			return this._getNodeByPathLocator(propertyValue);
 		}
@@ -32,10 +36,17 @@
 	};
 
 	Cosmoz.DefaultTree.prototype.getPath = function (node) {
+		if (node === undefined) {
+			return;
+		}
 		return this._getPathByPathLocator(node.pathLocator);
 	};
 
 	Cosmoz.DefaultTree.prototype.getPathByProperty = function (propertyName, propertyValue) {
+		if (propertyName === undefined || propertyValue === undefined) {
+			return;
+		}
+
 		if (propertyName === 'pathLocator') {
 			return this._getPathByPathLocator(propertyValue);
 		}
@@ -47,10 +58,17 @@
 	};
 
 	Cosmoz.DefaultTree.prototype.getChildren = function (node) {
+		if (node === undefined) {
+			return;
+		}
 		return _objectValues(node.children);
 	};
 
 	Cosmoz.DefaultTree.prototype.getProperty = function (node, propertyName) {
+		if (node === undefined || propertyName === undefined) {
+			return;
+		}
+
 		return node[propertyName];
 	};
 
