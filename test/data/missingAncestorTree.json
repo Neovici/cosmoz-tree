@@ -1,0 +1,24 @@
+{
+    "2": {
+        "id": "167d1485-7d4f-4c7d-86cd-a4fb00f31245",
+        "name": "Node2",
+        "pathLocator": "1.2",
+        "children": {}
+    },
+
+    "301": {
+        "id": "3a7654f1-e3e6-49c7-b6a8-a4fb00f31245",
+        "name": "Node301",
+        "pathLocator": "1.2.3.301",
+        "children": {
+            "401": {
+                "id": "865065da-f44c-472e-a8df-a4fb00f3124b",
+                "name": "Node401",
+                "pathLocator": "1.2.3.301.401",
+                "children": {
+                }
+
+            }
+        }
+    }
+}
