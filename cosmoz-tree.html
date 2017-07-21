@@ -52,26 +52,67 @@
 			}
 		},
 
+		nodeConformsSearch: function (node, propertyName, propertyValue, exact) {
+			var property = this.getProperty(node, propertyName);
+
+			switch (exact) {
+				case true:
+					if (property === propertyValue) {
+						return true;
+					}
+					break;
+			
+				case false:
+					if (property.toLowerCase().indexOf(propertyValue.toLowerCase()) > -1) {
+						return true;
+					}
+					break;
+			
+				default:
+					return false;
+					break;
+			}
+			
+			return false;
+		},
+
+		/**
+		 * After node found and before pushed to results array.
+		 */
+		afterFound: function (node) {
+			return node;
+		},
+
 		/**
 		 * Basic search for a node by one of its property
 		 */
-		search: function (node, propertyName, propertyValue) {
-			if (this.getProperty(node, propertyName) === propertyValue) {
-				return node;
-			}
+		search: function (node, propertyName, propertyValue, exact = true, all = false, results = []) {
+			var nodeConforms = this.nodeConformsSearch(node, propertyName, propertyValue, exact),
+				children,
+				result,
+				i;
 
-			var children = this.getChildren(node),
-				i = 0,
-				n;
-
-			if (children) {
-				for (i = 0; i < children.length; i+=1) {
-					n = this.search(children[i], propertyName, propertyValue);
-					if (n !== undefined) {
-						return n;
-					}
+			if (nodeConforms) {
+				if (all) {
+					results.push(this.afterFound(node));
+				} else {
+					return node;
 				}
 			}
+
+			children = this.getChildren(node);
+
+			if (children && Array.isArray(children)) {
+				for (i = 0; i < children.length; i++) {
+					var child = children[i];
+					result = this.search(children[i], propertyName, propertyValue, exact, all, results);
+					if (!Array.isArray(result)) {
+						return result;
+					}
+				}				
+			}
+
+			return results;
 		}
 	};
 </script>

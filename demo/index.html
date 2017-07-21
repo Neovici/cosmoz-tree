@@ -10,6 +10,7 @@
 
     <link rel="import" href="../../iron-ajax/iron-ajax.html">
     <link rel="import" href="../cosmoz-tree.html">
+    <link rel="import" href="../cosmoz-default-tree.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
     </style>
@@ -21,7 +22,41 @@
 
     <script>
 			// TODO(pasleq): do something with the tree
-			var tree = new Cosmoz.Tree(treeJson);
+      window.addEventListener('WebComponentsReady', function(e) {
+        var ajax = document.querySelector('iron-ajax');
+        ajax.addEventListener('response', function(response) {
+          var nodeList = response.detail.response;
+
+          // MyTree = function(nodeList) {
+          //   this.nodeList = nodeList;
+          // };
+          // MyTree.prototype = Object.create(Cosmoz.Tree.prototype);
+
+          // MyTree.prototype.getProperty = function (node, propertyName) {
+          //   if (!node) return;
+          //   return node[propertyName];
+          // };
+
+          // MyTree.prototype.getChildren = function (node) {
+          //   return node['children'];
+          // };
+
+          // MyTree.prototype.getTree = function () {
+          //   return this.nodeList;
+          // };
+
+          var tree = new Cosmoz.DefaultTree(nodeList);
+
+          var allFound = tree._searchAllRoots('name', 'a', false, true);
+          var firstFound = tree._searchAllRoots('name', 'Company', false, false);
+          var exactFoundFirst = tree._searchAllRoots('name', 'Company Phqiglgqnn', true, false);
+          var exactFoundAll = tree._searchAllRoots('name', 'Company Phqiglgqnn', true, true);
+
+          console.log(allFound, firstFound, exactFoundFirst, exactFoundAll);
+
+        });
+      });
+			
     </script>
   </body>
 </html>

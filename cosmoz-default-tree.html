@@ -72,16 +72,14 @@
 		return node[propertyName];
 	};
 
-	Cosmoz.DefaultTree.prototype._searchAllRoots = function (propertyName, propertyValue) {
-		var i,
-			node;
+	Cosmoz.DefaultTree.prototype._searchAllRoots = function (propertyName, propertyValue, exact = true, all = false) {
+		var results = [];
 
-		for (i = 0; i < this._roots.length; i+=1) {
-			node = this.search(this._roots[i], propertyName, propertyValue);
-			if (node !== undefined) {
-				return node;
-			}
-		}
+		this._roots.forEach(function (rootObj) {
+			results = results.concat(this.search(rootObj, propertyName, propertyValue, exact, all));
+		}, this);
+			
+		return results;
 	};
 
 	Cosmoz.DefaultTree.prototype._getNodeByPathLocator = function (pathLocator) {
