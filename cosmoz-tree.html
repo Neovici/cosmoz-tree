@@ -29,15 +29,11 @@ Navigator through object with treelike datastructure.
 			throw new Error('Must be implemented in derived object');
 		},
 
-		getPath: function (node) {
+		getPathString: function (node) {
 			throw new Error('Must be implemented in derived object');
 		},
 
-		getPathByProperty: function (propertyName, propertyValue) {
-			throw new Error('Must be implemented in derived object');
-		},
-
-		getChildren: function (node) {
+		getChildren: function (node, asList) {
 			throw new Error('Must be implemented in derived object');
 		},
 
@@ -45,20 +41,9 @@ Navigator through object with treelike datastructure.
 			throw new Error('Must be implemented in derived object');
 		},
 
-		getPathString: function (node, textPropertyName, separator) {
-			var path = this.getPath(node);
-			return path.map(function (n) {
-				return this.getProperty(n, textPropertyName);
-			}, this).join(separator);
-		},
-
-		getPathStringByProperty: function (propertyName, propertyValue, textPropertyName, separator) {
-			var node = this.getNodeByProperty(propertyName, propertyValue);
-			if (node !== undefined) {
-				return this.getPathString(node, textPropertyName, separator);
-			}
-		},
-
+		/**
+		 * Returns True if a node fullfills the search criteria.
+		 */
 		nodeConformsSearch: function (node, propertyName, propertyValue, exact) {
 			var property = this.getProperty(node, propertyName);
 
@@ -84,14 +69,15 @@ Navigator through object with treelike datastructure.
 		},
 
 		/**
-		 * After node found and before pushed to results array.
+		 * Gets called after a node has been found 
+		 * and before pushed to results array.
 		 */
 		afterFound: function (node) {
 			return node;
 		},
 
 		/**
-		 * Basic search for a node by one of its property
+		 * Basic search for a node by one of its properties.
 		 */
 		search: function (node, propertyName, propertyValue, exact = true, all = false, results = []) {
 			var nodeConforms = this.nodeConformsSearch(node, propertyName, propertyValue, exact),
@@ -107,7 +93,7 @@ Navigator through object with treelike datastructure.
 				}
 			}
 
-			children = this.getChildren(node);
+			children = this.getChildren(node, true);
 
 			if (children && Array.isArray(children)) {
 				for (i = 0; i < children.length; i++) {

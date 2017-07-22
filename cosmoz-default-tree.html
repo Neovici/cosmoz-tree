@@ -32,55 +32,25 @@ Navigator through object with treelike datastructure and default settings.
 
 	Cosmoz.DefaultTree.prototype = Object.create(Cosmoz.Tree.prototype);
 
-	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyName, propertyValue) {
+	/**
+	 * Returns an Array with all found Nodes.
+	 * Returns an Object with the first found Node.
+	 */
+	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyName, propertyValue, exact = true, all = false) {
 		if (propertyName === undefined || propertyValue === undefined) {
 			return;
 		}
 
 		if (propertyName === 'pathLocator') {
-			return this._getNodeByPathLocator(propertyValue);
+			return this.getNodeByPathLocator(propertyValue);
 		}
 
-		return this._searchAllRoots(propertyName, propertyValue);
+		return this._searchAllRoots(propertyName, propertyValue, exact, all);
 	};
 
-	Cosmoz.DefaultTree.prototype.getPath = function (node) {
-		if (node === undefined) {
-			return;
-		}
-		return this._getPathByPathLocator(node.pathLocator);
-	};
-
-	Cosmoz.DefaultTree.prototype.getPathByProperty = function (propertyName, propertyValue) {
-		if (propertyName === undefined || propertyValue === undefined) {
-			return;
-		}
-
-		if (propertyName === 'pathLocator') {
-			return this._getPathByPathLocator(propertyValue);
-		}
-
-		var node = this._searchAllRoots(propertyName, propertyValue);
-		if (node !== undefined) {
-			return this._getPathByPathLocator(node.pathLocator);
-		}
-	};
-
-	Cosmoz.DefaultTree.prototype.getChildren = function (node) {
-		if (node === undefined) {
-			return;
-		}
-		return _objectValues(node.children);
-	};
-
-	Cosmoz.DefaultTree.prototype.getProperty = function (node, propertyName) {
-		if (node === undefined || propertyName === undefined) {
-			return;
-		}
-
-		return node[propertyName];
-	};
-
+	/**
+	 * Loops over the _roots Array and returns the concatenated results of search().
+	 */
 	Cosmoz.DefaultTree.prototype._searchAllRoots = function (propertyName, propertyValue, exact = true, all = false) {
 		var results = [];
 
@@ -91,73 +61,62 @@ Navigator through object with treelike datastructure and default settings.
 		return results;
 	};
 
-	Cosmoz.DefaultTree.prototype._getNodeByPathLocator = function (pathLocator) {
-		var	node,
-			path,
-			i;
-
-		for (i = 0; i < this._roots.length; i+=1) {
-			node = this._roots[i];
-			if (node.pathLocator === pathLocator) {
-				return node;
-			}
-
-			if (pathLocator.indexOf(node.pathLocator + '.') === 0) {
-				path = pathLocator.slice(node.pathLocator.length + 1).split('.');
-				for (i = 0; i < path.length; i+=1) {
-					if (node.children) {
-						node = node.children[path[i]];
-					} else {
-						node = null;
-					}
-					if (node === undefined ||  node === null) {
-						break;
-					}
-				}
-
-				if (node !== undefined && node !== null) {
-					return node;
-				}
-			}
-		}
+	/**
+	 * Returns the Node of a given pathLocator.
+	 */
+	Cosmoz.DefaultTree.prototype.getNodeByPathLocator = function (pathLocator) {
+		var	nodesOnPath = this.nodesOnPath(this._treeData, pathLocator);
+		return nodesOnPath[nodesOnPath.length - 1];
 	};
 
-	Cosmoz.DefaultTree.prototype._getPathByPathLocator = function (pathLocator) {
-		var	node,
-			path,
-			subPath,
-			i;
-
-		for (i = 0; i < this._roots.length; i+=1) {
-			node = this._roots[i];
-			path = [node];
-
-			if (node.pathLocator === pathLocator) {
-				return path;
+	/**
+	 * Returns an Array of nodes on a given path.
+	 */
+	Cosmoz.DefaultTree.prototype.getNodesOnPath = function (nodes, pathLocator, separatorSign = '.') {
+		var path = pathLocator.split(separatorSign),
+			pathSegment = nodes;
+				
+		return path.map(function (nodeKey) {
+			var node = pathSegment[nodeKey],
+				children = this.getChildren(node);
+			node['key'] = nodeKey;
+			if (node && children !== undefined && Object.keys(children).length > 0) {
+				pathSegment = children;
 			}
+			return node;
+		}, this);
+	},
 
-			if (pathLocator.indexOf(node.pathLocator + '.') === 0) {
-				subPath = pathLocator.slice(node.pathLocator.length + 1).split('.');
-				for (i = 0; i < subPath.length; i+=1) {
-					if (node.children) {
-						node = node.children[subPath[i]];
-					} else {
-						node = null;
-					}
-					if (node === undefined ||  node === null) {
-						path = null;
-						break;
-					} else {
-						path.push(node);
-					}
-				}
-
-				if (path !== null) {
-					return path;
-				}
-			}
-		}
+	/**
+	 * Returns a String (separated node comparison properties) representing the path.
+	 */
+	Cosmoz.DefaultTree.prototype.getPathString = function (nodeList, pathLocator, comparisonProperty) {
+			var nodesOnPath = this.getNodesOnPath(nodeList, pathLocator),
+				path = '';
+			nodesOnPath.forEach(function (node) {
+				path += node[comparisonProperty] + '/';
+			}, this);
+			return path;
 	};
 
+	/**
+	 * Returns an Object or an Array representing the children of a node.
+	 */
+	Cosmoz.DefaultTree.prototype.getChildren = function (node, asList) {
+		if (node === undefined) {
+			return;
+		}
+		return asList ? _objectValues(node.children) : node.children;
+	};
+
+	/**
+	 * Returns the property of a Node based on a given property name.
+	 */
+	Cosmoz.DefaultTree.prototype.getProperty = function (node, propertyName) {
+		if (node === undefined || propertyName === undefined) {
+			return;
+		}
+		return node[propertyName];
+	};
 
 </script>
