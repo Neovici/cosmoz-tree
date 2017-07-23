@@ -6,6 +6,7 @@ window.Cosmoz = window.Cosmoz || {};
 
   /**
    * Use `Cosmoz.TreeBehavior` to use your properties with generic cosmoz-tree classes.
+   * @demo demo/index.html
    * @polymerBehavior Cosmoz.TreeBehavior
    */
 Cosmoz.TreeBehavior = {
@@ -35,18 +36,27 @@ Cosmoz.TreeBehavior = {
                 }
 
                 var treeClass = eval(this.properties[treePropertyKey].treeClass);
+                treeClass = this._getTreeClass(treeClass);
+
                 if (!treeClass) {
                     console.error('The provided treeClass ' + this.properties[treePropertyKey].treeClass + ' is invalid or not imported.')
                 }
-
                 Object.setPrototypeOf(this[treePropertyKey], {
                     tree: function() { return new treeClass(this); }.call(this[treePropertyKey])
                 });
+
+                this.notifyPath(treePropertyKey + '.tree', this[treePropertyKey].tree);
             };
 
             this._addObserverEffect(treePropertyKey, observer);
         }, this);
     },
+    /**
+	 * A hook to manipulate the default tree class.
+	 */
+    _getTreeClass: function (treeClass) {
+        return treeClass;
+    }
 };
 
 </script>
