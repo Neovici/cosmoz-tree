@@ -36,7 +36,7 @@ Navigator through object with treelike datastructure and default settings.
 	 * Returns an Array with all found Nodes.
 	 * Returns an Object with the first found Node.
 	 */
-	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyName, propertyValue, exact = true, all = false) {
+	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyName, propertyValue, exact = true, all = false, nodeList) {
 		if (propertyName === undefined || propertyValue === undefined) {
 			return;
 		}
@@ -45,17 +45,18 @@ Navigator through object with treelike datastructure and default settings.
 			return this.getNodeByPathLocator(propertyValue);
 		}
 
-		return this._searchAllRoots(propertyName, propertyValue, exact, all);
+		return this._searchNodeList(propertyName, propertyValue, exact, all, nodeList);
 	};
 
 	/**
-	 * Loops over the _roots Array and returns the concatenated results of search().
+	 * Loops over a node list (or roots if not defined) and returns the concatenated results of search().
 	 */
-	Cosmoz.DefaultTree.prototype._searchAllRoots = function (propertyName, propertyValue, exact = true, all = false) {
+	Cosmoz.DefaultTree.prototype._searchNodeList = function (propertyName, propertyValue, exact = true, all = false, nodeList) {
+		nodeList = nodeList ? nodeList : this._roots;
 		var results = [];
 
-		this._roots.forEach(function (rootObj) {
-			results = results.concat(this.search(rootObj, propertyName, propertyValue, exact, all));
+		nodeList.forEach(function (node) {
+			results = results.concat(this.search(node, propertyName, propertyValue, exact, all));
 		}, this);
 			
 		return results;
@@ -65,17 +66,23 @@ Navigator through object with treelike datastructure and default settings.
 	 * Returns the Node of a given pathLocator.
 	 */
 	Cosmoz.DefaultTree.prototype.getNodeByPathLocator = function (pathLocator) {
-		var	nodesOnPath = this.nodesOnPath(this._treeData, pathLocator);
+		if (!pathLocator) {
+			return this._treeData;
+		}
+		var	nodesOnPath = this.getNodesOnPath(pathLocator, this._treeData);
 		return nodesOnPath[nodesOnPath.length - 1];
 	};
 
 	/**
 	 * Returns an Array of nodes on a given path.
+	 * If pathLocator is empty or not defined, the Root objects get returned.
 	 */
-	Cosmoz.DefaultTree.prototype.getNodesOnPath = function (nodes, pathLocator, separatorSign = '.') {
+	Cosmoz.DefaultTree.prototype.getNodesOnPath = function (pathLocator, nodes, separatorSign = '.') {
+		if (!pathLocator) return this._roots;
+
 		var path = pathLocator.split(separatorSign),
-			pathSegment = nodes;
-				
+			pathSegment = nodes ? nodes : this._treeData;
+		
 		return path.map(function (nodeKey) {
 			var node = pathSegment[nodeKey],
 				children = this.getChildren(node);
@@ -90,8 +97,8 @@ Navigator through object with treelike datastructure and default settings.
 	/**
 	 * Returns a String (separated node comparison properties) representing the path.
 	 */
-	Cosmoz.DefaultTree.prototype.getPathString = function (nodeList, pathLocator, comparisonProperty) {
-			var nodesOnPath = this.getNodesOnPath(nodeList, pathLocator),
+	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, comparisonProperty) {
+			var nodesOnPath = this.getNodesOnPath(pathLocator, this._treeData),
 				path = '';
 			nodesOnPath.forEach(function (node) {
 				path += node[comparisonProperty] + '/';
