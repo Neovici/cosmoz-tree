@@ -72,7 +72,7 @@ Navigator through object with treelike datastructure.
 		 * Gets called after a node has been found 
 		 * and before pushed to results array.
 		 */
-		afterFound: function (node) {
+		afterFound: function (node, propertyName, propertyValue) {
 			return node;
 		},
 
@@ -87,7 +87,7 @@ Navigator through object with treelike datastructure.
 
 			if (nodeConforms) {
 				if (all) {
-					results.push(this.afterFound(node));
+					results.push(this.afterFound(node, propertyName, propertyValue));
 				} else {
 					return node;
 				}
