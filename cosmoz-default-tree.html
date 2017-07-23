@@ -36,10 +36,14 @@ Navigator through object with treelike datastructure and default settings.
 	 * Returns an Array with all found Nodes.
 	 * Returns an Object with the first found Node.
 	 */
-	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyName, propertyValue, exact = true, all = false, nodeList) {
+	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyName, propertyValue, exact, all, nodeList) {
 		if (propertyName === undefined || propertyValue === undefined) {
 			return;
 		}
+
+		// Defaults
+		exact = exact !== undefined ? exact : true;
+		all = all !== undefined ? all : false;
 
 		if (propertyName === 'pathLocator') {
 			return this.getNodeByPathLocator(propertyValue);
@@ -51,9 +55,13 @@ Navigator through object with treelike datastructure and default settings.
 	/**
 	 * Loops over a node list (or roots if not defined) and returns the concatenated results of search().
 	 */
-	Cosmoz.DefaultTree.prototype._searchNodeList = function (propertyName, propertyValue, exact = true, all = false, nodeList) {
-		nodeList = nodeList ? nodeList : this._roots;
+	Cosmoz.DefaultTree.prototype._searchNodeList = function (propertyName, propertyValue, exact, all, nodeList) {
 		var results = [];
+
+		// Defaults
+		exact = exact !== undefined ? exact : true;
+		all = all !== undefined ? all : false;
+		nodeList = nodeList ? nodeList : this._roots;
 
 		nodeList.forEach(function (node) {
 			results = results.concat(this.search(node, propertyName, propertyValue, exact, all));
@@ -77,8 +85,11 @@ Navigator through object with treelike datastructure and default settings.
 	 * Returns an Array of nodes on a given path.
 	 * If pathLocator is empty or not defined, the Root objects get returned.
 	 */
-	Cosmoz.DefaultTree.prototype.getNodesOnPath = function (pathLocator, nodes, separatorSign = '.') {
+	Cosmoz.DefaultTree.prototype.getNodesOnPath = function (pathLocator, nodes, separatorSign) {
 		if (!pathLocator) return this._roots;
+
+		// Defaults
+		separatorSign = separatorSign ? separatorSign : '.'
 
 		var path = pathLocator.split(separatorSign),
 			pathSegment = nodes ? nodes : this._treeData;

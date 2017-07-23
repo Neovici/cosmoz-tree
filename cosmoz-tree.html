@@ -79,11 +79,16 @@ Navigator through object with treelike datastructure.
 		/**
 		 * Basic search for a node by one of its properties.
 		 */
-		search: function (node, propertyName, propertyValue, exact = true, all = false, results = []) {
+		search: function (node, propertyName, propertyValue, exact, all, results) {
 			var nodeConforms = this.nodeConformsSearch(node, propertyName, propertyValue, exact),
 				children,
 				result,
 				i;
+			
+			// Defaults
+			exact = exact !== undefined ? exact : true;
+			all = all !== undefined ? all : false;
+			results = results ? results : [];
 
 			if (nodeConforms) {
 				if (all) {
