@@ -1,0 +1,52 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+
+window.Cosmoz = window.Cosmoz || {};
+
+  /**
+   * Use `Cosmoz.TreeBehavior` to use your properties with generic cosmoz-tree classes.
+   * @polymerBehavior Cosmoz.TreeBehavior
+   */
+Cosmoz.TreeBehavior = {
+    ready: function () {
+        this._initTreeBehavior();
+    },
+
+    /**
+     * Initializes the properties where a treeClass has been added.
+     * A tree attribute gets added to the properties
+     * which returns the (with the property value) initialized treeClass.
+     */
+    _initTreeBehavior: function () {
+		var trees = Object.keys(this.properties).filter(function (key) {
+			return this.properties[key].hasOwnProperty('treeClass');
+		}, this);
+        
+        trees.forEach(function (treePropertyKey) {
+            this.properties[treePropertyKey].tree = eval(this.properties[treePropertyKey].treeClass);
+            
+            var observer = '_TreeBehavior' + treePropertyKey.charAt(0).toUpperCase() + treePropertyKey.slice(1) + 'Changed';
+
+            this[observer] = function () {
+                if (!this[treePropertyKey]) return;
+                if (!this[treePropertyKey] instanceof Object) {
+                    console.error('The treeClass property needs to be an object!');
+                }
+
+                var treeClass = eval(this.properties[treePropertyKey].treeClass);
+                if (!treeClass) {
+                    console.error('The provided treeClass ' + this.properties[treePropertyKey].treeClass + ' is invalid or not imported.')
+                }
+
+                Object.setPrototypeOf(this[treePropertyKey], {
+                    tree: function() { return new treeClass(this); }.call(this[treePropertyKey])
+                });
+            };
+
+            this._addObserverEffect(treePropertyKey, observer);
+        }, this);
+    },
+};
+
+</script>
