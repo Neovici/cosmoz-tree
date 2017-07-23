@@ -53,6 +53,14 @@ Navigator through object with treelike datastructure and default settings.
 	};
 
 	/**
+	 * Returns the path String of the found Node(s).
+	 */
+	Cosmoz.DefaultTree.prototype.getPathByProperty = function (propertyName, propertyValue, exact, all, nodeList) {
+		var node = this.getNodeByProperty(propertyName, propertyValue, exact, all, nodeList);
+		return this.getPath(node.path, propertyName);
+	},
+
+	/**
 	 * Loops over a node list (or roots if not defined) and returns the concatenated results of search().
 	 */
 	Cosmoz.DefaultTree.prototype._searchNodeList = function (propertyName, propertyValue, exact, all, nodeList) {
@@ -108,13 +116,17 @@ Navigator through object with treelike datastructure and default settings.
 	/**
 	 * Returns a String (separated node comparison properties) representing the path.
 	 */
-	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, comparisonProperty) {
-			var nodesOnPath = this.getNodesOnPath(pathLocator, this._treeData),
-				path = '';
-			nodesOnPath.forEach(function (node) {
-				path += node[comparisonProperty] + '/';
-			}, this);
-			return path;
+	Cosmoz.DefaultTree.prototype.getPath = function (pathLocator, comparisonProperty, pathSeparator) {
+		var nodesOnPath = this.getNodesOnPath(pathLocator, this._treeData),
+			path = '';
+		
+		// Defaults
+		pathSeparator = pathSeparator ? pathSeparator : '/';
+		
+		nodesOnPath.forEach(function (node) {
+			path += node[comparisonProperty] + pathSeparator;
+		}, this);
+		return path;
 	};
 
 	/**

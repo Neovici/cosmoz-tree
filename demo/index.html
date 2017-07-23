@@ -18,25 +18,25 @@
   <body>
     <template is="dom-bind" id="demo">
       <h1>See console</h1>
-      <iron-ajax url="tree.json" handle-as="json" last-response="{{ treeJson }}" auto></iron-ajax>
+      <iron-ajax url="tree.json" on-response="handleResponse" handle-as="json" last-response="{{ treeJson }}" auto></iron-ajax>
     </template>
 
     <script>
       window.addEventListener('WebComponentsReady', function(e) {
         var ajax = document.querySelector('iron-ajax');
-        ajax.addEventListener('response', function(response) {
-          var nodeList = response.detail.response;
 
+        document.querySelector('#demo').handleResponse = function(response) {
+          var nodeList = response.detail.response;
           var tree = new Cosmoz.DefaultTree(nodeList);
 
-          var allFound = tree._searchAllRoots('name', 'a', false, true);
-          var firstFound = tree._searchAllRoots('name', 'Company', false, false);
-          var exactFoundFirst = tree._searchAllRoots('name', 'Company Phqiglgqnn', true, false);
-          var exactFoundAll = tree._searchAllRoots('name', 'Company Phqiglgqnn', true, true);
+          var allFound = tree.getNodeByProperty('name', 'a', false, true);
+          var firstFound = tree.getNodeByProperty('name', 'Company', false, false);
+          var exactFoundFirst = tree.getNodeByProperty('name', 'Company Phqiglgqnn', true, false);
+          var exactFoundAll = tree.getNodeByProperty('name', 'Company Phqiglgqnn', true, true);
 
           console.log(allFound, firstFound, exactFoundFirst, exactFoundAll);
 
-        });
+        };
       });
 			
     </script>

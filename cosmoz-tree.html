@@ -100,14 +100,14 @@ Navigator through object with treelike datastructure.
 
 			children = this.getChildren(node, true);
 
-			if (children && Array.isArray(children)) {
+			if (Array.isArray(children)) {
 				for (i = 0; i < children.length; i++) {
 					var child = children[i];
 					result = this.search(children[i], propertyName, propertyValue, exact, all, results);
 					if (!Array.isArray(result)) {
 						return result;
 					}
-				}				
+				}
 			}
 
 			return results;
