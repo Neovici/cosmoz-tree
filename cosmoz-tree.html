@@ -91,18 +91,17 @@ Navigator through object with treelike datastructure.
 			results = results ? results : [];
 
 			if (nodeConforms) {
-				if (all) {
-					results.push(this.afterFound(node, propertyName, propertyValue));
-				} else {
+				if (!all) {
 					return node;
 				}
+				
+				results.push(this.afterFound(node, propertyName, propertyValue));
 			}
 
 			children = this.getChildren(node, true);
 
 			if (Array.isArray(children)) {
 				for (i = 0; i < children.length; i++) {
-					var child = children[i];
 					result = this.search(children[i], propertyName, propertyValue, exact, all, results);
 					if (!Array.isArray(result)) {
 						return result;

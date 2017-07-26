@@ -57,6 +57,9 @@ Navigator through object with treelike datastructure and default settings.
 	 */
 	Cosmoz.DefaultTree.prototype.getPathByProperty = function (propertyName, propertyValue, exact, all, nodeList) {
 		var node = this.getNodeByProperty(propertyName, propertyValue, exact, all, nodeList);
+		if (!node) {
+			return;
+		}
 		return this.getPath(node.path, propertyName);
 	},
 
@@ -94,7 +97,9 @@ Navigator through object with treelike datastructure and default settings.
 	 * If pathLocator is empty or not defined, the Root objects get returned.
 	 */
 	Cosmoz.DefaultTree.prototype.getNodesOnPath = function (pathLocator, nodes, separatorSign) {
-		if (!pathLocator) return this._roots;
+		if (!pathLocator) {
+			return this._roots
+		};
 
 		// Defaults
 		separatorSign = separatorSign ? separatorSign : '.'
@@ -118,22 +123,21 @@ Navigator through object with treelike datastructure and default settings.
 	 */
 	Cosmoz.DefaultTree.prototype.getPath = function (pathLocator, comparisonProperty, pathSeparator) {
 		var nodesOnPath = this.getNodesOnPath(pathLocator, this._treeData),
-			path = '';
+			path;
 		
 		// Defaults
 		pathSeparator = pathSeparator ? pathSeparator : '/';
-		
-		nodesOnPath.forEach(function (node) {
-			path += node[comparisonProperty] + pathSeparator;
-		}, this);
-		return path;
+
+		return nodesOnPath.map(function (node) {
+			return node[comparisonProperty];
+		}).join(pathSeparator);
 	};
 
 	/**
 	 * Returns an Object or an Array representing the children of a node.
 	 */
 	Cosmoz.DefaultTree.prototype.getChildren = function (node, asList) {
-		if (node === undefined) {
+		if (!node) {
 			return;
 		}
 		return asList ? _objectValues(node.children) : node.children;
@@ -143,7 +147,7 @@ Navigator through object with treelike datastructure and default settings.
 	 * Returns the property of a Node based on a given property name.
 	 */
 	Cosmoz.DefaultTree.prototype.getProperty = function (node, propertyName) {
-		if (node === undefined || propertyName === undefined) {
+		if (!node || !propertyName) {
 			return;
 		}
 		return node[propertyName];
