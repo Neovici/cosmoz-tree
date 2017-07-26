@@ -60,7 +60,7 @@ Navigator through object with treelike datastructure and default settings.
 		if (!node) {
 			return;
 		}
-		return this.getPath(node.path, propertyName);
+		return this.getPathString(node.path, propertyName);
 	},
 
 	/**
@@ -88,7 +88,7 @@ Navigator through object with treelike datastructure and default settings.
 		if (!pathLocator) {
 			return this._treeData;
 		}
-		var	nodesOnPath = this.getNodesOnPath(pathLocator, this._treeData);
+		var	nodesOnPath = this.getPath(pathLocator, this._treeData);
 		return nodesOnPath[nodesOnPath.length - 1];
 	};
 
@@ -96,7 +96,7 @@ Navigator through object with treelike datastructure and default settings.
 	 * Returns an Array of nodes on a given path.
 	 * If pathLocator is empty or not defined, the Root objects get returned.
 	 */
-	Cosmoz.DefaultTree.prototype.getNodesOnPath = function (pathLocator, nodes, separatorSign) {
+	Cosmoz.DefaultTree.prototype.getPath = function (pathLocator, nodes, separatorSign) {
 		if (!pathLocator) {
 			return this._roots
 		};
@@ -121,8 +121,8 @@ Navigator through object with treelike datastructure and default settings.
 	/**
 	 * Returns a String (separated node comparison properties) representing the path.
 	 */
-	Cosmoz.DefaultTree.prototype.getPath = function (pathLocator, comparisonProperty, pathSeparator) {
-		var nodesOnPath = this.getNodesOnPath(pathLocator, this._treeData),
+	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, comparisonProperty, pathSeparator) {
+		var nodesOnPath = this.getPath(pathLocator, this._treeData),
 			path;
 		
 		// Defaults
