@@ -14,6 +14,9 @@ Navigator through object with treelike datastructure and default settings.
 	window.Cosmoz = window.Cosmoz || {};
 
 	function _objectValues(obj) {
+		if (!obj) {
+			return;
+		}
 		return Object.keys(obj).map(function (key) {
 			return obj[key];
 		});
@@ -33,49 +36,17 @@ Navigator through object with treelike datastructure and default settings.
 	Cosmoz.DefaultTree.prototype = Object.create(Cosmoz.Tree.prototype);
 
 	/**
-	 * Returns an Array with all found Nodes.
-	 * Returns an Object with the first found Node.
-	 */
-	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyName, propertyValue, exact, all, nodeList) {
-		if (propertyName === undefined || propertyValue === undefined) {
-			return;
-		}
-
-		// Defaults
-		exact = exact !== undefined ? exact : true;
-		all = all !== undefined ? all : false;
-
-		if (propertyName === 'pathLocator') {
-			return this.getNodeByPathLocator(propertyValue);
-		}
-
-		return this._searchNodeList(propertyName, propertyValue, exact, all, nodeList);
-	};
-
-	/**
-	 * Returns the path String of the found Node(s).
-	 */
-	Cosmoz.DefaultTree.prototype.getPathByProperty = function (propertyName, propertyValue, exact, all, nodeList) {
-		var node = this.getNodeByProperty(propertyName, propertyValue, exact, all, nodeList);
-		if (!node) {
-			return;
-		}
-		return this.getPathString(node.path, propertyName);
-	},
-
-	/**
 	 * Loops over a node list (or roots if not defined) and returns the concatenated results of search().
 	 */
-	Cosmoz.DefaultTree.prototype._searchNodeList = function (propertyName, propertyValue, exact, all, nodeList) {
+	Cosmoz.DefaultTree.prototype.searchNodes = function (propertyName, propertyValue, exact, nodes) {
 		var results = [];
 
 		// Defaults
 		exact = exact !== undefined ? exact : true;
-		all = all !== undefined ? all : false;
-		nodeList = nodeList ? nodeList : this._roots;
+		nodes = nodes ? nodes : this._roots;
 
-		nodeList.forEach(function (node) {
-			results = results.concat(this.search(node, propertyName, propertyValue, exact, all));
+		nodes.forEach(function (node) {
+			results = results.concat(this.search(node, propertyName, propertyValue, exact));
 		}, this);
 			
 		return results;
@@ -98,11 +69,11 @@ Navigator through object with treelike datastructure and default settings.
 	 */
 	Cosmoz.DefaultTree.prototype.getPath = function (pathLocator, nodes, separatorSign) {
 		if (!pathLocator) {
-			return this._roots
-		};
+			return this._roots;
+		}
 
 		// Defaults
-		separatorSign = separatorSign ? separatorSign : '.'
+		separatorSign = separatorSign ? separatorSign : '.';
 
 		var path = pathLocator.split(separatorSign),
 			pathSegment = nodes ? nodes : this._treeData;
@@ -110,7 +81,6 @@ Navigator through object with treelike datastructure and default settings.
 		return path.map(function (nodeKey) {
 			var node = pathSegment[nodeKey],
 				children = this.getChildren(node);
-			node['key'] = nodeKey;
 			if (node && children !== undefined && Object.keys(children).length > 0) {
 				pathSegment = children;
 			}
@@ -122,9 +92,8 @@ Navigator through object with treelike datastructure and default settings.
 	 * Returns a String (separated node comparison properties) representing the path.
 	 */
 	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, comparisonProperty, pathSeparator) {
-		var nodesOnPath = this.getPath(pathLocator, this._treeData),
-			path;
-		
+		var nodesOnPath = this.getPath(pathLocator, this._treeData);
+
 		// Defaults
 		pathSeparator = pathSeparator ? pathSeparator : '/';
 
@@ -136,11 +105,11 @@ Navigator through object with treelike datastructure and default settings.
 	/**
 	 * Returns an Object or an Array representing the children of a node.
 	 */
-	Cosmoz.DefaultTree.prototype.getChildren = function (node, asList) {
+	Cosmoz.DefaultTree.prototype.getChildren = function (node) {
 		if (!node) {
 			return;
 		}
-		return asList ? _objectValues(node.children) : node.children;
+		return node.children;
 	};
 
 	/**

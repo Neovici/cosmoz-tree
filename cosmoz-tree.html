@@ -73,17 +73,9 @@ Navigator through object with treelike datastructure.
 		},
 
 		/**
-		 * Gets called after a node has been found 
-		 * and before pushed to results array.
-		 */
-		afterFound: function (node, propertyName, propertyValue) {
-			return node;
-		},
-
-		/**
 		 * Basic search for a node by one of its properties.
 		 */
-		search: function (node, propertyName, propertyValue, exact, all, results) {
+		search: function (node, propertyName, propertyValue, exact, results) {
 			var nodeConforms = this.nodeConformsSearch(node, propertyName, propertyValue, exact),
 				children,
 				result,
@@ -91,22 +83,17 @@ Navigator through object with treelike datastructure.
 			
 			// Defaults
 			exact = exact !== undefined ? exact : true;
-			all = all !== undefined ? all : false;
 			results = results ? results : [];
 
 			if (nodeConforms) {
-				if (!all) {
-					return node;
-				}
-				
-				results.push(this.afterFound(node, propertyName, propertyValue));
+				results.push(node);
 			}
 
-			children = this.getChildren(node, true);
+			children = _objectValues(this.getChildren(node));
 
 			if (Array.isArray(children)) {
 				for (i = 0; i < children.length; i++) {
-					result = this.search(children[i], propertyName, propertyValue, exact, all, results);
+					result = this.search(children[i], propertyName, propertyValue, exact, results);
 					if (!Array.isArray(result)) {
 						return result;
 					}
