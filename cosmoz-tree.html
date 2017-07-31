@@ -51,25 +51,11 @@ Navigator through object with treelike datastructure.
 		nodeConformsSearch: function (node, propertyName, propertyValue, exact) {
 			var property = this.getProperty(node, propertyName);
 
-			switch (exact) {
-				case true:
-					if (property === propertyValue) {
-						return true;
-					}
-					break;
-			
-				case false:
-					if (property.toLowerCase().indexOf(propertyValue.toLowerCase()) > -1) {
-						return true;
-					}
-					break;
-			
-				default:
-					return false;
-					break;
+			if (exact) {
+				return property && property === propertyValue;
 			}
-			
-			return false;
+
+			return property && property.toLowerCase().indexOf(propertyValue.toLowerCase()) > -1;
 		},
 
 		/**
