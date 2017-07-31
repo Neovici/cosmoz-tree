@@ -25,47 +25,105 @@ Navigator through object with treelike datastructure.
 	};
 
 	Cosmoz.Tree.prototype = {
-		getNodeByProperty: function (propertyName, propertyValue) {
+
+		/**
+		 * Should return the first node found.
+		 * @return {object} or null if there was an empty response.
+		 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
+		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+		 * @param {boolean} exact (If the search should be executed exact or flaw. true wouldn't match "Pet")
+		 * @param {object} nodeObj (The object the search should be based on.) or on default this._treeData
+		 */
+		getNodeByProperty: function (propertyName, propertyValue, exact, nodeObj) {
 			throw new Error('Must be implemented in derived object');
 		},
 
-		getPathNodes: function (node) {
+		/**
+		 * Should return the nodes on a given path.
+		 * @return {array} or null if there was an empty response.
+		 * @param {string} pathLocator (The string which describes the path. e.g. "1.2.9")
+		 * @param {object} nodeObj (The object the search should be based on.) Default: this._treeData
+		 * @param {string} separatorSign (The string which separates the path. e.g ".") Default: "."
+		 * @param {string} childProperty (The string which describes the child property of a node.) Default: "children"
+		*/
+		getPathNodes: function (pathLocator, nodeObj, separatorSign, childProperty) {
 			throw new Error('Must be implemented in derived object');
 		},
 
-		getPathString: function (node) {
+		/**
+		 * Returns a string which describes the path of a node (found by its path locator).
+		 * @return {string} e.g. home/computer/desktop
+		 * @param {string} pathLocator (The string which describes the path. e.g. "1.2.9")
+		 * @param {string} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
+		 * @param {string} pathSeparator (The string the path should get separated with.)
+		 * @param {string} separatorSign (The string which separates the path. e.g ".")
+		 * @param {string} childProperty (The string which describes the child property of a node.)
+		*/
+		getPathString: function (pathLocator, pathProperty, pathSeparator, separatorSign, childProperty) {
 			throw new Error('Must be implemented in derived object');
 		},
 
-		getPathStringByProperty: function (node) {
+		/**
+		 * Should returns a string which describes the path of a node (found by a node's property and value).
+		 * @return {string} e.g. home/computer/desktop
+		 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
+		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+		 * @param {string} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
+		 * @param {string} pathSeparator (The string the path should get separated with.)
+		 * @param {string} separatorSign (The string which separates the path. e.g ".")
+		 * @param {string} childProperty (The string which describes the child property of a node.)
+		*/
+		getPathStringByProperty: function (propertyName, propertyValue, pathProperty, pathSeparator, separatorSign, childProperty) {
 			throw new Error('Must be implemented in derived object');
 		},
 
-		getChildren: function (node, asList) {
+		/** TODO (jalal): Drop this method
+		 * Should return the children of a node in form of an array.
+		 * @return {array}
+		 * @param {node} node (The node of which the children should be returned of.)
+		 * @param {string} childProperty (The string which describes the child property of a node.)
+		*/
+		getChildren: function (node, childProperty) {
 			throw new Error('Must be implemented in derived object');
 		},
 
+		/** TODO (jalal): Drop this method
+		 * Should return the value of a node's property.
+		 * @return {array}
+		 * @param {node} node (The node of which the property value should be returned of.)
+		 * @param {string} propertyName (The name of the property. e.g. "name")
+		*/
 		getProperty: function (node, propertyName) {
 			throw new Error('Must be implemented in derived object');
 		},
 
 		/**
-		 * Returns True if a node fullfills the search criteria.
-		 */
+		 * Checks if a node matches the search criteria.
+		 * @return {boolean}
+		 * @param {node} node (The node the check should be based on.)
+		 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
+		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+		 * @param {boolean} exact (If the search should be executed exact or flaw. true wouldn't match "Pet")
+		*/
 		nodeConformsSearch: function (node, propertyName, propertyValue, exact) {
 			var property = this.getProperty(node, propertyName);
 
 			if (exact) {
 				return property && property === propertyValue;
 			}
-
 			return property && property.toLowerCase().indexOf(propertyValue.toLowerCase()) > -1;
 		},
 
 		/**
-		 * Basic search for a node by one of its properties.
-		 */
-		search: function (node, propertyName, propertyValue, exact, results) {
+		 * Searches a (multi root) node and matches nodes based on a property and a value.
+		 * @return {array}
+		 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
+		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+		 * @param {boolean} exact (If the search should be executed exact or flaw. true wouldn't match "Pet")
+		 * @param {array} results (The array search results get added to.) Default: []
+		 * @param {string} childProperty (The string which describes the child property of a node.) Default: "children"
+		*/
+		search: function (node, propertyName, propertyValue, exact, results, childProperty) {
 			var nodeConforms = this.nodeConformsSearch(node, propertyName, propertyValue, exact),
 				children,
 				result,
@@ -74,12 +132,13 @@ Navigator through object with treelike datastructure.
 			// Defaults
 			exact = exact !== undefined ? exact : true;
 			results = results ? results : [];
+			childProperty = childProperty ? childProperty : 'children';
 
 			if (nodeConforms) {
 				results.push(node);
 			}
 
-			children = this.getChildren(node);
+			children = this.getChildren(node, childProperty);
 
 			if (Array.isArray(children)) {
 				for (i = 0; i < children.length; i++) {

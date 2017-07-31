@@ -5,7 +5,6 @@ Navigator through object with treelike datastructure and default settings.
 
 @demo demo/index.html
 -->
-
 <script>
 	'use strict';
 
@@ -36,9 +35,14 @@ Navigator through object with treelike datastructure and default settings.
 	Cosmoz.DefaultTree.prototype = Object.create(Cosmoz.Tree.prototype);
 
 	/**
-	 * Returns the first found Node.
+	 * Returns the first node found.
+	 * @return {object} or null if there was an empty response.
+	 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
+	 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+	 * @param {boolean} exact (If the search should be executed exact or flaw. true wouldn't match "Pet")
+	 * @param {object} nodeObj (The object the search should be based on.) or on default this._treeData
 	 */
-	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyName, propertyValue, exact, nodes) {
+	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyName, propertyValue, exact, nodeObj) {
 		if (propertyName === undefined || propertyValue === undefined) {
 			return;
 		}
@@ -46,47 +50,68 @@ Navigator through object with treelike datastructure and default settings.
 		exact = exact !== undefined ? exact : true;
 
 		if (propertyName === 'pathLocator') {
-			return this.getNodeByPathLocator(propertyValue);
+			return this.getNodeByPathLocator(propertyValue, nodeObj);
 		}
 
-		var results = this.searchNodes(propertyName, propertyValue, exact, nodes);
+		var results = this.searchNodes(propertyName, propertyValue, exact, nodeObj);
 		return results && results.length > 0 ? results[0] : null;
 	};
 
 	/**
-	 * Loops over a node list (or roots if not defined) and returns the concatenated results of search().
-	 */
-	Cosmoz.DefaultTree.prototype.searchNodes = function (propertyName, propertyValue, exact, nodes) {
+	 * Searches a (multi root) node and matches nodes based on a property and a value.
+	 * @return {array}
+	 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
+	 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+	 * @param {boolean} exact (If the search should be executed exact or flaw. true wouldn't match "Pet")
+	 * @param {object} nodeObj (The object the search should be based on.) or on default this._treeData
+	 * @param {string} childProperty (The string which describes the child property of a node.) Default: "children"
+	*/
+	Cosmoz.DefaultTree.prototype.searchNodes = function (propertyName, propertyValue, exact, nodeObj, childProperty) {
 		var results = [];
 
 		// Defaults
 		exact = exact !== undefined ? exact : true;
-		nodes = nodes ? nodes : this._roots;
+		var nodes = nodeObj ? _objectValues(nodeObj) : this._roots;
 
 		nodes.forEach(function (node) {
-			results = results.concat(this.search(node, propertyName, propertyValue, exact));
+			results = results.concat(this.search(node, propertyName, propertyValue, exact, childProperty));
 		}, this);
 			
 		return results;
 	};
 
 	/**
-	 * Returns the Node of a given pathLocator.
-	 */
-	Cosmoz.DefaultTree.prototype.getNodeByPathLocator = function (pathLocator) {
+	 * Returns the node of a given path.
+	 * @return {object}
+	 * @param {string} pathLocator (The string which describes the path. e.g. "1.2.9")
+	 * @param {object} nodeObj (The object the search should be based on.) Default: this._treeData
+	 * @param {string} separatorSign (The string which separates the path. e.g ".") Default: "."
+	 * @param {string} childProperty (The string which describes the child property of a node.) Default: "children"
+	*/
+	Cosmoz.DefaultTree.prototype.getNodeByPathLocator = function (pathLocator, nodeObj, separatorSign, childProperty) {
 		if (!pathLocator) {
 			return this._treeData;
 		}
-		var	pathNodes = this.getPathNodes(pathLocator, this._treeData),
+
+		// Defaults
+		nodeObj = nodeObj ? nodeObj : this._treeData;
+		separatorSign = separatorSign ? separatorSign : '.';
+		childProperty = childProperty ? childProperty : 'children';
+
+		var	pathNodes = this.getPathNodes(pathLocator, nodeObj, separatorSign, childProperty),
 			lastNodeOnPath = pathNodes.pop();
 		return lastNodeOnPath !== undefined ? lastNodeOnPath : null;
 	};
 
 	/**
-	 * Returns an Array of nodes on a given path.
-	 * If pathLocator is empty or not defined, the Root objects get returned.
-	 */
-	Cosmoz.DefaultTree.prototype.getPathNodes = function (pathLocator, nodes, separatorSign, childProperty) {
+	 * Returns the nodes on a given path.
+	 * @return {array} or null if there was an empty response.
+	 * @param {string} pathLocator (The string which describes the path. e.g. "1.2.9")
+	 * @param {object} nodeObj (The object the search should be based on.) Default: this._treeData
+	 * @param {string} separatorSign (The string which separates the path. e.g ".") Default: "."
+	 * @param {string} childProperty (The string which describes the child property of a node.) Default: "children"
+	*/
+	Cosmoz.DefaultTree.prototype.getPathNodes = function (pathLocator, nodeObj, separatorSign, childProperty) {
 		if (!pathLocator) {
 			return this._roots;
 		}
@@ -96,8 +121,8 @@ Navigator through object with treelike datastructure and default settings.
 		childProperty = childProperty ? childProperty : 'children';
 
 		var path = pathLocator.split(separatorSign),
-			pathSegment = nodes ? nodes : this._treeData,
-			pathHasUndefinedSegments,
+			pathSegment = nodeObj ? nodeObj : this._treeData,
+			pathIsInvalid,
 			nodes;
 		
 		// Get the nodes on the path.
@@ -111,36 +136,56 @@ Navigator through object with treelike datastructure and default settings.
 		}, this);
 
 		// Check if all nodes on the path are valid.
-		pathHasUndefinedSegments = nodes.some(function (n) {
+		pathIsInvalid = nodes.some(function (n) {
 			if (n === undefined) {
 				return true;
 			}
 		});
 
-		return pathHasUndefinedSegments ? null : nodes;
+		return pathIsInvalid ? null : nodes;
 	},
 
 	/**
-	 * Returns a String (separated node properties) representing the path of a given path locator.
-	 */
-	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, pathProperty, pathSeparator) {
+	 * Returns a string which describes the path of a node (found by its path locator).
+	 * @return {string} e.g. home/computer/desktop
+	 * @param {string} pathLocator (The string which describes the path. e.g. "1.2.9")
+	 * @param {string} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
+	 * @param {string} pathSeparator (The string the path should get separated with.) Default: "/"
+	 * @param {string} separatorSign (The string which separates the path. e.g ".") Default: "."
+	 * @param {string} childProperty (The string which describes the child property of a node.) Default: "children"
+	*/
+	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, pathProperty, pathSeparator, separatorSign, childProperty) {
 		var pathNodes = this.getPathNodes(pathLocator, this._treeData);
 
 		// Defaults
 		pathSeparator = pathSeparator ? pathSeparator : '/';
+		separatorSign = separatorSign ? separatorSign : '.';
+		childProperty = childProperty ? childProperty : 'children';
 
 		return pathNodes.map(function (node) {
 			return node[pathProperty];
 		}).join(pathSeparator);
 	};
 
-	Cosmoz.DefaultTree.prototype.getPathStringByProperty = function (propertyName, propertyValue, pathProperty, pathSeparator) {
+	/**
+	 * Returns a string which describes the path of a node (found by a node's property and value).
+	 * @return {string} e.g. home/computer/desktop
+	 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
+	 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+	 * @param {string} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
+	 * @param {string} pathSeparator (The string the path should get separated with.) Default: "/"
+	 * @param {string} separatorSign (The string which separates the path. e.g ".") Default: "."
+	 * @param {string} childProperty (The string which describes the child property of a node.) Default: "children"
+	*/
+	Cosmoz.DefaultTree.prototype.getPathStringByProperty = function (propertyName, propertyValue, pathProperty, pathSeparator, separatorSign, childProperty) {
 		if (propertyName === undefined || propertyValue === undefined) {
 			return;
 		}
 
 		// Defaults
 		pathProperty = pathProperty ? pathProperty : 'name';
+		separatorSign = separatorSign ? separatorSign : '.';
+		childProperty = childProperty ? childProperty : 'children';
 
 		if (propertyName === 'pathLocator') {
 			return this.getPathString(propertyValue, pathProperty);
