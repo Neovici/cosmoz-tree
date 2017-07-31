@@ -156,11 +156,15 @@ Navigator through object with treelike datastructure and default settings.
 	/**
 	 * Returns an Object or an Array representing the children of a node.
 	 */
-	Cosmoz.DefaultTree.prototype.getChildren = function (node) {
+	Cosmoz.DefaultTree.prototype.getChildren = function (node, childProperty) {
 		if (!node) {
 			return;
 		}
-		return node.children;
+
+		// Defaults
+		childProperty = childProperty ? childProperty : 'children';
+
+		return _objectValues(node[childProperty]);
 	};
 
 	/**

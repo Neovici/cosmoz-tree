@@ -37,6 +37,10 @@ Navigator through object with treelike datastructure.
 			throw new Error('Must be implemented in derived object');
 		},
 
+		getPathStringByProperty: function (node) {
+			throw new Error('Must be implemented in derived object');
+		},
+
 		getChildren: function (node, asList) {
 			throw new Error('Must be implemented in derived object');
 		},
@@ -75,7 +79,7 @@ Navigator through object with treelike datastructure.
 				results.push(node);
 			}
 
-			children = _objectValues(this.getChildren(node));
+			children = this.getChildren(node);
 
 			if (Array.isArray(children)) {
 				for (i = 0; i < children.length; i++) {
