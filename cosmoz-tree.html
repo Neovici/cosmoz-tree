@@ -98,18 +98,20 @@ Navigator through object with treelike datastructure.
 		 * Checks if a node matches the search criteria.
 		 * @return {boolean}
 		 * @param {node} node (The node the check should be based on.)
-		 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
 		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
-		 * @param {boolean} exact (If the search should be executed exact or flaw. true wouldn't match "Pet")
+		 * @param {object} options (Comparison options) 
+		 * @param {string} options.propertyName (The name of the property the match should be based on. e.g. "name") 
+		 * @param {boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
 		*/
-		nodeConformsSearch: function (node, propertyName, propertyValue, exact) {
-			var property = this.getProperty(node, propertyName);
+		nodeConformsSearch: function (node, propertyValue, options) {
+			var property = options ? node[options.propertyName] : undefined;
 
 			if (!property) {
+				console.error('options.propertyName needs to be specified.');
 				return;
 			}
 
-			if (exact) {
+			if (options.exact) {
 				return property && property === propertyValue;
 			}
 			return property && property.toLowerCase().indexOf(propertyValue.toLowerCase()) > -1;
@@ -118,20 +120,21 @@ Navigator through object with treelike datastructure.
 		/**
 		 * Searches a (multi root) node and matches nodes based on a property and a value.
 		 * @return {array}
-		 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
 		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
-		 * @param {boolean} exact (If the search should be executed exact or flaw. true wouldn't match "Pet")
+		 * @param {object} options (Search options) 
+		 * @param {string} options.propertyName (The name of the property the match should be based on. e.g. "name") 
+		 * @param {boolean} options.exact [false] (If false, the propertyValue is matched fuzzy)
 		 * @param {array} results (The array search results get added to.) Default: []
 		*/
-		search: function (node, propertyName, propertyValue, exact, results) {
-			var nodeConforms = this.nodeConformsSearch(node, propertyName, propertyValue, exact),
+		search: function (node, propertyValue, options, results) {
+			var nodeConforms = this.nodeConformsSearch(node, propertyValue, options),
 				children,
 				result,
 				i;
 			
 			// Defaults
-			exact = exact !== undefined ? exact : true;
 			results = results || [];
+			
 			if (nodeConforms) {
 				results.push(node);
 			}
@@ -140,7 +143,7 @@ Navigator through object with treelike datastructure.
 
 			if (Array.isArray(children)) {
 				for (i = 0; i < children.length; i++) {
-					result = this.search(children[i], propertyName, propertyValue, exact, results);
+					result = this.search(children[i], propertyValue, options, results);
 					if (!Array.isArray(result)) {
 						return result;
 					}
