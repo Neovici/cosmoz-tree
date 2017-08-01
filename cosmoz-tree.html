@@ -29,7 +29,7 @@ Navigator through object with treelike datastructure.
 
 		/**
 		 * Should return the first node found.
-		 * @return {object} or null if there was an empty response.
+		 * @return {object}
 		 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
 		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 		 * @param {boolean} exact (If the search should be executed exact or flaw. true wouldn't match "Pet")
@@ -41,7 +41,7 @@ Navigator through object with treelike datastructure.
 
 		/**
 		 * Should return the nodes on a given path.
-		 * @return {array} or null if there was an empty response.
+		 * @return {array}
 		 * @param {string} pathLocator (The string which describes the path. e.g. "1.2.9")
 		 * @param {object} nodeObj (The object the search should be based on.) Default: this._treeData
 		 * @param {string} separatorSign (The string which separates the path. e.g ".") Default: "."
@@ -75,12 +75,21 @@ Navigator through object with treelike datastructure.
 			throw new Error('Must be implemented in derived object');
 		},
 
-		/** TODO (jalal): Drop this method
+		/**
 		 * Should return the children of a node in form of an array.
 		 * @return {array}
 		 * @param {node} node (The node of which the children should be returned of.)
 		*/
 		getChildren: function (node) {
+			throw new Error('Must be implemented in derived object');
+		},
+
+		/**
+		 * Returns true if a node has children.
+		 * @return {boolean}
+		 * @param {node} node (The node of which the children check should be applied on.)
+		*/
+		hasChildren: function (node) {
 			throw new Error('Must be implemented in derived object');
 		},
 
