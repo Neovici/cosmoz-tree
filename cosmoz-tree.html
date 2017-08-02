@@ -154,7 +154,7 @@ Navigator through object with treelike datastructure.
 				for (i = 0; i < children.length; i++) {
 					result = this.search(children[i], propertyValue, options, results);
 					if (!Array.isArray(result)) {
-						return result;
+						return [result];
 					}
 				}
 			}
