@@ -163,20 +163,29 @@ Navigator through object with treelike datastructure and default settings.
 			nodes = [];
 
 		// Get the nodes on the path.
-		path.some(function (nodeKey) {
-			var node = pathSegment[nodeKey],
-				children = node ? node[this.childProperty] : undefined;
-			
-			if (node) {
-				nodes.push(node);
+		var validPath = path.every(function (nodeKey) {
+			if (!pathSegment || !pathSegment[nodeKey]) {
+				return nodes.length === 0;
 			}
-
-			if (node && children !== undefined && Object.keys(children).length > 0) {
-				pathSegment = children;
-			} else {
-				return true;
-			}
+			var node = pathSegment[nodeKey];
+			pathSegment = node[this.childProperty];
+			nodes.push(node);
+			return true;
 		}, this);
+
+		if (!validPath) {
+			return null;
+		}
+
+		// corner case - no hit at all
+		if (validPath && nodes.length === 0 && path.length > 0) {
+			return null;
+		}
+
+		// filter out undefined items from the start
+		while (nodes.length > 0 && nodes[0] === undefined) {
+			nodes.shift();
+		}
 
 		return nodes;
 	},
