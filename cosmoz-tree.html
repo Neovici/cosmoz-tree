@@ -1,4 +1,6 @@
 
+<link rel="import" href="../polymer/polymer.html">
+
 <!--
 Navigator through object with treelike datastructure.
 -->
@@ -121,9 +123,9 @@ Navigator through object with treelike datastructure.
 			}
 
 			if (options.exact) {
-				return property && property === propertyValue;
+				return property === propertyValue;
 			}
-			return property && property.toLowerCase().indexOf(propertyValue.toLowerCase()) > -1;
+			return property.toLowerCase().indexOf(propertyValue.toLowerCase()) > -1;
 		},
 
 		/**

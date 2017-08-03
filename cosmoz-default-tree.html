@@ -1,3 +1,4 @@
+<link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="cosmoz-tree.html">
 
 <!--
@@ -56,7 +57,7 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {array} nodes [this._roots] (The objects the search should be based on.)
 	 */
 	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyValue, propertyName, nodes) {
-		if (propertyName === undefined || propertyValue === undefined) {
+		if (propertyValue === undefined) {
 			return;
 		}
 		// Defaults
@@ -200,8 +201,9 @@ Navigator through object with treelike datastructure and default settings.
 	*/
 	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, pathProperty, pathStringSeparator, pathLocatorSeparator) {
 		// Defaults
-		pathStringSeparator = pathStringSeparator || this.pathStringSeparator;
+		pathProperty = pathProperty || this.searchProperty;
 		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
+		pathStringSeparator = pathStringSeparator || this.pathStringSeparator;
 
 		var pathNodes = this.getPathNodes(pathLocator, this._treeData, pathLocatorSeparator);
 
@@ -224,7 +226,7 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {string} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	*/
 	Cosmoz.DefaultTree.prototype.getPathStringByProperty = function (propertyValue, propertyName, pathProperty, pathStringSeparator, pathLocatorSeparator) {
-		if (propertyName === undefined || propertyValue === undefined) {
+		if (propertyValue === undefined) {
 			return;
 		}
 
@@ -238,7 +240,7 @@ Navigator through object with treelike datastructure and default settings.
 			return this.getPathString(propertyValue, pathProperty, pathStringSeparator, pathLocatorSeparator);
 		}
 		
-		var node = this.getNodeByProperty(propertyName, propertyValue);
+		var node = this.getNodeByProperty(propertyValue, propertyName);
 
 		if (node) {
 			return this.getPathString(node.pathLocator || node.path, pathProperty);

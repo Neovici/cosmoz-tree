@@ -59,66 +59,102 @@
 				});
 			});
 
-			test('instantiating a Cosmoz.Tree works', function () {
-				assert.isNotNull(basicTree);
+			test('instantiating a Cosmoz.Tree', function () {
+				assert.isOk(basicTree);
 			});
 
-			test('getNodeById', function () {
-				var
-					root = basicTree.getNodeByProperty('id', '11111111-1111-1111-1111-111111111111'),
-					node2 = basicTree.getNodeByProperty('id', '167d1485-7d4f-4c7d-86cd-a4fb00f31245'),
-					node3 = basicTree.getNodeByProperty('id', '3a7654f1-e3e6-49c7-b6a8-a4fb00f31245'),
-					node4 = basicTree.getNodeByProperty('id', '2b547550-b874-4228-9395-a4fb00f31245');
-				assert.isNotNull(root);
-				assert.isNotNull(node2);
-				assert.isNotNull(node3);
-				assert.isNotNull(node4);
+			test('getNodeByProperty', function () {
+				var 
+					root  = basicTree.getNodeByProperty('11111111-1111-1111-1111-111111111111', 'id'),
+					node2 = basicTree.getNodeByProperty('167d1485-7d4f-4c7d-86cd-a4fb00f31245', 'id'),
+					node3 = basicTree.getNodeByProperty('3a7654f1-e3e6-49c7-b6a8-a4fb00f31245', 'id'),
+					node4 = basicTree.getNodeByProperty('2b547550-b874-4228-9395-a4fb00f31245', 'id'),
+					node5 = basicTree.getNodeByProperty(node4.name),
+					node6 = basicTree.getNodeByProperty(node2.pathLocator, 'pathLocator', basicTree._roots);
+				assert.isOk(root);
+				assert.isOk(node2);
+				assert.isOk(node3);
+				assert.isOk(node4);
+				assert.deepEqual(node4, node5);
+				assert.deepEqual(node2, node6);
 			});
+
+			test('searchNodes', function () {
+				var
+					root = basicTree.searchNodes('1', undefined, undefined, 'pathLocator')[0],
+					node2 = basicTree.searchNodes('1', undefined, undefined, 'pathLocator', root)[0],
+					node3 = basicTree.searchNodes('2b547550-b874-4228-9395-a4fb00f31245', undefined, undefined, 'id')[0],
+					node4 = basicTree.searchNodes(node3.name),
+					node5 = basicTree.searchNodes('2b547550-b874-4228-9395-', undefined, false, 'id'),
+					node6 = basicTree.searchNodes('Node', basicTree._roots, false, 'name');
+
+				assert.isOk(root);
+				assert.deepEqual(root, node2);
+				assert.isOk(node3);
+				assert.isAbove(node4.indexOf(node3), -1, 'Search by name & id creates no overlap in results.');
+				assert.isAbove(node5.indexOf(node3), -1, 'There is no overlab in results. "exact" attribute fails.');
+				assert.isOk(node6);
+			});
+
+			test('findNode', function () {
+				var
+					root = basicTree.searchNodes('1', undefined, undefined, 'pathLocator')[0],
+					node = basicTree.findNode('1'),
+					node2 = basicTree.findNode('2b547550-b874-4228-9395-a4fb00f31245', 'id');
+
+				assert.deepEqual(root[0], node);
+				assert.isOk(node2);
+			});
+
 			test('getNodeByPathLocator', function () {
-				var
-					root = basicTree.getNodeByProperty('pathLocator', '1'),
-					node2 = basicTree.getNodeByProperty('pathLocator', '1.2'),
-					node3 = basicTree.getNodeByProperty('pathLocatord', '1.2.3'),
-					node4 = basicTree.getNodeByProperty('pathLocator', '1.2.3.301');
-				assert.isNotNull(root);
-				assert.isNotNull(node2);
-				assert.isNotNull(node3);
-				assert.isNotNull(node4);
+				var	node3 = basicTree.getNodeByPathLocator('1.2.3');
+				assert.isOk(node3);
 			});
 
-			test('getPath', function () {
-				var
-					root = basicTree.getNodeByProperty('id', '11111111-1111-1111-1111-111111111111'),
-					node2 = basicTree.getNodeByProperty('id', '167d1485-7d4f-4c7d-86cd-a4fb00f31245'),
-					node3 = basicTree.getNodeByProperty('id', '3a7654f1-e3e6-49c7-b6a8-a4fb00f31245'),
-					node4 = basicTree.getNodeByProperty('id', '2b547550-b874-4228-9395-a4fb00f31245'),
-					rootPath = basicTree.getPath(root),
-					node2Path = basicTree.getPath(node2),
-					node3Path = basicTree.getPath(node3),
-					node4Path = basicTree.getPath(node4);
+			test('getPathNodes', function () {
+				var	nodes3 = basicTree.getPathNodes('1.2.3'),
+					node3 = basicTree.getNodeByPathLocator('1.2.3'),
+					nodes301 = basicTree.getPathNodes('1.2.3.301'),
+					nodes3X1 = basicTree.getPathNodes('1.2.33'),
+					nodes3X2 = basicTree.getPathNodes('1.2.3.3'),
+					nodes3X3 = basicTree.getPathNodes('0.1.2.3');
+				
+				assert.notOk(nodes3X1);
+				assert.notOk(nodes3X2);
+				assert.isOk(nodes3);
+				assert.isOk(nodes301);
 
-				assert.equal(rootPath.length, 1);
-				assert.equal(rootPath[0], root);
+				assert.equal(nodes3.length, 3);
+				assert.equal(nodes301.length, 4);
 
-				assert.equal(node2Path.length, 2);
-				assert.equal(node2Path[0], root);
-				assert.equal(node2Path[1], node2);
+				assert.deepEqual(nodes3.slice().pop(), node3);
+				assert.equal(nodes3X3.length, nodes3.length);
+				assert.deepEqual(nodes3X3.slice().pop(), nodes3.slice().pop());
+			});
 
-				assert.equal(node3Path.length, 3);
-				assert.equal(node3Path[0], root);
-				assert.equal(node3Path[1], node2);
-				assert.equal(node3Path[2], node3);
+			test('getPathString', function () {
+				var	node3 = basicTree.getNodeByPathLocator('1.2.3'),
+					pathString = basicTree.getPathString(node3.pathLocator);
+				assert.equal(pathString.split('/').pop(), node3.name);
+			});
 
-				assert.equal(node4Path.length, 2);
-				assert.equal(node4Path[0], root);
-				assert.equal(node4Path[1], node4);
+			test('getPathStringByProperty', function () {
+				var	node3 = basicTree.getNodeByPathLocator('1.2.3'),
+					pathString = basicTree.getPathStringByProperty(node3.id, 'id');
+				assert.equal(pathString.split('/').pop(), node3.name);
+			});
+
+			test('hasChildren', function () {
+				var	node3 = basicTree.getNodeByPathLocator('1.2.3'),
+					node301 = basicTree.getNodeByPathLocator('1.2.3.301');
+				assert(basicTree.hasChildren(node3));
+				assert(!basicTree.hasChildren(node301));
 
 			});
 
 			test('getPathString', function () {
-				var	node301 = basicTree.getNodeByProperty('pathLocator', '1.2.3.301'),
-					node301PathString = basicTree.getPathString(node301, 'name', '/');
-
+				var	node301 = basicTree.getNodeByPathLocator('1.2.3.301'),
+					node301PathString = basicTree.getPathString(node301.pathLocator, 'name', '/');
 				assert.equal(node301PathString, 'Root/Node2/Node3/Node301');
 			});
 		});
@@ -135,17 +171,17 @@
 				});
 			});
 
-			test('instantiating a Cosmoz.Tree works', function () {
-				assert.isNotNull(multiRootTree);
+			test('instantiating a Cosmoz.Tree', function () {
+				assert.isOk(multiRootTree);
 			});
 
 			test('getNodeByProperty', function () {
 				var node2 = multiRootTree.getNodeByProperty('id', '167d1485-7d4f-4c7d-86cd-a4fb00f31245'),
 					node3 = multiRootTree.getNodeByProperty('id', '3a7654f1-e3e6-49c7-b6a8-a4fb00f31245'),
 					node4 = multiRootTree.getNodeByProperty('id', '2b547550-b874-4228-9395-a4fb00f31245');
-				assert.isNotNull(node2);
-				assert.isNotNull(node3);
-				assert.isNotNull(node4);
+				assert.isOk(node2);
+				assert.isOk(node3);
+				assert.isOk(node4);
 
 			});
 
@@ -159,14 +195,14 @@
 					node4Path = multiRootTree.getPath(node4);
 
 				assert.equal(node2Path.length, 1);
-				assert.equal(node2Path[0], node2);
+				assert.deepEqual(node2Path[0], node2);
 
 				assert.equal(node3Path.length, 2);
-				assert.equal(node3Path[0], node2);
-				assert.equal(node3Path[1], node3);
+				assert.deepEqual(node3Path[0], node2);
+				assert.deepEqual(node3Path[1], node3);
 
 				assert.equal(node4Path.length, 1);
-				assert.equal(node4Path[0], node4);
+				assert.deepEqual(node4Path[0], node4);
 
 			});
 		});
@@ -184,16 +220,16 @@
 			});
 
 			test('instantiating a Cosmoz.Tree works', function () {
-				assert.isNotNull(missingAncestorTree);
+				assert.isOk(missingAncestorTree);
 			});
 
 			test('getNodeByProperty', function () {
-				var node2 = missingAncestorTree.getNodeByProperty('id', '167d1485-7d4f-4c7d-86cd-a4fb00f31245'),
-					node301 = missingAncestorTree.getNodeByProperty('id', '3a7654f1-e3e6-49c7-b6a8-a4fb00f31245'),
-					node401 = missingAncestorTree.getNodeByProperty('id', '865065da-f44c-472e-a8df-a4fb00f3124b');
-				assert.isNotNull(node2);
-				assert.isNotNull(node301);
-				assert.isNotNull(node401);
+				var node2 = missingAncestorTree.getNodeByProperty('167d1485-7d4f-4c7d-86cd-a4fb00f31245', 'id'),
+					node301 = missingAncestorTree.getNodeByProperty('3a7654f1-e3e6-49c7-b6a8-a4fb00f31245', 'id'),
+					node401 = missingAncestorTree.getNodeByProperty('865065da-f44c-472e-a8df-a4fb00f3124b', 'id');
+				assert.isOk(node2);
+				assert.isOk(node301);
+				assert.isOk(node401);
 
 			});
 
