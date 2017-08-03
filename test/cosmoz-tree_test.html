@@ -220,7 +220,7 @@
 				});
 			});
 
-			test('instantiating a Cosmoz.Tree works', function () {
+			test('instantiating a Cosmoz.Tree', function () {
 				assert.isOk(missingAncestorTree);
 			});
 
@@ -234,20 +234,19 @@
 
 			});
 
-			test('getPath', function () {
+			test('getPathNodes', function () {
 				var
-					node301 = missingAncestorTree.getNodeByProperty('id', '3a7654f1-e3e6-49c7-b6a8-a4fb00f31245'),
-					node401 = missingAncestorTree.getNodeByProperty('id', '865065da-f44c-472e-a8df-a4fb00f3124b'),
-					node301Path = missingAncestorTree.getPath(node301),
-					node401Path = missingAncestorTree.getPath(node401);
+					node301 = missingAncestorTree.getNodeByProperty('3a7654f1-e3e6-49c7-b6a8-a4fb00f31245', 'id'),
+					node401 = missingAncestorTree.getNodeByProperty('865065da-f44c-472e-a8df-a4fb00f3124b', 'id'),
+					node301Path = missingAncestorTree.getPathNodes(node301.pathLocator),
+					node401Path = missingAncestorTree.getPathNodes(node401.pathLocator);
 
 				assert.equal(node301Path.length, 1);
-				assert.equal(node301Path[0], node301);
+				assert.deepEqual(node301Path[0], node301);
 
 				assert.equal(node401Path.length, 2);
 				assert.equal(node401Path[0], node301);
 				assert.equal(node401Path[1], node401);
-
 			});
 		});
 	}());
