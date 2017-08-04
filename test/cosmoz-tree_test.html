@@ -119,10 +119,11 @@
 					nodes3X2 = basicTree.getPathNodes('1.2.3.3'),
 					nodes3X3 = basicTree.getPathNodes('0.1.2.3');
 				
-				assert.notOk(nodes3X1);
-				assert.notOk(nodes3X2);
 				assert.isOk(nodes3);
 				assert.isOk(nodes301);
+
+				assert.equal(nodes3X1.indexOf(undefined), 2);
+				assert.equal(nodes3X2.filter(function (n) { return n; }).length, 3);
 
 				assert.equal(nodes3.length, 3);
 				assert.equal(nodes301.length, 4);
@@ -193,10 +194,10 @@
 					nodes3X2 = multiRootTree.getPathNodes('1.2.3.3'),
 					nodes3X3 = multiRootTree.getPathNodes('0.1.2.3');
 				
-				assert.notOk(nodes3X1);
-				assert.notOk(nodes3X2);
-				assert.isOk(nodes3);
-				assert.isOk(nodes14);
+				assert.equal(nodes3X1.indexOf(undefined), 1);
+				assert.equal(nodes3X2.filter(function (n) { return n; }).length, 2);
+				assert.isAbove(nodes3.length, 0);
+				assert.isAbove(nodes14.length, 0);
 
 				assert.equal(nodes3.length, 2);
 				assert.equal(nodes14.length, 1);
@@ -241,12 +242,12 @@
 					node301Path = missingAncestorTree.getPathNodes(node301.pathLocator),
 					node401Path = missingAncestorTree.getPathNodes(node401.pathLocator);
 
-				assert.equal(node301Path.length, 1);
-				assert.deepEqual(node301Path[0], node301);
+				assert.equal(node301Path.filter(function (n) { return n; }).length, 2);
+				assert.deepEqual(node301Path[2], node301);
 
-				assert.equal(node401Path.length, 2);
-				assert.equal(node401Path[0], node301);
-				assert.equal(node401Path[1], node401);
+				assert.equal(node401Path.length, 4);
+				assert.equal(node401Path[2], node301);
+				assert.equal(node401Path[3], node401);
 			});
 		});
 	}());
