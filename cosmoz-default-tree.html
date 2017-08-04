@@ -146,6 +146,10 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Returns the nodes on a given path.
+	 * A valid path 1.2.3 should return the items [1, 2, 3]
+	 * - path 1.2.3.3 should return [1, 2, 3, undefined]
+	 * - path 0.1.2.3 should return [1, 2, 3]
+	 * - path 0.1.5.3 should return [1, undefined, undefined]
 	 * @return {array}
 	 * @param {string} pathLocator (The string which describes the path. e.g. "1.2.9")
 	 * @param {object} nodeObj [this._treeData] (The object the search should be based on.)
@@ -161,29 +165,19 @@ Navigator through object with treelike datastructure and default settings.
 
 		var path = pathLocator.split(pathLocatorSeparator),
 			pathSegment = nodeObj || this._treeData,
-			nodes = [];
+			nodes = [],
+			node;
 
-		// Get the nodes on the path.
-		var validPath = path.every(function (nodeKey) {
-			if (!pathSegment || !pathSegment[nodeKey]) {
-				return nodes.length === 0;
-			}
-			var node = pathSegment[nodeKey];
-			pathSegment = node[this.childProperty];
+		// Get the nodes on the path
+		path.forEach(function (nodeKey) {
+			node = pathSegment[nodeKey] !== node ? pathSegment[nodeKey] : undefined;
 			nodes.push(node);
-			return true;
+			if (node && this.hasChildren(node)) {
+				pathSegment = node[this.childProperty];
+			}
 		}, this);
 
-		if (!validPath) {
-			return null;
-		}
-
-		// corner case - no hit at all
-		if (validPath && nodes.length === 0 && path.length > 0) {
-			return null;
-		}
-
-		// filter out undefined items from the start
+		// Filter out undefined items of the start
 		while (nodes.length > 0 && nodes[0] === undefined) {
 			nodes.shift();
 		}
