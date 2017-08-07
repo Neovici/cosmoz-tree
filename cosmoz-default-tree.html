@@ -165,16 +165,16 @@ Navigator through object with treelike datastructure and default settings.
 
 		var path = pathLocator.split(pathLocatorSeparator),
 			pathSegment = nodeObj || this._treeData,
-			nodes = [],
+			nodes,
 			node;
 
 		// Get the nodes on the path
-		path.forEach(function (nodeKey) {
+		nodes = path.map(function (nodeKey) {
 			node = pathSegment[nodeKey] !== node ? pathSegment[nodeKey] : undefined;
-			nodes.push(node);
 			if (node && this.hasChildren(node)) {
 				pathSegment = node[this.childProperty];
 			}
+			return node;
 		}, this);
 
 		// Filter out undefined items of the start
