@@ -1,5 +1,15 @@
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+Navigator through object with treelike datastructure.
+-->
+
 <script>
 	'use strict';
+
+	// Needed for iron-component-page.
+	Polymer({ is: 'cosmoz-tree' });
 
 	window.Cosmoz = window.Cosmoz || {};
 
@@ -18,60 +28,140 @@
 	};
 
 	Cosmoz.Tree.prototype = {
-		getNodeByProperty: function (propertyName, propertyValue) {
+
+		/**
+		 * Should return the first node found.
+		 * @return {object}
+		 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
+		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+		 * @param {boolean} exact (If the search should be executed exact or flaw. true wouldn't match "Pet")
+		 * @param {object} nodeObj (The object the search should be based on.) or on default this._treeData
+		 */
+		getNodeByProperty: function (propertyName, propertyValue, exact, nodeObj) {
 			throw new Error('Must be implemented in derived object');
 		},
 
-		getPath: function (node) {
+		/**
+		 * Should return the nodes on a given path.
+		 * @return {array}
+		 * @param {string} pathLocator (The string which describes the path. e.g. "1.2.9")
+		 * @param {object} nodeObj (The object the search should be based on.) Default: this._treeData
+		 * @param {string} separatorSign (The string which separates the path. e.g ".") Default: "."
+		*/
+		getPathNodes: function (pathLocator, nodeObj, separatorSign) {
 			throw new Error('Must be implemented in derived object');
 		},
 
-		getPathByProperty: function (propertyName, propertyValue) {
+		/**
+		 * Returns a string which describes the path of a node (found by its path locator).
+		 * @return {string} e.g. home/computer/desktop
+		 * @param {string} pathLocator (The string which describes the path. e.g. "1.2.9")
+		 * @param {string} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
+		 * @param {string} pathSeparator (The string the path should get separated with.)
+		 * @param {string} separatorSign (The string which separates the path. e.g ".")
+		*/
+		getPathString: function (pathLocator, pathProperty, pathSeparator, separatorSign) {
 			throw new Error('Must be implemented in derived object');
 		},
 
+		/**
+		 * Should returns a string which describes the path of a node (found by a node's property and value).
+		 * @return {string} e.g. home/computer/desktop
+		 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
+		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+		 * @param {string} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
+		 * @param {string} pathSeparator (The string the path should get separated with.)
+		 * @param {string} separatorSign (The string which separates the path. e.g ".")
+		*/
+		getPathStringByProperty: function (propertyName, propertyValue, pathProperty, pathSeparator, separatorSign) {
+			throw new Error('Must be implemented in derived object');
+		},
+
+		/**
+		 * Should return the children of a node in form of an array.
+		 * @return {array}
+		 * @param {node} node (The node of which the children should be returned of.)
+		*/
 		getChildren: function (node) {
 			throw new Error('Must be implemented in derived object');
 		},
 
+		/**
+		 * Returns true if a node has children.
+		 * @return {boolean}
+		 * @param {node} node (The node of which the children check should be applied on.)
+		*/
+		hasChildren: function (node) {
+			throw new Error('Must be implemented in derived object');
+		},
+
+		/** TODO (jalal): Drop this method
+		 * Should return the value of a node's property.
+		 * @return {array}
+		 * @param {node} node (The node of which the property value should be returned of.)
+		 * @param {string} propertyName (The name of the property. e.g. "name")
+		*/
 		getProperty: function (node, propertyName) {
 			throw new Error('Must be implemented in derived object');
 		},
 
-		getPathString: function (node, textPropertyName, separator) {
-			var path = this.getPath(node);
-			return path.map(function (n) {
-				return this.getProperty(n, textPropertyName);
-			}, this).join(separator);
-		},
+		/**
+		 * Checks if a node matches the search criteria.
+		 * @return {boolean}
+		 * @param {node} node (The node the check should be based on.)
+		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+		 * @param {object} options (Comparison options) 
+		 * @param {string} options.propertyName (The name of the property the match should be based on. e.g. "name") 
+		 * @param {boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
+		*/
+		nodeConformsSearch: function (node, propertyValue, options) {
+			var property = options ? node[options.propertyName] : undefined;
 
-		getPathStringByProperty: function (propertyName, propertyValue, textPropertyName, separator) {
-			var node = this.getNodeByProperty(propertyName, propertyValue);
-			if (node !== undefined) {
-				return this.getPathString(node, textPropertyName, separator);
+			if (!property) {
+				console.error('options.propertyName needs to be specified.');
+				return;
 			}
+
+			if (options.exact) {
+				return property === propertyValue;
+			}
+			return property.toLowerCase().indexOf(propertyValue.toLowerCase()) > -1;
 		},
 
 		/**
-		 * Basic search for a node by one of its property
-		 */
-		search: function (node, propertyName, propertyValue) {
-			if (this.getProperty(node, propertyName) === propertyValue) {
-				return node;
+		 * Searches a (multi root) node and matches nodes based on a property and a value.
+		 * @return {array}
+		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+		 * @param {object} options (Search options) 
+		 * @param {string} options.propertyName (The name of the property the match should be based on. e.g. "name") 
+		 * @param {boolean} options.exact [false] (If false, the propertyValue is matched fuzzy)
+		 * @param {array} results (The array search results get added to.) Default: []
+		*/
+		search: function (node, propertyValue, options, results) {
+			var nodeConforms = this.nodeConformsSearch(node, propertyValue, options),
+				children,
+				result,
+				i;
+			
+			// Defaults
+			results = results || [];
+			
+			if (nodeConforms) {
+				results.push(node);
 			}
 
-			var children = this.getChildren(node),
-				i = 0,
-				n;
+			children = this.getChildren(node);
 
-			if (children) {
-				for (i = 0; i < children.length; i+=1) {
-					n = this.search(children[i], propertyName, propertyValue);
-					if (n !== undefined) {
-						return n;
+			if (Array.isArray(children)) {
+				for (i = 0; i < children.length; i++) {
+					result = this.search(children[i], propertyValue, options, results);
+					if (!Array.isArray(result)) {
+						return [result];
 					}
 				}
 			}
+
+			return results;
 		}
 	};
 </script>

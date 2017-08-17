@@ -10,18 +10,33 @@
 
     <link rel="import" href="../../iron-ajax/iron-ajax.html">
     <link rel="import" href="../cosmoz-tree.html">
+    <link rel="import" href="../cosmoz-default-tree.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
     </style>
   </head>
   <body>
     <template is="dom-bind" id="demo">
-      <iron-ajax url="tree.json" handle-as="json" last-response="{{ treeJson }}" auto></iron-ajax>
+      <h1>See console</h1>
+      <iron-ajax url="tree.json" on-response="handleResponse" handle-as="json" last-response="{{ treeJson }}" auto></iron-ajax>
     </template>
 
     <script>
-			// TODO(pasleq): do something with the tree
-			var tree = new Cosmoz.Tree(treeJson);
+      window.addEventListener('WebComponentsReady', function(e) {
+
+        document.querySelector('#demo').handleResponse = function(response) {
+          var nodeList = response.detail.response,
+              tree = new Cosmoz.DefaultTree(nodeList),
+              allFound = tree.getNodeByProperty('name', 'a', false, true),
+              firstFound = tree.getNodeByProperty('name', 'Company', false, false),
+              exactFoundFirst = tree.getNodeByProperty('name', 'Company Phqiglgqnn', true, false),
+              exactFoundAll = tree.getNodeByProperty('name', 'Company Phqiglgqnn', true, true);
+
+          console.log(allFound, firstFound, exactFoundFirst, exactFoundAll);
+
+        };
+      });
+			
     </script>
   </body>
 </html>
