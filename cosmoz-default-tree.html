@@ -29,7 +29,7 @@ Navigator through object with treelike datastructure and default settings.
 	 * @constructor
 	 *
 	 * @param {object} treeData (The tree object.)
-	 * @param {object} options (Tree options.) 
+	 * @param {object} options (Tree options.)
 	 * @param {string} options.childProperty ["children"] (The name of the property a search should be based on. e.g. "name")
 	 * @param {string} options.propertyName ["name"] (The name of the property a search should be based on. e.g. "name")
 	 * @param {string} options.pathStringSeparator ["/"] (The string the path should get separated with.)
@@ -52,8 +52,8 @@ Navigator through object with treelike datastructure and default settings.
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
 	 * @return {object} - The first found node.
-	 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+	 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {array} nodes [this._roots] (The objects the search should be based on.)
 	 */
 	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyValue, propertyName, nodes) {
@@ -104,8 +104,8 @@ Navigator through object with treelike datastructure and default settings.
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
 	 * @return {array} - The found node(s).
 	 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
-	 * @param {object} options (Matching options) 
-	 * @param {string} options.propertyName (The name of the property the match should be based on. e.g. "name") 
+	 * @param {object} options (Matching options)
+	 * @param {string} options.propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
 	 * @param {boolean} options.firstHitOnly [false] (If the search should only return the first found node.)
 	 * @param {object} nodes [this._roots] (The nodes the search should be based on.)
@@ -233,7 +233,7 @@ Navigator through object with treelike datastructure and default settings.
 		if (propertyName === 'pathLocator') {
 			return this.getPathString(propertyValue, pathProperty, pathStringSeparator, pathLocatorSeparator);
 		}
-		
+
 		var node = this.getNodeByProperty(propertyValue, propertyName);
 
 		if (node) {
