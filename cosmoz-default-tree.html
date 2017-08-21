@@ -157,8 +157,37 @@ Navigator through object with treelike datastructure and default settings.
 	*/
 	Cosmoz.DefaultTree.prototype.getPathNodes = function (pathLocator, nodeObj, pathLocatorSeparator) {
 		if (!pathLocator) {
-			return this._roots;
+			return nodeObj;
 		}
+
+		var tree = nodeObj || this._treeData;
+
+		return Object.keys(tree)
+			.map(function (key) {
+				var subTree = {};
+				subTree[key] = tree[key];
+				return this._getPathNodes(pathLocator, subTree, pathLocatorSeparator);
+			}, this)
+			.filter(function (item) {
+				return item && item.length > 0;
+			})
+			.sort(function (a, b) {
+				var undefCounter = function (item) {
+						return item === undefined;
+					},
+					aUndefCount = a.filter(undefCounter).length,
+					bUndefCount = b.filter(undefCounter).length;
+
+				if (aUndefCount < bUndefCount) {
+					return -1;
+				}
+				if (aUndefCount > bUndefCount) {
+					return 1;
+				}
+				return 0;
+			})[0];
+	},
+	Cosmoz.DefaultTree.prototype._getPathNodes = function (pathLocator, nodeObj, pathLocatorSeparator) {
 
 		// Defaults
 		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
@@ -170,8 +199,11 @@ Navigator through object with treelike datastructure and default settings.
 
 		// Get the nodes on the path
 		nodes = path.map(function (nodeKey) {
-			node = pathSegment[nodeKey] !== node ? pathSegment[nodeKey] : undefined;
-			if (node && this.hasChildren(node)) {
+			if (!pathSegment) {
+				return;
+			}
+			node = pathSegment[nodeKey];
+			if (node) {
 				pathSegment = node[this.childProperty];
 			}
 			return node;
