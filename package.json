@@ -13,7 +13,10 @@
     "polymer-cli": "^1.4.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "polymer serve -o",
+    "postinstall": "polymer install",
+    "lint": "eslint --cache --ext .js,.html . && polymer lint cosmoz-*.html",
+    "test": "polymer test"
   },
   "repository": {
     "type": "git",
