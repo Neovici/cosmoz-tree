@@ -2,3 +2,4 @@ bower_components/
 node_modules/
 debug.log
 .DS_Store
+.eslintcache
