@@ -167,16 +167,11 @@ Navigator through object with treelike datastructure and default settings.
 			results = [];
 
 		// Getting path nodes
-		// We cannot break the loop in-between because even if in a root node aren't any undefined values
-		// there is a chance that in a different 
-		Object.keys(nodeObj).some(function (nodeKey) {
+		Object.keys(nodeObj).forEach(function (nodeKey) {
 			var node = {};
 			node[nodeKey] = nodeObj[nodeKey];
 			var result = this._getPathNodes(pathLocator, node, pathLocatorSeparator);
 			results.push(result);
-			if (result.indexOf(undefined) === -1 && result.length > 0 && result[0]['pathLocator'] == pathLocator) {
-				return true;
-			}
 		}, this);
 
 		return results.sort(this._sortPathNodes)[0];
