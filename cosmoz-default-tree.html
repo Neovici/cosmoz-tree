@@ -163,24 +163,81 @@ Navigator through object with treelike datastructure and default settings.
 		// Defaults
 		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
 
+		var nodeObj = nodeObj || this._treeData,
+			results = [];
+
+		// Getting path nodes
+		Object.keys(nodeObj).forEach(function (nodeKey) {
+			var node = {};
+			node[nodeKey] = nodeObj[nodeKey];
+			var result = this._getPathNodes(pathLocator, node, pathLocatorSeparator);
+			results.push(result);
+		}, this);
+
+		return results.sort(this._sortPathNodes)[0];
+	},
+
+	Cosmoz.DefaultTree.prototype._sortPathNodes = function (a, b) {
+		var adef,
+			bdef,
+			countTypes = function (arr) {
+				return arr.reduce(function (prev, curr) {
+					return (prev[typeof curr] = ++prev[typeof curr] || 1, prev);
+				}, {});
+			},
+			undefinedCountA = countTypes(a)['undefined'] || 0,
+			undefinedCountB = countTypes(b)['undefined'] || 0;
+		
+		// If equal amount of undefined values, sort via array length
+		// of the defined values in the array.
+		if (undefinedCountA === undefinedCountB) {
+			adef = a.filter(function (n) { return n; });
+			bdef = b.filter(function (n) { return n; });
+			return adef.length > bdef.length ? -1 : 1;
+		}
+
+		// Reverse sort by undefined values in array
+		if (undefinedCountB > undefinedCountA) {
+			if (a.length > 0) {
+				return -1;
+			} else {
+				// Corner case, a is empty and b is not.
+				return b.length > 0 ? 1 : -1;
+			}
+		} else {
+			return -1;
+		}
+	},
+
+	Cosmoz.DefaultTree.prototype._getPathNodes = function (pathLocator, nodeObj, pathLocatorSeparator) {
+		if (!pathLocator) {
+			return this._roots;
+		}
+
+		// Defaults
+		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
+
 		var path = pathLocator.split(pathLocatorSeparator),
 			pathSegment = nodeObj || this._treeData,
-			nodes,
+			nodes = [],
 			node;
 
 		// Get the nodes on the path
-		nodes = path.map(function (nodeKey) {
-			node = pathSegment[nodeKey] !== node ? pathSegment[nodeKey] : undefined;
-			if (node && this.hasChildren(node)) {
-				pathSegment = node[this.childProperty];
+		path.some(function (nodeKey) {
+			node = pathSegment[nodeKey];
+			
+			if (node) {
+				nodes.push(node);
+			} else {
+				return nodes.length !== 0;
 			}
-			return node;
-		}, this);
 
-		// Filter out undefined items of the start
-		while (nodes.length > 0 && nodes[0] === undefined) {
-			nodes.shift();
-		}
+			if (this.hasChildren(node)) {
+				pathSegment = node[this.childProperty];
+			} else {
+				return true;
+			}
+		}, this);
 
 		return nodes;
 	},
