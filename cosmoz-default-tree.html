@@ -156,11 +156,11 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {string} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path.)
 	*/
 	Cosmoz.DefaultTree.prototype.getPathNodes = function (pathLocator, nodeObj, pathLocatorSeparator) {
-		if (!pathLocator) {
-			return nodeObj;
-		}
-
 		var tree = nodeObj || this._treeData;
+
+		if (!pathLocator) {
+			return tree;
+		}
 
 		return Object.keys(tree)
 			.map(function (key) {
@@ -175,14 +175,25 @@ Navigator through object with treelike datastructure and default settings.
 				var undefCounter = function (item) {
 						return item === undefined;
 					},
+					defCounter = function (item) {
+						return item;
+					},
 					aUndefCount = a.filter(undefCounter).length,
-					bUndefCount = b.filter(undefCounter).length;
-
+					bUndefCount = b.filter(undefCounter).length,
+					aDefCount = a.filter(defCounter).length,
+					bDefCount = b.filter(defCounter).length;
+				
 				if (aUndefCount < bUndefCount) {
 					return -1;
 				}
 				if (aUndefCount > bUndefCount) {
 					return 1;
+				}
+				if (aDefCount < bDefCount) {
+					return 1;
+				}
+				if (aDefCount > bDefCount) {
+					return -1;
 				}
 				return 0;
 			})[0];

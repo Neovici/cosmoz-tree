@@ -248,7 +248,8 @@
 					n_1_4_4 = missingAncestorTree.getPathNodes('1.4.4'),
 					n_1_2_7_8 = missingAncestorTree.getPathNodes('1.2.7.8'),
 					n_1_2_7_301 = missingAncestorTree.getPathNodes('1.2.7.301'),
-					n_2_301 = missingAncestorTree.getPathNodes('2.301');
+					n_2_301 = missingAncestorTree.getPathNodes('2.301'),
+					n_601_301 = missingAncestorTree.getPathNodes('601.301.10.11');
 
 				// since 301 is its own root, it should be the only node returned
 				assert.equal(node301Path.length, 1);
@@ -294,6 +295,14 @@
 				assert.equal(n_1_2_7_8[1].name, 'Node2');
 				assert.isNotOk(n_1_2_7_8[2]);
 				assert.isNotOk(n_1_2_7_8[3]);
+
+				// 601.301.10.11
+				// same amount of undefined values: make sure the match with more defined values
+				// is in favor
+				assert.equal(n_601_301.length, 4);
+				assert.equal(n_601_301.filter(function (n) { 
+					return n; 
+				}).length, 2);
 
 				// 1.2.7.301 - impossible case ?
 				// assert.equal(n_1_2_7_301.length, 4);
