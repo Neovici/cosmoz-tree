@@ -40,7 +40,9 @@ Navigator through object with treelike datastructure and default settings.
 		this._treeData = treeData;
 		this._roots = _objectValues(treeData);
 
+		/* eslint-disable no-param-reassign */
 		options = options || {};
+		/* eslint-enable no-param-reassign */
 		this.pathLocatorSeparator = options.pathLocatorSeparator || '.';
 		this.pathStringSeparator = options.pathStringSeparator || '/';
 		this.childProperty = options.childProperty || 'children';
@@ -61,8 +63,10 @@ Navigator through object with treelike datastructure and default settings.
 			return;
 		}
 		// Defaults
+		/* eslint-disable no-param-reassign */
 		nodes = nodes || this._roots;
 		propertyName = propertyName || this.searchProperty;
+		/* eslint-enable no-param-reassign */
 
 		return this.findNode(propertyValue, propertyName, nodes);
 	};
@@ -114,7 +118,9 @@ Navigator through object with treelike datastructure and default settings.
 		var results = [];
 
 		// Defaults
+		/* eslint-disable no-param-reassign */
 		nodes = nodes || this._roots;
+		/* eslint-enable no-param-reassign */
 
 		nodes.some(function (node) {
 			results = results.concat(this.search(node, propertyValue, options));
@@ -137,8 +143,10 @@ Navigator through object with treelike datastructure and default settings.
 		}
 
 		// Defaults
+		/* eslint-disable no-param-reassign */
 		nodeObj = nodeObj || this._treeData;
 		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
+		/* eslint-enable no-param-reassign */
 
 		var	pathNodes = this.getPathNodes(pathLocator, nodeObj, pathLocatorSeparator);
 		return pathNodes && pathNodes.pop();
@@ -182,7 +190,7 @@ Navigator through object with treelike datastructure and default settings.
 					bUndefCount = b.filter(undefCounter).length,
 					aDefCount = a.filter(defCounter).length,
 					bDefCount = b.filter(defCounter).length;
-				
+
 				if (aUndefCount < bUndefCount) {
 					return -1;
 				}
@@ -197,11 +205,14 @@ Navigator through object with treelike datastructure and default settings.
 				}
 				return 0;
 			})[0];
-	},
+	};
+
 	Cosmoz.DefaultTree.prototype._getPathNodes = function (pathLocator, nodeObj, pathLocatorSeparator) {
 
 		// Defaults
+		/* eslint-disable no-param-reassign */
 		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
+		/* eslint-enable no-param-reassign */
 
 		var path = pathLocator.split(pathLocatorSeparator),
 			pathSegment = nodeObj || this._treeData,
@@ -226,7 +237,7 @@ Navigator through object with treelike datastructure and default settings.
 		}
 
 		return nodes;
-	},
+	};
 
 	/**
 	 * Returns a string which describes the path of a node (found by its path locator).
@@ -238,9 +249,11 @@ Navigator through object with treelike datastructure and default settings.
 	*/
 	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, pathProperty, pathStringSeparator, pathLocatorSeparator) {
 		// Defaults
+		/* eslint-disable no-param-reassign */
 		pathProperty = pathProperty || this.searchProperty;
 		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
 		pathStringSeparator = pathStringSeparator || this.pathStringSeparator;
+		/* eslint-enable no-param-reassign */
 
 		var pathNodes = this.getPathNodes(pathLocator, this._treeData, pathLocatorSeparator);
 
@@ -268,10 +281,12 @@ Navigator through object with treelike datastructure and default settings.
 		}
 
 		// Defaults
+		/* eslint-disable no-param-reassign */
 		pathProperty = pathProperty || this.searchProperty;
 		propertyName = propertyName || this.searchProperty;
 		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
 		pathStringSeparator = pathStringSeparator || this.pathStringSeparator;
+		/* eslint-enable no-param-reassign */
 
 		if (propertyName === 'pathLocator') {
 			return this.getPathString(propertyValue, pathProperty, pathStringSeparator, pathLocatorSeparator);

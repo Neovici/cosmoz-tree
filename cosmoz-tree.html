@@ -110,8 +110,8 @@ Navigator through object with treelike datastructure.
 		 * @return {boolean}
 		 * @param {node} node (The node the check should be based on.)
 		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
-		 * @param {object} options (Comparison options) 
-		 * @param {string} options.propertyName (The name of the property the match should be based on. e.g. "name") 
+		 * @param {object} options (Comparison options)
+		 * @param {string} options.propertyName (The name of the property the match should be based on. e.g. "name")
 		 * @param {boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
 		*/
 		nodeConformsSearch: function (node, propertyValue, options) {
@@ -132,8 +132,8 @@ Navigator through object with treelike datastructure.
 		 * Searches a (multi root) node and matches nodes based on a property and a value.
 		 * @return {array}
 		 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
-		 * @param {object} options (Search options) 
-		 * @param {string} options.propertyName (The name of the property the match should be based on. e.g. "name") 
+		 * @param {object} options (Search options)
+		 * @param {string} options.propertyName (The name of the property the match should be based on. e.g. "name")
 		 * @param {boolean} options.exact [false] (If false, the propertyValue is matched fuzzy)
 		 * @param {array} results (The array search results get added to.) Default: []
 		*/
@@ -142,10 +142,12 @@ Navigator through object with treelike datastructure.
 				children,
 				result,
 				i;
-			
+
 			// Defaults
+			/* eslint-disable no-param-reassign */
 			results = results || [];
-			
+			/* eslint-enable no-param-reassign */
+
 			if (nodeConforms) {
 				results.push(node);
 			}
