@@ -242,30 +242,78 @@
 					node301Path = missingAncestorTree.getPathNodes(node301.pathLocator),
 					node401Path = missingAncestorTree.getPathNodes(node401.pathLocator),
 					n_1_2_3_301 = missingAncestorTree.getPathNodes('1.2.3.301'),
+					n_1_2_301 = missingAncestorTree.getPathNodes('1.2.301'),
 					n_1_2 = missingAncestorTree.getPathNodes('1.2'),
-					n_2_301 = missingAncestorTree.getPathNodes('2.301');
+					n_1_2_2 = missingAncestorTree.getPathNodes('1.2.2'),
+					n_1_4_4 = missingAncestorTree.getPathNodes('1.4.4'),
+					n_1_2_7_8 = missingAncestorTree.getPathNodes('1.2.7.8'),
+					n_1_2_7_301 = missingAncestorTree.getPathNodes('1.2.7.301'),
+					n_2_301 = missingAncestorTree.getPathNodes('2.301'),
+					n_601_301 = missingAncestorTree.getPathNodes('601.301.10.11');
 
-				assert.equal(node301Path.filter(function (n) { return n; }).length, 2);
-				assert.equal(node301.name, 'Node301')
-				assert.deepEqual(node301Path[2], node301);
+				// since 301 is its own root, it should be the only node returned
+				assert.equal(node301Path.length, 1);
+				assert.equal(node301.name, 'Node301');
+				assert.deepEqual(node301Path[0], node301);
 
-				assert.equal(node401Path.length, 4);
-				assert.equal(node401Path[2], node301);
-				assert.equal(node401Path[3], node401);
+				// node401 is directly under 301, should only be two nodes returned
+				assert.equal(node401Path.length, 2);
+				assert.equal(node401Path[0], node301);
+				assert.equal(node401Path[1], node401);
 
 				// 1.2.3.301
-				assert.equal(n_1_2_3_301[0].name, 'Node2');
-				assert.isNotOk(n_1_2_3_301[1]);
-				assert.equal(n_1_2_3_301[2].name, 'Node301');
+				assert.equal(n_1_2_3_301[0].name, 'Node301');
+
+				// 1.2.301
+				// make sure we don't get stuck in the first root
+				assert.equal(n_1_2_301[0].name, 'Node301');
+				assert.equal(n_1_2_301.length, 1);
 
 				// 1.2
-				assert.equal(n_1_2.length, 1);
-				assert.equal(n_1_2[0].name, 'Node2');
+				assert.equal(n_1_2.length, 2);
+				assert.equal(n_1_2[0].name, 'Node1');
+				assert.equal(n_1_2[1].name, 'Node2');
+
+				// 1.2.2
+				// make sure we don't pick the same node twice at the end
+				assert.equal(n_1_2_2.length, 3);
+				assert.equal(n_1_2_2[0].name, 'Node1');
+				assert.equal(n_1_2_2[1].name, 'Node2');
+				assert.isNotOk(n_1_2_2[2]);
+
+				// 1.4.4
+				// make sure we handle nodes without 'children' property
+				assert.equal(n_1_4_4.length, 3);
+				assert.equal(n_1_4_4[0].name, 'Node1');
+				assert.equal(n_1_4_4[1].name, 'Nochildren');
+				assert.isNotOk(n_1_4_4[2]);
+
+				// 1.2.7.8
+				// make sure we handle multiple undefineds at the end
+				assert.equal(n_1_2_7_8.length, 4);
+				assert.equal(n_1_2_7_8[0].name, 'Node1');
+				assert.equal(n_1_2_7_8[1].name, 'Node2');
+				assert.isNotOk(n_1_2_7_8[2]);
+				assert.isNotOk(n_1_2_7_8[3]);
+
+				// 601.301.10.11
+				// same amount of undefined values: make sure the match with more defined values
+				// is in favor
+				assert.equal(n_601_301.length, 4);
+				assert.equal(n_601_301.filter(function (n) { 
+					return n; 
+				}).length, 2);
+
+				// 1.2.7.301 - impossible case ?
+				// assert.equal(n_1_2_7_301.length, 4);
+				// assert.equal(n_1_2_7_301[0].name, 'Node1');
+				// assert.equal(n_1_2_7_301[1].name, 'Node2');
+				// assert.isNotOk(n_1_2_7_301[2]);
+				// assert.isNotOk(n_1_2_7_301[3]);
 
 				// 2.301
-				assert.equal(n_2_301.length, 2);
-				assert.equal(n_2_301[0].name, 'Node2');
-				assert.equal(n_2_301[1].name, 'Node301');
+				assert.equal(n_2_301.length, 1);
+				assert.equal(n_2_301[0].name, 'Node301');
 			});
 		});
 	}());

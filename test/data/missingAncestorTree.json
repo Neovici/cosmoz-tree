@@ -1,10 +1,4 @@
 {
-    "2": {
-        "id": "167d1485-7d4f-4c7d-86cd-a4fb00f31245",
-        "name": "Node2",
-        "pathLocator": "1.2",
-        "children": {}
-    },
 
     "301": {
         "id": "3a7654f1-e3e6-49c7-b6a8-a4fb00f31245",
@@ -18,6 +12,48 @@
                 "children": {
                 }
 
+            }
+        }
+    },
+
+    "601": {
+        "id": "f8e2a26d-c5cb-45b4-9551-1cd0bkodke676297b",
+        "name": "Node601",
+        "pathLocator": "1.601.301",
+        "children": {
+            "301": {
+                "id": "167d1485-7d4f-4c7d-8496cd-a4fb00f31245",
+                "name": "Node601_301_2",
+                "pathLocator": "1.601.301.2",
+                "children": {
+                }
+            }
+        }
+    },
+
+    "1": {
+        "id": "f8e2a26d-c5cb-45b4-9551-1cd0b676297b",
+        "name": "Node1",
+        "pathLocator": "1",
+        "children": {
+            "2": {
+                "id": "167d1485-7d4f-4c7d-86cd-a4fb00f31245",
+                "name": "Node2",
+                "pathLocator": "1.2",
+                "children": {
+                }
+            },
+            "4": {
+                "id": "7554a7e3-b676-4a66-8d54-d55b8da9c473",
+                "name": "Nochildren",
+                "pathLocator": "1.4"
+            },
+            "301": {
+                "id": "37990cf3-0cc9-42ae-94d2-8c584004b20a",
+                "name": "Node301 wrong",
+                "pathLocator": "1.301",
+                "children": {
+                }
             }
         }
     }
