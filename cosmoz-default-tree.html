@@ -52,7 +52,7 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
-	 * @return {Object} - The first found node.
+	 * @returns {Object} - The first found node.
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {String} propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {Array} nodes [this._roots] (The objects the search should be based on.)
@@ -67,7 +67,7 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
-	 * @return {Array} - All found nodes.
+	 * @returns {Array} - All found nodes.
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {Object} nodes [this._treeData] (The nodes the search should be based on.)
 	 * @param {Boolean} exact [true] (If the search should be executed exact or flaw. true wouldn't match "Pet")
@@ -84,7 +84,7 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
-	 * @return {Object} - The first found node.
+	 * @returns {Object} - The first found node.
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
 	 * @param {Object} nodes [this._treeData] (The nodes the search should be based on.)
@@ -218,7 +218,7 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Returns a string which describes the path of a node (found by its path locator).
-	 * @return {String} e.g. home/computer/desktop
+	 * @returns {String} e.g. home/computer/desktop
 	 * @param {String} pathLocator (The string which describes the path. e.g. "1.2.9")
 	 * @param {String} pathProperty (The property of a node on which the path should be build on. e.g "location" with node = {"location": "home", ..})
 	 * @param {String} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
@@ -238,7 +238,7 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Returns a string which describes the path of a node (found by a node's property and value).
-	 * @return {String} e.g. home/computer/desktop
+	 * @returns {String} e.g. home/computer/desktop
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {String} propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {String} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
@@ -290,7 +290,7 @@ Navigator through object with treelike datastructure and default settings.
 	 * Returns the property of a Node based on a given property name.
 	 * @param {Object} node The object to get property from
 	 * @param {String} propertyName The name of property
-	 * @return {*} The value of the property
+	 * @returns {*} The value of the property
 	 */
 	Cosmoz.DefaultTree.prototype.getProperty = function (node, propertyName) {
 		if (!node || !propertyName) {
