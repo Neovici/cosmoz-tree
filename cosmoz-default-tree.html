@@ -57,15 +57,10 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {String} propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {Array} nodes [this._roots] (The objects the search should be based on.)
 	 */
-	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyValue, propertyName, nodes) {
+	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyValue, propertyName = this.searchProperty, nodes = this._roots) {
 		if (propertyValue === undefined) {
 			return;
 		}
-		// Defaults
-		/* eslint-disable no-param-reassign */
-		nodes = nodes || this._roots;
-		propertyName = propertyName || this.searchProperty;
-		/* eslint-enable no-param-reassign */
 
 		return this.findNode(propertyValue, propertyName, nodes);
 	};
@@ -78,9 +73,9 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {Boolean} exact [true] (If the search should be executed exact or flaw. true wouldn't match "Pet")
 	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
 	*/
-	Cosmoz.DefaultTree.prototype.searchNodes = function (propertyValue, nodes, exact, propertyName) {
+	Cosmoz.DefaultTree.prototype.searchNodes = function (propertyValue, nodes, exact, propertyName = this.searchProperty) {
 		var options = {
-			propertyName: propertyName || this.searchProperty,
+			propertyName: propertyName,
 			exact: exact !== undefined ? exact : true,
 			firstHitOnly: false
 		};
@@ -94,9 +89,9 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
 	 * @param {Object} nodes [this._treeData] (The nodes the search should be based on.)
 	*/
-	Cosmoz.DefaultTree.prototype.findNode = function (propertyValue, propertyName, nodes) {
+	Cosmoz.DefaultTree.prototype.findNode = function (propertyValue, propertyName = this.searchProperty, nodes) {
 		var options = {
-			propertyName: propertyName || this.searchProperty,
+			propertyName: propertyName,
 			exact: true,
 			firstHitOnly: true
 		};
@@ -113,13 +108,8 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {Boolean} options.firstHitOnly [false] (If the search should only return the first found node.)
 	 * @param {Object} nodes [this._roots] (The nodes the search should be based on.)
 	*/
-	Cosmoz.DefaultTree.prototype._searchNodes = function (propertyValue, options, nodes) {
+	Cosmoz.DefaultTree.prototype._searchNodes = function (propertyValue, options, nodes = this._roots) {
 		var results = [];
-
-		// Defaults
-		/* eslint-disable no-param-reassign */
-		nodes = nodes || this._roots;
-		/* eslint-enable no-param-reassign */
 
 		nodes.some(function (node) {
 			results = results.concat(this.search(node, propertyValue, options));
@@ -136,16 +126,10 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {Object} nodeObj [this._treeData] (The object the search should be based on.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	*/
-	Cosmoz.DefaultTree.prototype.getNodeByPathLocator = function (pathLocator, nodeObj, pathLocatorSeparator) {
+	Cosmoz.DefaultTree.prototype.getNodeByPathLocator = function (pathLocator, nodeObj = this._treeData, pathLocatorSeparator = this.pathLocatorSeparator) {
 		if (!pathLocator) {
 			return this._roots;
 		}
-
-		// Defaults
-		/* eslint-disable no-param-reassign */
-		nodeObj = nodeObj || this._treeData;
-		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
-		/* eslint-enable no-param-reassign */
 
 		var	pathNodes = this.getPathNodes(pathLocator, nodeObj, pathLocatorSeparator);
 		return pathNodes && pathNodes.pop();
@@ -206,13 +190,7 @@ Navigator through object with treelike datastructure and default settings.
 			})[0];
 	};
 
-	Cosmoz.DefaultTree.prototype._getPathNodes = function (pathLocator, nodeObj, pathLocatorSeparator) {
-
-		// Defaults
-		/* eslint-disable no-param-reassign */
-		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
-		/* eslint-enable no-param-reassign */
-
+	Cosmoz.DefaultTree.prototype._getPathNodes = function (pathLocator, nodeObj, pathLocatorSeparator = this.pathLocatorSeparator) {
 		var path = pathLocator.split(pathLocatorSeparator),
 			pathSegment = nodeObj || this._treeData,
 			nodes,
@@ -246,14 +224,7 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {String} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path segments of pathLocator.)
 	*/
-	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, pathProperty, pathStringSeparator, pathLocatorSeparator) {
-		// Defaults
-		/* eslint-disable no-param-reassign */
-		pathProperty = pathProperty || this.searchProperty;
-		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
-		pathStringSeparator = pathStringSeparator || this.pathStringSeparator;
-		/* eslint-enable no-param-reassign */
-
+	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, pathProperty = this.searchProperty, pathStringSeparator = this.pathStringSeparator, pathLocatorSeparator = this.pathLocatorSeparator) {
 		var pathNodes = this.getPathNodes(pathLocator, this._treeData, pathLocatorSeparator);
 
 		if (!pathNodes) {
@@ -274,18 +245,10 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {String} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	*/
-	Cosmoz.DefaultTree.prototype.getPathStringByProperty = function (propertyValue, propertyName, pathProperty, pathStringSeparator, pathLocatorSeparator) {
+	Cosmoz.DefaultTree.prototype.getPathStringByProperty = function (propertyValue, propertyName = this.searchProperty, pathProperty = this.searchProperty, pathStringSeparator = this.pathStringSeparator, pathLocatorSeparator =  this.pathLocatorSeparator) {
 		if (propertyValue === undefined) {
 			return;
 		}
-
-		// Defaults
-		/* eslint-disable no-param-reassign */
-		pathProperty = pathProperty || this.searchProperty;
-		propertyName = propertyName || this.searchProperty;
-		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
-		pathStringSeparator = pathStringSeparator || this.pathStringSeparator;
-		/* eslint-enable no-param-reassign */
 
 		if (propertyName === 'pathLocator') {
 			return this.getPathString(propertyValue, pathProperty, pathStringSeparator, pathLocatorSeparator);
