@@ -3,11 +3,8 @@
 	"description": "Utility class to manipulate a tree data structure",
 	"main": "cosmoz-tree.html",
 	"ignore": [
-		"**/.*",
 		"node_modules",
-		"bower_components",
-		"test",
-		"tests"
+		"bower_components"
 	],
 	"dependencies": {
 		"polymer": "Polymer/polymer#1.9 - 2"
