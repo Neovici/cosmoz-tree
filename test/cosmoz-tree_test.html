@@ -8,6 +8,10 @@
 
 	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 	<script src="../../web-component-tester/browser.js"></script>
+	<script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+	<link rel="import" href="../../test-fixture/test-fixture.html">
+	<link rel="import" href="../../iron-test-helpers/iron-test-helpers.html">
 
 	<link rel="import" href="../cosmoz-default-tree.html">
 	<link rel="import" href="../../iron-ajax/iron-ajax.html">
@@ -44,7 +48,6 @@
 	</test-fixture>
 
 	<script>
-	/*global WCT, suite, fixture, setup, suiteSetup, test, Polymer, assert */
 	(function () {
 		'use strict';
 		suite('basic', function () {
@@ -239,7 +242,7 @@
 
 			});
 
-			/* eslint-disable camelcase */
+			/* eslint-disable camelcase,no-unused-vars */
 			test('getPathNodes', function () {
 				var
 					node301 = missingAncestorTree.getNodeByProperty('3a7654f1-e3e6-49c7-b6a8-a4fb00f31245', 'id'),
@@ -324,5 +327,4 @@
 		});
 	}());
 	</script>
-  </body>
-</html>
+</body></html>
