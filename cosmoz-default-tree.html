@@ -257,7 +257,7 @@ Navigator through object with treelike datastructure and default settings.
 		var node = this.getNodeByProperty(propertyValue, propertyName);
 
 		if (node) {
-			return this.getPathString(node.pathLocator || node.path, pathProperty);
+			return this.getPathString(node.pathLocator || node.path, pathProperty, pathStringSeparator);
 		}
 	};
 
