@@ -35,12 +35,11 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {string} options.pathStringSeparator ["/"] (The string the path should get separated with.)
 	 * @param {string} options.pathLocatorSeparator ["."] (The string which separates the path segments of a path locator.)
 	*/
-	Cosmoz.DefaultTree = function (treeData, options) {
+	Cosmoz.DefaultTree = function (treeData, options = {}) {
 		Cosmoz.Tree.apply(this, arguments);
 		this._treeData = treeData;
 		this._roots = _objectValues(treeData);
 
-		options = options || {};
 		this.pathLocatorSeparator = options.pathLocatorSeparator || '.';
 		this.pathStringSeparator = options.pathStringSeparator || '/';
 		this.childProperty = options.childProperty || 'children';
@@ -56,13 +55,10 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {array} nodes [this._roots] (The objects the search should be based on.)
 	 */
-	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyValue, propertyName, nodes) {
+	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyValue, propertyName = this.searchProperty, nodes = this._roots) {
 		if (propertyValue === undefined) {
 			return;
 		}
-		// Defaults
-		nodes = nodes || this._roots;
-		propertyName = propertyName || this.searchProperty;
 
 		return this.findNode(propertyValue, propertyName, nodes);
 	};
@@ -110,11 +106,8 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {boolean} options.firstHitOnly [false] (If the search should only return the first found node.)
 	 * @param {object} nodes [this._roots] (The nodes the search should be based on.)
 	*/
-	Cosmoz.DefaultTree.prototype._searchNodes = function (propertyValue, options, nodes) {
+	Cosmoz.DefaultTree.prototype._searchNodes = function (propertyValue, options, nodes = this._roots) {
 		var results = [];
-
-		// Defaults
-		nodes = nodes || this._roots;
 
 		nodes.some(function (node) {
 			results = results.concat(this.search(node, propertyValue, options));
@@ -131,14 +124,10 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {object} nodeObj [this._treeData] (The object the search should be based on.)
 	 * @param {string} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	*/
-	Cosmoz.DefaultTree.prototype.getNodeByPathLocator = function (pathLocator, nodeObj, pathLocatorSeparator) {
+	Cosmoz.DefaultTree.prototype.getNodeByPathLocator = function (pathLocator, nodeObj = this._treeData, pathLocatorSeparator = this.pathLocatorSeparator) {
 		if (!pathLocator) {
 			return this._roots;
 		}
-
-		// Defaults
-		nodeObj = nodeObj || this._treeData;
-		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
 
 		var	pathNodes = this.getPathNodes(pathLocator, nodeObj, pathLocatorSeparator);
 		return pathNodes && pathNodes.pop();
@@ -197,12 +186,9 @@ Navigator through object with treelike datastructure and default settings.
 				}
 				return 0;
 			})[0];
-	},
-	Cosmoz.DefaultTree.prototype._getPathNodes = function (pathLocator, nodeObj, pathLocatorSeparator) {
-
-		// Defaults
-		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
-
+	};
+	
+	Cosmoz.DefaultTree.prototype._getPathNodes = function (pathLocator, nodeObj, pathLocatorSeparator = this.pathLocatorSeparator) {
 		var path = pathLocator.split(pathLocatorSeparator),
 			pathSegment = nodeObj || this._treeData,
 			nodes,
@@ -226,7 +212,7 @@ Navigator through object with treelike datastructure and default settings.
 		}
 
 		return nodes;
-	},
+	};
 
 	/**
 	 * Returns a string which describes the path of a node (found by its path locator).
@@ -236,12 +222,7 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {string} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
 	 * @param {string} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path segments of pathLocator.)
 	*/
-	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, pathProperty, pathStringSeparator, pathLocatorSeparator) {
-		// Defaults
-		pathProperty = pathProperty || this.searchProperty;
-		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
-		pathStringSeparator = pathStringSeparator || this.pathStringSeparator;
-
+	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, pathProperty = this.searchProperty, pathStringSeparator = this.pathStringSeparator, pathLocatorSeparator = this.pathLocatorSeparator) {
 		var pathNodes = this.getPathNodes(pathLocator, this._treeData, pathLocatorSeparator);
 
 		if (!pathNodes) {
@@ -262,16 +243,10 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {string} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
 	 * @param {string} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	*/
-	Cosmoz.DefaultTree.prototype.getPathStringByProperty = function (propertyValue, propertyName, pathProperty, pathStringSeparator, pathLocatorSeparator) {
+	Cosmoz.DefaultTree.prototype.getPathStringByProperty = function (propertyValue, propertyName = this.searchProperty, pathProperty = this.searchProperty, pathStringSeparator = this.pathStringSeparator, pathLocatorSeparator = this.pathLocatorSeparator) {
 		if (propertyValue === undefined) {
 			return;
 		}
-
-		// Defaults
-		pathProperty = pathProperty || this.searchProperty;
-		propertyName = propertyName || this.searchProperty;
-		pathLocatorSeparator = pathLocatorSeparator || this.pathLocatorSeparator;
-		pathStringSeparator = pathStringSeparator || this.pathStringSeparator;
 
 		if (propertyName === 'pathLocator') {
 			return this.getPathString(propertyValue, pathProperty, pathStringSeparator, pathLocatorSeparator);
