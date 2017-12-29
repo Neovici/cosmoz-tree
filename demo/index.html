@@ -1,45 +1,54 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-		<title>cosmoz-tree demo</title>
+	<title>cosmoz-tree demo</title>
 
-		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-		<link rel="import" href="../../iron-ajax/iron-ajax.html">
-		<link rel="import" href="../cosmoz-tree.html">
-		<link rel="import" href="../cosmoz-default-tree.html">
+	<link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html" />
+	<link rel="import" href="../../iron-demo-helpers/demo-snippet.html" />
 
-		<style is="custom-style" include="demo-pages-shared-styles">
-		</style>
-	</head>
-	<body>
-		<template is="dom-bind" id="demo">
+	<link rel="import" href="../../iron-ajax/iron-ajax.html">
+	<link rel="import" href="../cosmoz-tree.html">
+	<link rel="import" href="../cosmoz-default-tree.html">
+
+	<custom-style>
+		<style is="custom-style" include="demo-pages-shared-styles"></style>
+	</custom-style>
+</head>
+<body unresolved>
+	<dom-bind id="demo">
+		<template is="dom-bind">
 			<h1>See console</h1>
-			<iron-ajax url="tree.json" on-response="handleResponse" handle-as="json" auto></iron-ajax>
+			<iron-ajax url="tree.json" on-response="handleResponse" handle-as="json" auto="[[ doRequest ]]"></iron-ajax>
 			<iron-ajax url="../test/data/missingAncestorTree.json" on-response="handleMatResponse" handle-as="json" auto></iron-ajax>
 		</template>
+	</dom-bind>
 
-		<script>
-			var t = document.querySelector('#demo');
-			t.handleResponse = function (response) {
-				var nodeList = response.detail.response,
-					tree = new Cosmoz.DefaultTree(nodeList),
-					allFound = tree.getNodeByProperty('a', 'name'),
-					firstFound = tree.getNodeByProperty('Company', 'name'),
-					exactFoundFirst = tree.getNodeByProperty('Company Phqiglgqnn'),
-					exactFoundAll = tree.getNodeByProperty('Company Phqiglgqnn');
+	<script>
+	window.addEventListener('WebComponentsReady', function () {
+		var t = document.querySelector('#demo');
+		t = !t.set ? t.firstElementChild : t;
+		t.handleResponse = function (response) {
+			var nodeList = response.detail.response,
+				tree = new Cosmoz.DefaultTree(nodeList),
+				allFound = tree.getNodeByProperty('a', 'name'),
+				firstFound = tree.getNodeByProperty('Company', 'name'),
+				exactFoundFirst = tree.getNodeByProperty('Company Phqiglgqnn'),
+				exactFoundAll = tree.getNodeByProperty('Company Phqiglgqnn');
 
-				console.log(allFound, firstFound, exactFoundFirst, exactFoundAll);
-			};
-			t.handleMatResponse = function (response) {
-				var nodeList = response.detail.response,
-					tree = new Cosmoz.DefaultTree(nodeList);
+			console.log(allFound, firstFound, exactFoundFirst, exactFoundAll);
+		};
+		t.handleMatResponse = function (response) {
+			var nodeList = response.detail.response,
+				tree = new Cosmoz.DefaultTree(nodeList);
 
-				console.log(tree.getPathNodes('1.2.301'));
-			};
-		</script>
-	</body>
-</html>
+			console.log(tree.getPathNodes('1.2.301'));
+		};
+		t.set('doRequest', true);
+	});
+	</script>
+</body></html>

@@ -1,6 +1,7 @@
 {
-    "eslint.validate": [
-        "javascript",
-        "html"
-    ]
+	"eslint.autoFixOnSave": true,
+	"eslint.validate": [
+		{ "language": "javascript", "autoFix": true },
+		{ "language": "html", "autoFix": true }
+	]
 }

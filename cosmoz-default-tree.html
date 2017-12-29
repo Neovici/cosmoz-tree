@@ -9,8 +9,7 @@ Navigator through object with treelike datastructure and default settings.
 <script>
 	'use strict';
 
-	// Needed for iron-component-page.
-	Polymer({ is: 'cosmoz-default-tree' });
+	Polymer({ is: 'cosmoz-default-tree' }); // Needed for iron-component-page.
 
 	window.Cosmoz = window.Cosmoz || {};
 
@@ -28,12 +27,12 @@ Navigator through object with treelike datastructure and default settings.
 	 *
 	 * @constructor
 	 *
-	 * @param {object} treeData (The tree object.)
-	 * @param {object} options (Tree options.)
-	 * @param {string} options.childProperty ["children"] (The name of the property a search should be based on. e.g. "name")
-	 * @param {string} options.propertyName ["name"] (The name of the property a search should be based on. e.g. "name")
-	 * @param {string} options.pathStringSeparator ["/"] (The string the path should get separated with.)
-	 * @param {string} options.pathLocatorSeparator ["."] (The string which separates the path segments of a path locator.)
+	 * @param {Object} treeData (The tree object.)
+	 * @param {Object} options (Tree options.)
+	 * @param {String} options.childProperty ["children"] (The name of the property a search should be based on. e.g. "name")
+	 * @param {String} options.propertyName ["name"] (The name of the property a search should be based on. e.g. "name")
+	 * @param {String} options.pathStringSeparator ["/"] (The string the path should get separated with.)
+	 * @param {String} options.pathLocatorSeparator ["."] (The string which separates the path segments of a path locator.)
 	*/
 	Cosmoz.DefaultTree = function (treeData, options = {}) {
 		Cosmoz.Tree.apply(this, arguments);
@@ -50,10 +49,10 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
-	 * @return {object} - The first found node.
-	 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
-	 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
-	 * @param {array} nodes [this._roots] (The objects the search should be based on.)
+	 * @returns {Object} - The first found node.
+	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+	 * @param {String} propertyName (The name of the property the match should be based on. e.g. "name")
+	 * @param {Array} nodes [this._roots] (The objects the search should be based on.)
 	 */
 	Cosmoz.DefaultTree.prototype.getNodeByProperty = function (propertyValue, propertyName = this.searchProperty, nodes = this._roots) {
 		if (propertyValue === undefined) {
@@ -65,15 +64,15 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
-	 * @return {array} - All found nodes.
-	 * @param {string} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
-	 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
-	 * @param {boolean} exact [true] (If the search should be executed exact or flaw. true wouldn't match "Pet")
-	 * @param {object} nodes [this._treeData] (The nodes the search should be based on.)
+	 * @returns {Array} - All found nodes.
+	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+	 * @param {Object} nodes [this._treeData] (The nodes the search should be based on.)
+	 * @param {Boolean} exact [true] (If the search should be executed exact or flaw. true wouldn't match "Pet")
+	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
 	*/
-	Cosmoz.DefaultTree.prototype.searchNodes = function (propertyValue, nodes, exact, propertyName) {
+	Cosmoz.DefaultTree.prototype.searchNodes = function (propertyValue, nodes, exact, propertyName = this.searchProperty) {
 		var options = {
-			propertyName: propertyName || this.searchProperty,
+			propertyName: propertyName,
 			exact: exact !== undefined ? exact : true,
 			firstHitOnly: false
 		};
@@ -82,14 +81,14 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
-	 * @return {object} - The first found node.
-	 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
-	 * @param {string} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
-	 * @param {object} nodes [this._treeData] (The nodes the search should be based on.)
+	 * @returns {Object} - The first found node.
+	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
+	 * @param {Object} nodes [this._treeData] (The nodes the search should be based on.)
 	*/
-	Cosmoz.DefaultTree.prototype.findNode = function (propertyValue, propertyName, nodes) {
+	Cosmoz.DefaultTree.prototype.findNode = function (propertyValue, propertyName = this.searchProperty, nodes) {
 		var options = {
-			propertyName: propertyName || this.searchProperty,
+			propertyName: propertyName,
 			exact: true,
 			firstHitOnly: true
 		};
@@ -98,13 +97,13 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
-	 * @return {array} - The found node(s).
-	 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
-	 * @param {object} options (Matching options)
-	 * @param {string} options.propertyName (The name of the property the match should be based on. e.g. "name")
-	 * @param {boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
-	 * @param {boolean} options.firstHitOnly [false] (If the search should only return the first found node.)
-	 * @param {object} nodes [this._roots] (The nodes the search should be based on.)
+	 * @returns {Array} - The found node(s).
+	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+	 * @param {Object} options (Matching options)
+	 * @param {String} options.propertyName (The name of the property the match should be based on. e.g. "name")
+	 * @param {Boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
+	 * @param {Boolean} options.firstHitOnly [false] (If the search should only return the first found node.)
+	 * @param {Object} nodes [this._roots] (The nodes the search should be based on.)
 	*/
 	Cosmoz.DefaultTree.prototype._searchNodes = function (propertyValue, options, nodes = this._roots) {
 		var results = [];
@@ -119,10 +118,10 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Returns the node of a given path.
-	 * @return {object}
-	 * @param {string} pathLocator (The string which describes the path. e.g. "1.2.9")
-	 * @param {object} nodeObj [this._treeData] (The object the search should be based on.)
-	 * @param {string} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
+	 * @returns {Object} The node object
+	 * @param {String} pathLocator (The string which describes the path. e.g. "1.2.9")
+	 * @param {Object} nodeObj [this._treeData] (The object the search should be based on.)
+	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	*/
 	Cosmoz.DefaultTree.prototype.getNodeByPathLocator = function (pathLocator, nodeObj = this._treeData, pathLocatorSeparator = this.pathLocatorSeparator) {
 		if (!pathLocator) {
@@ -139,10 +138,10 @@ Navigator through object with treelike datastructure and default settings.
 	 * - path 1.2.3.3 should return [1, 2, 3, undefined]
 	 * - path 0.1.2.3 should return [1, 2, 3]
 	 * - path 0.1.5.3 should return [1, undefined, undefined]
-	 * @return {array}
-	 * @param {string} pathLocator (The string which describes the path. e.g. "1.2.9")
-	 * @param {object} nodeObj [this._treeData] (The object the search should be based on.)
-	 * @param {string} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path.)
+	 * @returns {Array} The node array
+	 * @param {String} pathLocator (The string which describes the path. e.g. "1.2.9")
+	 * @param {Object} nodeObj [this._treeData] (The object the search should be based on.)
+	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path.)
 	*/
 	Cosmoz.DefaultTree.prototype.getPathNodes = function (pathLocator, nodeObj, pathLocatorSeparator) {
 		var tree = nodeObj || this._treeData;
@@ -187,7 +186,7 @@ Navigator through object with treelike datastructure and default settings.
 				return 0;
 			})[0];
 	};
-	
+
 	Cosmoz.DefaultTree.prototype._getPathNodes = function (pathLocator, nodeObj, pathLocatorSeparator = this.pathLocatorSeparator) {
 		var path = pathLocator.split(pathLocatorSeparator),
 			pathSegment = nodeObj || this._treeData,
@@ -216,11 +215,11 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Returns a string which describes the path of a node (found by its path locator).
-	 * @return {string} e.g. home/computer/desktop
-	 * @param {string} pathLocator (The string which describes the path. e.g. "1.2.9")
-	 * @param {string} pathProperty (The property of a node on which the path should be build on. e.g "location" with node = {"location": "home", ..})
-	 * @param {string} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
-	 * @param {string} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path segments of pathLocator.)
+	 * @returns {String} e.g. home/computer/desktop
+	 * @param {String} pathLocator (The string which describes the path. e.g. "1.2.9")
+	 * @param {String} pathProperty (The property of a node on which the path should be build on. e.g "location" with node = {"location": "home", ..})
+	 * @param {String} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
+	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path segments of pathLocator.)
 	*/
 	Cosmoz.DefaultTree.prototype.getPathString = function (pathLocator, pathProperty = this.searchProperty, pathStringSeparator = this.pathStringSeparator, pathLocatorSeparator = this.pathLocatorSeparator) {
 		var pathNodes = this.getPathNodes(pathLocator, this._treeData, pathLocatorSeparator);
@@ -236,14 +235,14 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Returns a string which describes the path of a node (found by a node's property and value).
-	 * @return {string} e.g. home/computer/desktop
-	 * @param {string} propertyValue (The value of the property the match should be based on. e.g. "Peter")
-	 * @param {string} propertyName (The name of the property the match should be based on. e.g. "name")
-	 * @param {string} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
-	 * @param {string} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
-	 * @param {string} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
+	 * @returns {String} e.g. home/computer/desktop
+	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+	 * @param {String} propertyName (The name of the property the match should be based on. e.g. "name")
+	 * @param {String} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
+	 * @param {String} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
+	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	*/
-	Cosmoz.DefaultTree.prototype.getPathStringByProperty = function (propertyValue, propertyName = this.searchProperty, pathProperty = this.searchProperty, pathStringSeparator = this.pathStringSeparator, pathLocatorSeparator = this.pathLocatorSeparator) {
+	Cosmoz.DefaultTree.prototype.getPathStringByProperty = function (propertyValue, propertyName = this.searchProperty, pathProperty = this.searchProperty, pathStringSeparator = this.pathStringSeparator, pathLocatorSeparator =  this.pathLocatorSeparator) {
 		if (propertyValue === undefined) {
 			return;
 		}
@@ -255,12 +254,14 @@ Navigator through object with treelike datastructure and default settings.
 		var node = this.getNodeByProperty(propertyValue, propertyName);
 
 		if (node) {
-			return this.getPathString(node.pathLocator || node.path, pathProperty);
+			return this.getPathString(node.pathLocator || node.path, pathProperty, pathStringSeparator);
 		}
 	};
 
 	/**
 	 * Returns an Object or an Array representing the children of a node.
+	 * @param {Object} node The object to return children from
+	 * @returns {Object|Array} The node's children
 	 */
 	Cosmoz.DefaultTree.prototype.getChildren = function (node) {
 		if (!node) {
@@ -271,6 +272,8 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Returns true if a node has children.
+	 * @param {Object} node The object to get children from
+	 * @returns {Boolean} True if node has children
 	 */
 	Cosmoz.DefaultTree.prototype.hasChildren = function (node) {
 		if (!node) {
@@ -282,6 +285,9 @@ Navigator through object with treelike datastructure and default settings.
 
 	/**
 	 * Returns the property of a Node based on a given property name.
+	 * @param {Object} node The object to get property from
+	 * @param {String} propertyName The name of property
+	 * @returns {*} The value of the property
 	 */
 	Cosmoz.DefaultTree.prototype.getProperty = function (node, propertyName) {
 		if (!node || !propertyName) {

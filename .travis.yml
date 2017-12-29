@@ -1,5 +1,5 @@
 language: node_js
-node_js: '6'
+node_js: 6
 dist: trusty
 sudo: required
 addons:
@@ -9,11 +9,18 @@ addons:
     - google-chrome
     packages:
     - google-chrome-stable
+cache:
+  yarn: true
+  directories:
+  - node_modules
+  - bower_components
+  - bower_components-1.x
+  - ".eslintcache"
+  - "$HOME/.cache/bower"
 before_script:
-- npm install -g bower polylint web-component-tester
-- bower install
-- polylint --no-recursion
-script: xvfb-run wct
+- yarn run lint
+script:
+- xvfb-run yarn test
 notifications:
   slack:
     secure: 0SZgqN0YRFYPuLv6IG4PcDq/l09PfX1XexeTYlOD8UQQIUMPsq+eRBlEasmo1eVHCtErHVuYfTzmKPeco9y8gAtLbeSo5Cs2qhS0oo9zMoaE26gx95FYvOvFj9KPaoQ1/8YCzo5XkoVMUQbSZu2cckFqaVSdYfNGMgRJsVbPliEo7THgcV4nSBnmrLgqgpM2bRXr4q/3/h2lO9ViB+nyiL3aVhb7+N4bYjwlocKmUuuuX9viEMfOafw2OXiPJtzLVT5Iyqhjts3BI/3e+p4A9Kb1g7c5E1aA7jYlsy0m4T0El6SBqz3Y/kfYoBqVTLtU3GO8sxCN975pxEzG7UuW9h4qKJ34wft0PjnQ7z6Qe1+92MGmz3XvEfEudCn+3jUNtVEUBt6MM3XJcV1cztg/CzLK39yG5TZeVBtVFLDvFqhFxqiiDNw9IcFMAaoolngwkupiOMKQ2ZWgcml7KBG/Q7dA6Pu81edTMy5S2OKprSkdCZD0JDTF5rKcVxRNYIM9E86lCh0xmP89ouUxIDWhgqIBMJmlYg6mGaT5uy4ifjJj44X3EbPlBp7rfu6Bncll5GaYbOzvl2h1CuR1dTecPHjlmnUNmVy51IoOs2vjchH0/qaJqCLhQMZSILGLHOI0EDasG9++HspW05Wah34iQcukks5OrAWaI184gxQvGPs=
