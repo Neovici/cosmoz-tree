@@ -182,7 +182,7 @@ Navigator through object with treelike datastructure and default settings.
 					bUndefCount = b.filter(undefCounter).length,
 					aDefCount = a.filter(defCounter).length,
 					bDefCount = b.filter(defCounter).length;
-				
+
 				if (aUndefCount < bUndefCount) {
 					return -1;
 				}
@@ -248,7 +248,7 @@ Navigator through object with treelike datastructure and default settings.
 			return;
 		}
 
-		return pathNodes.map(function (node) {
+		return pathNodes.filter(n => n).map(function (node) {
 			return node[pathProperty];
 		}).join(pathStringSeparator);
 	};
