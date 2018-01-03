@@ -228,9 +228,10 @@ Navigator through object with treelike datastructure and default settings.
 			return;
 		}
 
-		return pathNodes.filter(n => n != null).map(node => {
-			return node[pathProperty];
-		}).join(pathStringSeparator);
+		return pathNodes
+			.filter(node => node != null)
+			.map(node => node[pathProperty])
+			.join(pathStringSeparator);
 	};
 
 	/**
