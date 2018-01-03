@@ -34,14 +34,11 @@ Navigator through object with treelike datastructure and default settings.
 	 * @param {String} options.pathStringSeparator ["/"] (The string the path should get separated with.)
 	 * @param {String} options.pathLocatorSeparator ["."] (The string which separates the path segments of a path locator.)
 	*/
-	Cosmoz.DefaultTree = function (treeData, options) {
+	Cosmoz.DefaultTree = function (treeData, options = {}) {
 		Cosmoz.Tree.apply(this, arguments);
 		this._treeData = treeData;
 		this._roots = _objectValues(treeData);
 
-		/* eslint-disable no-param-reassign */
-		options = options || {};
-		/* eslint-enable no-param-reassign */
 		this.pathLocatorSeparator = options.pathLocatorSeparator || '.';
 		this.pathStringSeparator = options.pathStringSeparator || '/';
 		this.childProperty = options.childProperty || 'children';
@@ -231,9 +228,10 @@ Navigator through object with treelike datastructure and default settings.
 			return;
 		}
 
-		return pathNodes.map(function (node) {
-			return node[pathProperty];
-		}).join(pathStringSeparator);
+		return pathNodes
+			.filter(node => node != null)
+			.map(node => node[pathProperty])
+			.join(pathStringSeparator);
 	};
 
 	/**
