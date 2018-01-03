@@ -228,7 +228,7 @@ Navigator through object with treelike datastructure and default settings.
 			return;
 		}
 
-		return pathNodes.filter(n => n).map(function (node) {
+		return pathNodes.filter(n => n != null).map(node => {
 			return node[pathProperty];
 		}).join(pathStringSeparator);
 	};
