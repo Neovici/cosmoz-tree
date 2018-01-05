@@ -92,7 +92,7 @@ class CosmozTree {
 	 * @param {Boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
 	*/
 	nodeConformsSearch(node, propertyValue, options) {
-		var property = options ? node[options.propertyName] : undefined;
+		const property = options ? node[options.propertyName] : undefined;
 
 		if (!property) {
 			console.error('options.propertyName needs to be specified.');
