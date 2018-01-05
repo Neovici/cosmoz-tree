@@ -14,7 +14,7 @@ class CosmozTree {
 	 * @param {Boolean} exact (If the search should be executed exact or flaw. true wouldn't match "Pet")
 	 * @param {Object} nodeObj (The object the search should be based on.) or on default this._treeData
 	 */
-	getNodeByProperty(propertyName, propertyValue, exact, nodeObj) {
+	getNodeByProperty(propertyName, propertyValue, exact, nodeObj) { // eslint-disable-line no-unused-vars
 		throw new Error('Must be implemented in derived object');
 	}
 
@@ -25,7 +25,7 @@ class CosmozTree {
 	 * @param {Object} nodeObj (The object the search should be based on.) Default: this._treeData
 	 * @param {String} separatorSign (The string which separates the path. e.g ".") Default: "."
 	*/
-	getPathNodes(pathLocator, nodeObj, separatorSign) {
+	getPathNodes(pathLocator, nodeObj, separatorSign) { // eslint-disable-line no-unused-vars
 		throw new Error('Must be implemented in derived object');
 	}
 
@@ -37,7 +37,7 @@ class CosmozTree {
 	 * @param {String} pathSeparator (The string the path should get separated with.)
 	 * @param {String} separatorSign (The string which separates the path. e.g ".")
 	*/
-	getPathString(pathLocator, pathProperty, pathSeparator, separatorSign) {
+	getPathString(pathLocator, pathProperty, pathSeparator, separatorSign) { // eslint-disable-line no-unused-vars
 		throw new Error('Must be implemented in derived object');
 	}
 
@@ -50,7 +50,7 @@ class CosmozTree {
 	 * @param {String} pathSeparator (The string the path should get separated with.)
 	 * @param {String} separatorSign (The string which separates the path. e.g ".")
 	*/
-	getPathStringByProperty(propertyName, propertyValue, pathProperty, pathSeparator, separatorSign) {
+	getPathStringByProperty(propertyName, propertyValue, pathProperty, pathSeparator, separatorSign) { // eslint-disable-line no-unused-vars
 		throw new Error('Must be implemented in derived object');
 	}
 
@@ -59,7 +59,7 @@ class CosmozTree {
 	 * @returns {Array} The node's children
 	 * @param {node} node (The node of which the children should be returned of.)
 	*/
-	getChildren(node) {
+	getChildren(node) { // eslint-disable-line no-unused-vars
 		throw new Error('Must be implemented in derived object');
 	}
 
@@ -68,17 +68,17 @@ class CosmozTree {
 	 * @returns {Boolean} True if node has children
 	 * @param {node} node (The node of which the children check should be applied on.)
 	*/
-	hasChildren(node) {
+	hasChildren(node) { // eslint-disable-line no-unused-vars
 		throw new Error('Must be implemented in derived object');
 	}
 
-	/** TODO (jalal): Drop this method
+	/**
 	 * Should return the value of a node's property.
 	 * @returns {Array|Object|String} The value of the property
 	 * @param {node} node (The node of which the property value should be returned of.)
 	 * @param {String} propertyName (The name of the property. e.g. "name")
 	*/
-	getProperty(node, propertyName) {
+	getProperty(node, propertyName) { // eslint-disable-line no-unused-vars
 		throw new Error('Must be implemented in derived object');
 	}
 
