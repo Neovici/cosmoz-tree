@@ -36,6 +36,30 @@ class CosmozDefaultTree extends Cosmoz.Tree {
 		return Object.keys(obj).map(key => obj[key]);
 	}
 
+	static _sortPathNodes(a, b) {
+		const undefCounter = item => {
+				return item === undefined;
+			},
+			defCounter = item => {
+				return item;
+			},
+			aUndefCount = a.filter(undefCounter).length,
+			bUndefCount = b.filter(undefCounter).length,
+			aDefCount = a.filter(defCounter).length,
+			bDefCount = b.filter(defCounter).length;
+
+		if (aUndefCount < bUndefCount) {
+			return -1;
+		}
+		if (aUndefCount > bUndefCount || aDefCount < bDefCount) {
+			return 1;
+		}
+		if (aDefCount > bDefCount) {
+			return -1;
+		}
+		return 0;
+	}
+
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
 	 * @returns {Object} - The first found node.
@@ -148,32 +172,7 @@ class CosmozDefaultTree extends Cosmoz.Tree {
 			.filter(item => {
 				return item && item.length > 0;
 			})
-			.sort((a, b) => {
-				const undefCounter = item => {
-						return item === undefined;
-					},
-					defCounter = item => {
-						return item;
-					},
-					aUndefCount = a.filter(undefCounter).length,
-					bUndefCount = b.filter(undefCounter).length,
-					aDefCount = a.filter(defCounter).length,
-					bDefCount = b.filter(defCounter).length;
-
-				if (aUndefCount < bUndefCount) {
-					return -1;
-				}
-				if (aUndefCount > bUndefCount) {
-					return 1;
-				}
-				if (aDefCount < bDefCount) {
-					return 1;
-				}
-				if (aDefCount > bDefCount) {
-					return -1;
-				}
-				return 0;
-			})[0];
+			.sort(CosmozDefaultTree._sortPathNodes)[0];
 	}
 
 	_getPathNodes(pathLocator, nodeObj, pathLocatorSeparator = this.pathLocatorSeparator) {
