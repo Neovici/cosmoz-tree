@@ -117,18 +117,14 @@ class CosmozTree {
 	*/
 	search(node, propertyValue, options, results = []) {
 		const nodeConforms = this.nodeConformsSearch(node, propertyValue, options),
-			children = this.getChildren(node);
+			children = this.getChildren(node) || [];
 
 		if (nodeConforms) {
 			results.push(node);
 		}
 
-		if (!Array.isArray(children)) {
-			return results;
-		}
-
-		for (let i = 0; i < children.length; i++) {
-			const result = this.search(children[i], propertyValue, options, results);
+		for (const child of children) {
+			const result = this.search(child, propertyValue, options, results);
 			if (!Array.isArray(result)) {
 				return [result];
 			}
