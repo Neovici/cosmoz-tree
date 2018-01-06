@@ -31,7 +31,7 @@ class CosmozDefaultTree extends Cosmoz.Tree {
 
 	static _objectValues(obj) {
 		if (!obj) {
-			return;
+			return [];
 		}
 		return Object.keys(obj).map(key => obj[key]);
 	}
@@ -255,7 +255,7 @@ class CosmozDefaultTree extends Cosmoz.Tree {
 	 */
 	getChildren(node) {
 		if (!node) {
-			return;
+			return [];
 		}
 		return CosmozDefaultTree._objectValues(node[this.childProperty]);
 	}
