@@ -176,19 +176,8 @@ class CosmozDefaultTree extends Cosmoz.Tree {
 	}
 
 	_getPathNodes(pathLocator, nodeObj, pathLocatorSeparator = this.pathLocatorSeparator) {
-		let pathSegment = nodeObj || this._treeData;
 		const path = pathLocator.split(pathLocatorSeparator),
-			nodes = path.map(nodeKey => {
-				// Get the nodes on the path
-				if (!pathSegment) {
-					return;
-				}
-				const node = pathSegment[nodeKey];
-				if (node) {
-					pathSegment = node[this.childProperty];
-				}
-				return node;
-			});
+			nodes = this._pathToNodes(path, nodeObj || this._treeData);
 
 		// Filter out undefined items of the start
 		while (nodes.length > 0 && nodes[0] === undefined) {
@@ -196,6 +185,21 @@ class CosmozDefaultTree extends Cosmoz.Tree {
 		}
 
 		return nodes;
+	}
+
+	_pathToNodes(path, nodes) {
+		let pathSegment = nodes;
+		return path.map(nodeKey => {
+			// Get the nodes on the path
+			if (!pathSegment) {
+				return;
+			}
+			const node = pathSegment[nodeKey];
+			if (node) {
+				pathSegment = node[this.childProperty];
+			}
+			return node;
+		});
 	}
 
 	/**

@@ -116,20 +116,16 @@ class CosmozTree {
 	 * @param {Array} results (The array search results get added to.) Default: []
 	*/
 	search(node, propertyValue, options, results = []) {
-		var nodeConforms = this.nodeConformsSearch(node, propertyValue, options),
-			children,
-			result,
-			i;
+		const nodeConforms = this.nodeConformsSearch(node, propertyValue, options),
+			children = this.getChildren(node);
 
 		if (nodeConforms) {
 			results.push(node);
 		}
 
-		children = this.getChildren(node);
-
 		if (Array.isArray(children)) {
-			for (i = 0; i < children.length; i++) {
-				result = this.search(children[i], propertyValue, options, results);
+			for (let i = 0; i < children.length; i++) {
+				const result = this.search(children[i], propertyValue, options, results);
 				if (!Array.isArray(result)) {
 					return [result];
 				}
