@@ -123,12 +123,14 @@ class CosmozTree {
 			results.push(node);
 		}
 
-		if (Array.isArray(children)) {
-			for (let i = 0; i < children.length; i++) {
-				const result = this.search(children[i], propertyValue, options, results);
-				if (!Array.isArray(result)) {
-					return [result];
-				}
+		if (!Array.isArray(children)) {
+			return results;
+		}
+
+		for (let i = 0; i < children.length; i++) {
+			const result = this.search(children[i], propertyValue, options, results);
+			if (!Array.isArray(result)) {
+				return [result];
 			}
 		}
 
