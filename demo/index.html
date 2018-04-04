@@ -29,11 +29,11 @@
 	</dom-bind>
 
 	<script>
-	window.addEventListener('WebComponentsReady', function () {
-		var t = document.querySelector('#demo');
+	window.addEventListener('WebComponentsReady', () => {
+		let t = document.querySelector('#demo');
 		t = !t.set ? t.firstElementChild : t;
-		t.handleResponse = function (response) {
-			var nodeList = response.detail.response,
+		t.handleResponse = response => {
+			const nodeList = response.detail.response,
 				tree = new Cosmoz.DefaultTree(nodeList),
 				allFound = tree.getNodeByProperty('a', 'name'),
 				firstFound = tree.getNodeByProperty('Company', 'name'),
@@ -42,8 +42,8 @@
 
 			console.log(allFound, firstFound, exactFoundFirst, exactFoundAll);
 		};
-		t.handleMatResponse = function (response) {
-			var nodeList = response.detail.response,
+		t.handleMatResponse = response => {
+			const nodeList = response.detail.response,
 				tree = new Cosmoz.DefaultTree(nodeList);
 
 			console.log(tree.getPathNodes('1.2.301'));
