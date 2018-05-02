@@ -1,10 +1,18 @@
-# \<cosmoz-tree\>
+cosmoz-tree
+===========
 
-Element and helper classes to manage tree data structure
+[![Build Status](https://travis-ci.org/Neovici/cosmoz-tree.svg?branch=master)](https://travis-ci.org/Neovici/cosmoz-tree)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/Neovici/cosmoz-tree)
+
+## &lt;cosmoz-tree&gt;
+
+Element and helper classes to manage tree data structure.
 
 ## Install the Polymer-CLI
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
+First, make sure you have the
+[Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run
+`polymer serve` to serve your application locally.
 
 ## Viewing Your Application
 
@@ -35,4 +43,5 @@ $ polymer serve build/bundled
 $ polymer test
 ```
 
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run
+your application's test suite locally.
