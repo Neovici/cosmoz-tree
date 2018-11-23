@@ -1,7 +1,6 @@
 <link rel="import" href="cosmoz-tree.html">
 
 <script>
-(() => {
 	/**
 	Navigator through object with treelike datastructure and default settings.
 
@@ -21,7 +20,8 @@
 	 * @param {String} options.pathLocatorSeparator ["."] (The string which separates the path segments of a path locator.)
 	*/
 
-	class CosmozDefaultTree extends Cosmoz.Tree {
+	/*global CosmozTree*/
+	class CosmozDefaultTree extends CosmozTree {
 
 		constructor(treeData, options = {}) {
 			super();
@@ -295,6 +295,4 @@
 	window.Cosmoz = window.Cosmoz || {};
 	Cosmoz.DefaultTree = CosmozDefaultTree;
 
-
-})();
 </script>
