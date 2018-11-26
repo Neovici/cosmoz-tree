@@ -5,6 +5,9 @@
 	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
 	<title>cosmoz-tree demo</title>
+	
+	<link rel="import" href="../../polymer/lib/elements/custom-style.html">
+	<link rel="import" href="../../polymer/polymer-element.html">
 
 	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
@@ -16,7 +19,7 @@
 	<link rel="import" href="../cosmoz-default-tree.html">
 
 	<custom-style>
-		<style is="custom-style" include="demo-pages-shared-styles"></style>
+		<style include="demo-pages-shared-styles"></style>
 	</custom-style>
 </head>
 <body unresolved>
@@ -29,26 +32,23 @@
 	</dom-bind>
 
 	<script>
-	window.addEventListener('WebComponentsReady', () => {
-		let t = document.querySelector('#demo');
-		t = !t.set ? t.firstElementChild : t;
-		t.handleResponse = response => {
-			const nodeList = response.detail.response,
-				tree = new Cosmoz.DefaultTree(nodeList),
-				allFound = tree.getNodeByProperty('a', 'name'),
-				firstFound = tree.getNodeByProperty('Company', 'name'),
-				exactFoundFirst = tree.getNodeByProperty('Company Phqiglgqnn'),
-				exactFoundAll = tree.getNodeByProperty('Company Phqiglgqnn');
+		window.addEventListener('WebComponentsReady', () => {
+			let t = document.querySelector('#demo');
+			t = !t.set ? t.firstElementChild : t;
+			t.handleResponse = response => {
+				const nodeList = response.detail.response,
+					tree = new Cosmoz.DefaultTree(nodeList),
+					foundNode = tree.getNodeByProperty('Company Phqiglgqnn');
 
-			console.log(allFound, firstFound, exactFoundFirst, exactFoundAll);
-		};
-		t.handleMatResponse = response => {
-			const nodeList = response.detail.response,
-				tree = new Cosmoz.DefaultTree(nodeList);
+				console.log('Node found with property value', foundNode);
+			};
+			t.handleMatResponse = response => {
+				const nodeList = response.detail.response,
+					tree = new Cosmoz.DefaultTree(nodeList);
 
-			console.log(tree.getPathNodes('1.2.301'));
-		};
-		t.set('doRequest', true);
-	});
+				console.log('Node found with path 1.2.301', tree.getPathNodes('1.2.301'));
+			};
+			t.set('doRequest', true);
+		});
 	</script>
 </body></html>

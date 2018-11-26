@@ -8,11 +8,11 @@
 </head>
 <body>
 	<script>
-		var pages = [
+		const pages = [
 				'cosmoz-tree_test.html'
 			],
-			suites = [],
-			i;
+			suites = [];
+		let i;
 
 		for (i = 0; i < pages.length; i++) {
 			suites.push(pages[i] + '?dom=shadow');
