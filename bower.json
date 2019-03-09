@@ -6,8 +6,8 @@
 		"**/.*",
 		"node_modules",
 		"bower_components",
-		"test",
-		"tests"
+		"test/*",
+		"!test/data"
 	],
 	"dependencies": {
 		"polymer": "Polymer/polymer#^2.6.1"
