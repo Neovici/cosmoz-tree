@@ -18,7 +18,7 @@ export class DefaultTree extends Tree {
 	constructor(treeData, options = {}) {
 		super();
 		this._treeData = treeData;
-		this._roots = this.constructor._objectValues(treeData);
+		this._roots = Object.values(treeData);
 
 		this.pathLocatorSeparator = options.pathLocatorSeparator || '.';
 		this.pathStringSeparator = options.pathStringSeparator || '/';
@@ -26,20 +26,9 @@ export class DefaultTree extends Tree {
 		this.searchProperty = options.searchProperty || 'name';
 	}
 
-	static _objectValues(obj) {
-		if (!obj) {
-			return [];
-		}
-		return Object.keys(obj).map(key => obj[key]);
-	}
-
 	static _sortPathNodes(a, b) {
-		const undefCounter = item => {
-				return item === undefined;
-			},
-			defCounter = item => {
-				return item;
-			},
+		const undefCounter = item => item === undefined,
+			defCounter = item => item,
 			aUndefCount = a.filter(undefCounter).length,
 			bUndefCount = b.filter(undefCounter).length,
 			aDefCount = a.filter(defCounter).length,
@@ -262,10 +251,10 @@ export class DefaultTree extends Tree {
 	 * @returns {Object|Array} The node's children
 	 */
 	getChildren(node) {
-		if (!node) {
+		if (!node || !node[this.childProperty]) {
 			return [];
 		}
-		return this.constructor._objectValues(node[this.childProperty]);
+		return Object.values(node[this.childProperty]);
 	}
 
 	/**
