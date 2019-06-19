@@ -6,15 +6,15 @@
 
 	<title>cosmoz-tree test</title>
 
-	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-	<script src="../../web-component-tester/browser.js"></script>
-	<script src="../../test-fixture/test-fixture-mocha.js"></script>
+	<script src="/components/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+	<script src="/components/mocha/mocha.js"></script>
+	<script src="/components/wct-mocha/wct-mocha.js"></script>
+	<script src="/components/chai/chai.js"></script>
+	<script src="/components/@polymer/test-fixture/test-fixture-mocha.js"></script>
 
-	<link rel="import" href="../../test-fixture/test-fixture.html">
-	<link rel="import" href="../../iron-test-helpers/iron-test-helpers.html">
-
-	<link rel="import" href="../cosmoz-default-tree.html">
-	<link rel="import" href="../../iron-ajax/iron-ajax.html">
+	<script type="module" src="/components/@polymer/test-fixture/test-fixture.js"></script>
+	<script type="module" src="/components/@polymer/iron-test-helpers/iron-test-helpers.js"></script>
+	<script type="module" src="/components/@polymer/iron-ajax/iron-ajax.js"></script>
 </head>
 <body>
 	<test-fixture id="basic">
@@ -47,9 +47,8 @@
 		</template>
 	</test-fixture>
 
-	<script>
-	(function () {
-		'use strict';
+	<script type="module">
+		import { DefaultTree } from '../cosmoz-default-tree.js';
 		suite('basic', () => {
 			let basicFixture,
 				basicTree;
@@ -57,7 +56,7 @@
 			suiteSetup(done => {
 				basicFixture = fixture('basic');
 				basicFixture.addEventListener('response', () => {
-					basicTree = new Cosmoz.DefaultTree(basicFixture.lastResponse);
+					basicTree = new DefaultTree(basicFixture.lastResponse);
 					done();
 				});
 			});
@@ -68,7 +67,7 @@
 
 			test('getNodeByProperty', () => {
 				const
-					root  = basicTree.getNodeByProperty('11111111-1111-1111-1111-111111111111', 'id'),
+					root	= basicTree.getNodeByProperty('11111111-1111-1111-1111-111111111111', 'id'),
 					node2 = basicTree.getNodeByProperty('167d1485-7d4f-4c7d-86cd-a4fb00f31245', 'id'),
 					node3 = basicTree.getNodeByProperty('3a7654f1-e3e6-49c7-b6a8-a4fb00f31245', 'id'),
 					node4 = basicTree.getNodeByProperty('2b547550-b874-4228-9395-a4fb00f31245', 'id'),
@@ -110,12 +109,12 @@
 			});
 
 			test('getNodeByPathLocator', () => {
-				const	node3 = basicTree.getNodeByPathLocator('1.2.3');
+				const node3 = basicTree.getNodeByPathLocator('1.2.3');
 				assert.isOk(node3);
 			});
 
 			test('getPathNodes', () => {
-				const	nodes3 = basicTree.getPathNodes('1.2.3'),
+				const nodes3 = basicTree.getPathNodes('1.2.3'),
 					node3 = basicTree.getNodeByPathLocator('1.2.3'),
 					nodes301 = basicTree.getPathNodes('1.2.3.301'),
 					nodes3X1 = basicTree.getPathNodes('1.2.33'),
@@ -139,19 +138,19 @@
 			});
 
 			test('getPathString', () => {
-				const	node3 = basicTree.getNodeByPathLocator('1.2.3'),
+				const node3 = basicTree.getNodeByPathLocator('1.2.3'),
 					pathString = basicTree.getPathString(node3.pathLocator);
 				assert.equal(pathString.split('/').pop(), node3.name);
 			});
 
 			test('getPathStringByProperty', () => {
-				const	node3 = basicTree.getNodeByPathLocator('1.2.3'),
+				const node3 = basicTree.getNodeByPathLocator('1.2.3'),
 					pathString = basicTree.getPathStringByProperty(node3.id, 'id');
 				assert.equal(pathString.split('/').pop(), node3.name);
 			});
 
 			test('hasChildren', () => {
-				const	node3 = basicTree.getNodeByPathLocator('1.2.3'),
+				const node3 = basicTree.getNodeByPathLocator('1.2.3'),
 					node301 = basicTree.getNodeByPathLocator('1.2.3.301');
 				assert(basicTree.hasChildren(node3));
 				assert(!basicTree.hasChildren(node301));
@@ -159,7 +158,7 @@
 			});
 
 			test('getPathString', () => {
-				const	node301 = basicTree.getNodeByPathLocator('1.2.3.301'),
+				const node301 = basicTree.getNodeByPathLocator('1.2.3.301'),
 					node301PathString = basicTree.getPathString(node301.pathLocator, 'name', '/');
 				assert.equal(node301PathString, 'Root/Node2/Node3/Node301');
 			});
@@ -172,7 +171,7 @@
 			suiteSetup(done => {
 				multiRootFixture = fixture('multiRoot');
 				multiRootFixture.addEventListener('response', () => {
-					multiRootTree = new Cosmoz.DefaultTree(multiRootFixture.lastResponse);
+					multiRootTree = new DefaultTree(multiRootFixture.lastResponse);
 					done();
 				});
 			});
@@ -192,7 +191,7 @@
 			});
 
 			test('getPathNodes', () => {
-				const	nodes3 = multiRootTree.getPathNodes('1.2.3'),
+				const nodes3 = multiRootTree.getPathNodes('1.2.3'),
 					node3 = multiRootTree.getNodeByPathLocator('1.2.3'),
 					nodes14 = multiRootTree.getPathNodes('1.4'),
 					nodes3X1 = multiRootTree.getPathNodes('1.2.33'),
@@ -223,7 +222,7 @@
 			suiteSetup(done => {
 				missingAncestorFixture = fixture('missingAncestor');
 				missingAncestorFixture.addEventListener('response', () => {
-					missingAncestorTree = new Cosmoz.DefaultTree(missingAncestorFixture.lastResponse);
+					missingAncestorTree = new DefaultTree(missingAncestorFixture.lastResponse);
 					done();
 				});
 			});
@@ -325,6 +324,5 @@
 			});
 			/* eslint-enable camelcase */
 		});
-	}());
 	</script>
 </body></html>

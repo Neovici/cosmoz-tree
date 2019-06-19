@@ -4,7 +4,7 @@
     {
       "description": "Navigator through object with treelike datastructure.",
       "summary": "",
-      "path": "cosmoz-tree.html",
+      "path": "cosmoz-tree.js",
       "properties": [],
       "methods": [
         {
@@ -13,12 +13,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 18,
-              "column": 2
+              "line": 17,
+              "column": 1
             },
             "end": {
-              "line": 20,
-              "column": 3
+              "line": 19,
+              "column": 2
             }
           },
           "metadata": {},
@@ -55,12 +55,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 29,
-              "column": 2
+              "line": 28,
+              "column": 1
             },
             "end": {
-              "line": 31,
-              "column": 3
+              "line": 30,
+              "column": 2
             }
           },
           "metadata": {},
@@ -92,12 +92,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 41,
-              "column": 2
+              "line": 40,
+              "column": 1
             },
             "end": {
-              "line": 43,
-              "column": 3
+              "line": 42,
+              "column": 2
             }
           },
           "metadata": {},
@@ -134,12 +134,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 54,
-              "column": 2
+              "line": 53,
+              "column": 1
             },
             "end": {
-              "line": 56,
-              "column": 3
+              "line": 55,
+              "column": 2
             }
           },
           "metadata": {},
@@ -181,12 +181,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 63,
-              "column": 2
+              "line": 62,
+              "column": 1
             },
             "end": {
-              "line": 65,
-              "column": 3
+              "line": 64,
+              "column": 2
             }
           },
           "metadata": {},
@@ -208,12 +208,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 72,
-              "column": 2
+              "line": 71,
+              "column": 1
             },
             "end": {
-              "line": 74,
-              "column": 3
+              "line": 73,
+              "column": 2
             }
           },
           "metadata": {},
@@ -235,12 +235,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 82,
-              "column": 2
+              "line": 81,
+              "column": 1
             },
             "end": {
-              "line": 84,
-              "column": 3
+              "line": 83,
+              "column": 2
             }
           },
           "metadata": {},
@@ -267,12 +267,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 95,
-              "column": 2
+              "line": 94,
+              "column": 1
             },
             "end": {
-              "line": 107,
-              "column": 3
+              "line": 106,
+              "column": 2
             }
           },
           "metadata": {},
@@ -304,12 +304,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 119,
-              "column": 2
+              "line": 118,
+              "column": 1
             },
             "end": {
-              "line": 135,
-              "column": 3
+              "line": 134,
+              "column": 2
             }
           },
           "metadata": {},
@@ -330,7 +330,10 @@
               "description": "(Search options)"
             },
             {
-              "name": "results = []"
+              "name": "results",
+              "type": "Array",
+              "defaultValue": "[]",
+              "description": "(The array search results get added to.) Default: []"
             }
           ],
           "return": {
@@ -344,21 +347,21 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 5,
-          "column": 1
+          "line": 3,
+          "column": 7
         },
         "end": {
-          "line": 136,
-          "column": 2
+          "line": 135,
+          "column": 1
         }
       },
       "privacy": "public",
-      "name": "CosmozTree"
+      "name": "Tree"
     },
     {
-      "description": "",
+      "description": "Navigator through object with treelike datastructure and default settings.",
       "summary": "",
-      "path": "cosmoz-default-tree.html",
+      "path": "cosmoz-default-tree.js",
       "properties": [],
       "methods": [
         {
@@ -367,12 +370,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 73,
-              "column": 2
+              "line": 66,
+              "column": 1
             },
             "end": {
-              "line": 79,
-              "column": 3
+              "line": 72,
+              "column": 2
             }
           },
           "metadata": {},
@@ -383,158 +386,21 @@
               "description": "(The value of the property the match should be based on. e.g. \"Peter\")"
             },
             {
-              "name": "propertyName = this.searchProperty"
+              "name": "propertyName",
+              "type": "String",
+              "defaultValue": "this.searchProperty",
+              "description": "(The name of the property the match should be based on. e.g. \"name\")"
             },
             {
-              "name": "nodes = this._roots"
+              "name": "nodes",
+              "type": "Array",
+              "defaultValue": "this._roots",
+              "description": "[this._roots] (The objects the search should be based on.)"
             }
           ],
           "return": {
             "type": "Object",
             "desc": "The first found node."
-          }
-        },
-        {
-          "name": "searchNodes",
-          "description": "Searches a (multi root) node and matches nodes based on a property and a value.",
-          "privacy": "public",
-          "sourceRange": {
-            "start": {
-              "line": 89,
-              "column": 2
-            },
-            "end": {
-              "line": 96,
-              "column": 3
-            }
-          },
-          "metadata": {},
-          "params": [
-            {
-              "name": "propertyValue",
-              "type": "String",
-              "description": "(The value of the property the match should be based on. e.g. \"Peter\")"
-            },
-            {
-              "name": "nodes",
-              "type": "Object",
-              "description": "[this._treeData] (The nodes the search should be based on.)"
-            },
-            {
-              "name": "exact",
-              "type": "Boolean",
-              "description": "[true] (If the search should be executed exact or flaw. true wouldn't match \"Pet\")"
-            },
-            {
-              "name": "propertyName = this.searchProperty"
-            }
-          ],
-          "return": {
-            "type": "Array",
-            "desc": "All found nodes."
-          }
-        },
-        {
-          "name": "findNode",
-          "description": "Searches a (multi root) node and matches nodes based on a property and a value.",
-          "privacy": "public",
-          "sourceRange": {
-            "start": {
-              "line": 105,
-              "column": 2
-            },
-            "end": {
-              "line": 112,
-              "column": 3
-            }
-          },
-          "metadata": {},
-          "params": [
-            {
-              "name": "propertyValue",
-              "type": "String",
-              "description": "(The value of the property the match should be based on. e.g. \"Peter\")"
-            },
-            {
-              "name": "propertyName = this.searchProperty"
-            },
-            {
-              "name": "nodes",
-              "type": "Object",
-              "description": "[this._treeData] (The nodes the search should be based on.)"
-            }
-          ],
-          "return": {
-            "type": "Object",
-            "desc": "The first found node."
-          }
-        },
-        {
-          "name": "_searchNodes",
-          "description": "Searches a (multi root) node and matches nodes based on a property and a value.",
-          "privacy": "protected",
-          "sourceRange": {
-            "start": {
-              "line": 124,
-              "column": 2
-            },
-            "end": {
-              "line": 133,
-              "column": 3
-            }
-          },
-          "metadata": {},
-          "params": [
-            {
-              "name": "propertyValue",
-              "type": "String",
-              "description": "(The value of the property the match should be based on. e.g. \"Peter\")"
-            },
-            {
-              "name": "options",
-              "type": "Object",
-              "description": "(Matching options)"
-            },
-            {
-              "name": "nodes = this._roots"
-            }
-          ],
-          "return": {
-            "type": "Array",
-            "desc": "The found node(s)."
-          }
-        },
-        {
-          "name": "getNodeByPathLocator",
-          "description": "Returns the node of a given path.",
-          "privacy": "public",
-          "sourceRange": {
-            "start": {
-              "line": 142,
-              "column": 2
-            },
-            "end": {
-              "line": 149,
-              "column": 3
-            }
-          },
-          "metadata": {},
-          "params": [
-            {
-              "name": "pathLocator",
-              "type": "String",
-              "description": "(The string which describes the path. e.g. \"1.2.9\")"
-            },
-            {
-              "name": "nodeObj = this._treeData"
-            },
-            {
-              "name": "pathLocatorSeparator = this.pathLocatorSeparator"
-            }
-          ],
-          "return": {
-            "type": "Object",
-            "desc": "The node object"
           }
         },
         {
@@ -543,12 +409,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 162,
-              "column": 2
+              "line": 155,
+              "column": 1
             },
             "end": {
-              "line": 179,
-              "column": 3
+              "line": 172,
+              "column": 2
             }
           },
           "metadata": {},
@@ -575,68 +441,17 @@
           }
         },
         {
-          "name": "_getPathNodes",
-          "description": "",
-          "privacy": "protected",
-          "sourceRange": {
-            "start": {
-              "line": 181,
-              "column": 2
-            },
-            "end": {
-              "line": 191,
-              "column": 3
-            }
-          },
-          "metadata": {},
-          "params": [
-            {
-              "name": "pathLocator"
-            },
-            {
-              "name": "nodeObj"
-            },
-            {
-              "name": "pathLocatorSeparator = this.pathLocatorSeparator"
-            }
-          ]
-        },
-        {
-          "name": "_pathToNodes",
-          "description": "",
-          "privacy": "protected",
-          "sourceRange": {
-            "start": {
-              "line": 193,
-              "column": 2
-            },
-            "end": {
-              "line": 206,
-              "column": 3
-            }
-          },
-          "metadata": {},
-          "params": [
-            {
-              "name": "path"
-            },
-            {
-              "name": "nodes"
-            }
-          ]
-        },
-        {
           "name": "getPathString",
           "description": "Returns a string which describes the path of a node (found by its path locator).",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 216,
-              "column": 2
+              "line": 209,
+              "column": 1
             },
             "end": {
-              "line": 227,
-              "column": 3
+              "line": 225,
+              "column": 2
             }
           },
           "metadata": {},
@@ -647,13 +462,22 @@
               "description": "(The string which describes the path. e.g. \"1.2.9\")"
             },
             {
-              "name": "pathProperty = this.searchProperty"
+              "name": "pathProperty",
+              "type": "String",
+              "defaultValue": "this.searchProperty",
+              "description": "(The property of a node on which the path should be build on. e.g \"location\" with node = {\"location\": \"home\", ..})"
             },
             {
-              "name": "pathStringSeparator = this.pathStringSeparator"
+              "name": "pathStringSeparator",
+              "type": "String",
+              "defaultValue": "this.pathStringSeparator",
+              "description": "[this.pathStringSeparator] (The string the path should get separated with.)"
             },
             {
-              "name": "pathLocatorSeparator = this.pathLocatorSeparator"
+              "name": "pathLocatorSeparator",
+              "type": "String",
+              "defaultValue": "this.pathLocatorSeparator",
+              "description": "[this.pathLocatorSeparator] (The string which separates the path segments of pathLocator.)"
             }
           ],
           "return": {
@@ -667,12 +491,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 238,
-              "column": 2
+              "line": 236,
+              "column": 1
             },
             "end": {
-              "line": 252,
-              "column": 3
+              "line": 256,
+              "column": 2
             }
           },
           "metadata": {},
@@ -683,16 +507,28 @@
               "description": "(The value of the property the match should be based on. e.g. \"Peter\")"
             },
             {
-              "name": "propertyName = this.searchProperty"
+              "name": "propertyName",
+              "type": "String",
+              "defaultValue": "this.searchProperty",
+              "description": "(The name of the property the match should be based on. e.g. \"name\")"
             },
             {
-              "name": "pathProperty = this.searchProperty"
+              "name": "pathProperty",
+              "type": "String",
+              "defaultValue": "this.searchProperty",
+              "description": "(The property of a node on which the path should be build on. e.g \"location\" if node = {\"location\": \"home\"})"
             },
             {
-              "name": "pathStringSeparator = this.pathStringSeparator"
+              "name": "pathStringSeparator",
+              "type": "String",
+              "defaultValue": "this.pathStringSeparator",
+              "description": "[this.pathStringSeparator] (The string the path should get separated with.)"
             },
             {
-              "name": "pathLocatorSeparator = this.pathLocatorSeparator"
+              "name": "pathLocatorSeparator",
+              "type": "String",
+              "defaultValue": "this.pathLocatorSeparator",
+              "description": "[this.pathLocatorSeparator] (The string which separates the path. e.g \".\")"
             }
           ],
           "return": {
@@ -706,12 +542,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 259,
-              "column": 2
+              "line": 263,
+              "column": 1
             },
             "end": {
-              "line": 264,
-              "column": 3
+              "line": 268,
+              "column": 2
             }
           },
           "metadata": {},
@@ -733,12 +569,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 271,
-              "column": 2
+              "line": 275,
+              "column": 1
             },
             "end": {
-              "line": 277,
-              "column": 3
+              "line": 281,
+              "column": 2
             }
           },
           "metadata": {},
@@ -760,12 +596,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 285,
-              "column": 2
+              "line": 289,
+              "column": 1
             },
             "end": {
-              "line": 290,
-              "column": 3
+              "line": 294,
+              "column": 2
             }
           },
           "metadata": {},
@@ -785,6 +621,300 @@
             "type": "*",
             "desc": "The value of the property"
           }
+        },
+        {
+          "name": "nodeConformsSearch",
+          "description": "Checks if a node matches the search criteria.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "cosmoz-tree.js",
+            "start": {
+              "line": 94,
+              "column": 1
+            },
+            "end": {
+              "line": 106,
+              "column": 2
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "node",
+              "type": "node",
+              "description": "(The node the check should be based on.)"
+            },
+            {
+              "name": "propertyValue",
+              "type": "String",
+              "description": "(The value of the property the match should be based on. e.g. \"Peter\")"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "(Comparison options)"
+            }
+          ],
+          "return": {
+            "type": "Boolean",
+            "desc": "True if node matches"
+          },
+          "inheritedFrom": "Tree"
+        },
+        {
+          "name": "search",
+          "description": "Searches a (multi root) node and matches nodes based on a property and a value.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "cosmoz-tree.js",
+            "start": {
+              "line": 118,
+              "column": 1
+            },
+            "end": {
+              "line": 134,
+              "column": 2
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "node",
+              "type": "node",
+              "description": "The node to search in."
+            },
+            {
+              "name": "propertyValue",
+              "type": "String",
+              "description": "(The value of the property the match should be based on. e.g. \"Peter\")"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "(Search options)"
+            },
+            {
+              "name": "results",
+              "type": "Array",
+              "defaultValue": "[]",
+              "description": "(The array search results get added to.) Default: []"
+            }
+          ],
+          "return": {
+            "type": "Array",
+            "desc": "The nodes found"
+          },
+          "inheritedFrom": "Tree"
+        },
+        {
+          "name": "searchNodes",
+          "description": "Searches a (multi root) node and matches nodes based on a property and a value.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 82,
+              "column": 1
+            },
+            "end": {
+              "line": 89,
+              "column": 2
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "propertyValue",
+              "type": "String",
+              "description": "(The value of the property the match should be based on. e.g. \"Peter\")"
+            },
+            {
+              "name": "nodes",
+              "type": "Object",
+              "description": "[this._treeData] (The nodes the search should be based on.)"
+            },
+            {
+              "name": "exact",
+              "type": "Boolean",
+              "description": "[true] (If the search should be executed exact or flaw. true wouldn't match \"Pet\")"
+            },
+            {
+              "name": "propertyName",
+              "type": "String",
+              "defaultValue": "this.searchProperty",
+              "description": "[this.searchProperty] (The name of the property the match should be based on. e.g. \"name\")"
+            }
+          ],
+          "return": {
+            "type": "Array",
+            "desc": "All found nodes."
+          }
+        },
+        {
+          "name": "findNode",
+          "description": "Searches a (multi root) node and matches nodes based on a property and a value.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 98,
+              "column": 1
+            },
+            "end": {
+              "line": 105,
+              "column": 2
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "propertyValue",
+              "type": "String",
+              "description": "(The value of the property the match should be based on. e.g. \"Peter\")"
+            },
+            {
+              "name": "propertyName",
+              "type": "String",
+              "defaultValue": "this.searchProperty",
+              "description": "[this.searchProperty] (The name of the property the match should be based on. e.g. \"name\")"
+            },
+            {
+              "name": "nodes",
+              "type": "Object",
+              "description": "[this._treeData] (The nodes the search should be based on.)"
+            }
+          ],
+          "return": {
+            "type": "Object",
+            "desc": "The first found node."
+          }
+        },
+        {
+          "name": "_searchNodes",
+          "description": "Searches a (multi root) node and matches nodes based on a property and a value.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 117,
+              "column": 1
+            },
+            "end": {
+              "line": 126,
+              "column": 2
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "propertyValue",
+              "type": "String",
+              "description": "(The value of the property the match should be based on. e.g. \"Peter\")"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "(Matching options)"
+            },
+            {
+              "name": "nodes",
+              "type": "Object",
+              "defaultValue": "this._roots",
+              "description": "[this._roots] (The nodes the search should be based on.)"
+            }
+          ],
+          "return": {
+            "type": "Array",
+            "desc": "The found node(s)."
+          }
+        },
+        {
+          "name": "getNodeByPathLocator",
+          "description": "Returns the node of a given path.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 135,
+              "column": 1
+            },
+            "end": {
+              "line": 142,
+              "column": 2
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "pathLocator",
+              "type": "String",
+              "description": "(The string which describes the path. e.g. \"1.2.9\")"
+            },
+            {
+              "name": "nodeObj",
+              "type": "Object",
+              "defaultValue": "this._treeData",
+              "description": "[this._treeData] (The object the search should be based on.)"
+            },
+            {
+              "name": "pathLocatorSeparator",
+              "type": "String",
+              "defaultValue": "this.pathLocatorSeparator",
+              "description": "[this.pathLocatorSeparator] (The string which separates the path. e.g \".\")"
+            }
+          ],
+          "return": {
+            "type": "Object",
+            "desc": "The node object"
+          }
+        },
+        {
+          "name": "_getPathNodes",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 174,
+              "column": 1
+            },
+            "end": {
+              "line": 184,
+              "column": 2
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "pathLocator"
+            },
+            {
+              "name": "nodeObj"
+            },
+            {
+              "name": "pathLocatorSeparator",
+              "defaultValue": "this.pathLocatorSeparator"
+            }
+          ]
+        },
+        {
+          "name": "_pathToNodes",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 186,
+              "column": 1
+            },
+            "end": {
+              "line": 199,
+              "column": 2
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "path"
+            },
+            {
+              "name": "nodes"
+            }
+          ]
         }
       ],
       "staticMethods": [
@@ -794,12 +924,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 35,
-              "column": 2
+              "line": 28,
+              "column": 1
             },
             "end": {
-              "line": 40,
-              "column": 3
+              "line": 33,
+              "column": 2
             }
           },
           "metadata": {},
@@ -815,12 +945,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 42,
-              "column": 2
+              "line": 35,
+              "column": 1
             },
             "end": {
-              "line": 64,
-              "column": 3
+              "line": 57,
+              "column": 2
             }
           },
           "metadata": {},
@@ -834,21 +964,30 @@
           ]
         }
       ],
-      "demos": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        },
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 23,
-          "column": 1
+          "line": 7,
+          "column": 7
         },
         "end": {
-          "line": 291,
-          "column": 2
+          "line": 295,
+          "column": 1
         }
       },
       "privacy": "public",
-      "superclass": "Cosmoz.Tree",
-      "name": "CosmozDefaultTree"
+      "superclass": "Tree",
+      "name": "DefaultTree"
     }
   ]
 }
