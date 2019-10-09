@@ -41,12 +41,14 @@
 				tree = new DefaultTree(nodeList),
 				foundNode = tree.getNodeByProperty('Company Phqiglgqnn');
 
+			// eslint-disable-next-line no-console
 			console.log('Node found with property value', foundNode);
 		};
 		t.handleMatResponse = response => {
 			const nodeList = response.detail.response,
 				tree = new DefaultTree(nodeList);
 
+			// eslint-disable-next-line no-console
 			console.log('Node found with path 1.2.301', tree.getPathNodes('1.2.301'));
 		};
 		t.set('doRequest', true);

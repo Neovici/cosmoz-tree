@@ -96,6 +96,7 @@ export class Tree {
 		const property = options ? node[options.propertyName] : undefined;
 
 		if (!property) {
+			// eslint-disable-next-line no-console
 			console.error('options.propertyName needs to be specified.');
 			return;
 		}
