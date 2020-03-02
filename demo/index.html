@@ -5,16 +5,6 @@
 	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
 	<title>cosmoz-tree demo</title>
-
-	<script type="module" src="../../@polymer/polymer/lib/elements/custom-style.js"></script>
-	<script type="module" src="../../@polymer/polymer/polymer-element.js"></script>
-
-	<script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-
-	<script type="module" src="../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
-	<script type="module" src="../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
-
-	<script type="module" src="../../@polymer/iron-ajax/iron-ajax.js"></script>
 	<script type="module" src="../cosmoz-tree.js"></script>
 	<script type="module" src="../cosmoz-default-tree.js"></script>
 
@@ -22,35 +12,30 @@
 		<style include="demo-pages-shared-styles"></style>
 	</custom-style>
 </head>
-<body unresolved>
-	<dom-bind id="demo">
-		<template is="dom-bind">
-			<h1>See console</h1>
-			<iron-ajax url="tree.json" on-response="handleResponse" handle-as="json" auto="[[ doRequest ]]"></iron-ajax>
-			<iron-ajax url="../test/data/missingAncestorTree.json" on-response="handleMatResponse" handle-as="json" auto></iron-ajax>
-		</template>
-	</dom-bind>
+<body>
+	<h1>See console</h1>
 
 	<script type="module">
 		import { DefaultTree } from '../cosmoz-default-tree.js';
-		let t = document.querySelector('#demo');
-		t = !t.set ? t.firstElementChild : t;
 
-		t.handleResponse = response => {
-			const nodeList = response.detail.response,
-				tree = new DefaultTree(nodeList),
+		fetch('tree.json').then(async response => {
+			const json = await response.json(),
+				tree = new DefaultTree(json),
 				foundNode = tree.getNodeByProperty('Company Phqiglgqnn');
 
 			// eslint-disable-next-line no-console
 			console.log('Node found with property value', foundNode);
-		};
-		t.handleMatResponse = response => {
-			const nodeList = response.detail.response,
-				tree = new DefaultTree(nodeList);
+
+		});
+
+		fetch('../test/data/missingAncestorTree.json').then(async response => {
+			const json = await response.json(),
+				tree = new DefaultTree(json);
 
 			// eslint-disable-next-line no-console
 			console.log('Node found with path 1.2.301', tree.getPathNodes('1.2.301'));
-		};
-		t.set('doRequest', true);
+
+		});
 	</script>
-</body></html>
+</body>
+</html>
