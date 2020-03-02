@@ -1,35 +1,3 @@
-/*
-	<test-fixture id="basic">
-		<template>
-			<iron-ajax auto
-				url="data/basicTree.json"
-				handle-as="json"
-				last-response="{{ basicTree }}">
-			</iron-ajax>
-		</template>
-	</test-fixture>
-
-	<test-fixture id="multiRoot">
-		<template>
-			<iron-ajax auto
-				url="data/multiRootTree.json"
-				handle-as="json"
-				last-response="{{ multiRootTree }}">
-			</iron-ajax>
-		</template>
-	</test-fixture>
-
-	<test-fixture id="missingAncestor">
-		<template>
-			<iron-ajax auto
-				url="data/missingAncestorTree.json"
-				handle-as="json"
-				last-response="{{ missingAncestorTree }}">
-			</iron-ajax>
-		</template>
-	</test-fixture>
-
-	*/
 import {
 	assert
 } from '@open-wc/testing';

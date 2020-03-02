@@ -32,6 +32,16 @@ module.exports = config => {
 
 	config.set(
 		merge(createDefaultConfig(config), {
+			coverageIstanbulReporter: {
+				thresholds: {
+					global: {
+						statements: 80,
+						branches: 75,
+						functions: 75,
+						lines: 75
+					}
+				}
+			},
 			customLaunchers,
 			browsers: Object.keys(customLaunchers),
 			files: [{
