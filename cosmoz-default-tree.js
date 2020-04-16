@@ -142,17 +142,15 @@ export class DefaultTree extends Tree {
 	 * @param {Object} nodeObj [this._treeData] (The object the search should be based on.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path.)
 	*/
-	getPathNodes(pathLocator, nodeObj, pathLocatorSeparator) {
-		const tree = nodeObj || this._treeData;
-
+	getPathNodes(pathLocator, nodeObj = this._treeData, pathLocatorSeparator = this.pathLocatorSeparator) {
 		if (!pathLocator) {
-			return tree;
+			return nodeObj;
 		}
 
-		return Object.keys(tree)
+		return Object.keys(nodeObj)
 			.map(key => {
 				const subTree = {};
-				subTree[key] = tree[key];
+				subTree[key] = nodeObj[key];
 				return this._getPathNodes(pathLocator, subTree, pathLocatorSeparator);
 			})
 			.filter(item => {
@@ -161,9 +159,9 @@ export class DefaultTree extends Tree {
 			.sort(this.constructor._sortPathNodes)[0];
 	}
 
-	_getPathNodes(pathLocator, nodeObj, pathLocatorSeparator = this.pathLocatorSeparator) {
+	_getPathNodes(pathLocator, nodeObj = this._treeData, pathLocatorSeparator = this.pathLocatorSeparator) {
 		const path = pathLocator.split(pathLocatorSeparator),
-			nodes = this._pathToNodes(path, nodeObj || this._treeData);
+			nodes = this._pathToNodes(path, nodeObj);
 
 		// Filter out undefined items of the start
 		while (nodes.length > 0 && nodes[0] === undefined) {
@@ -204,7 +202,7 @@ export class DefaultTree extends Tree {
 	) {
 		const pathNodes = this.getPathNodes(pathLocator, this._treeData, pathLocatorSeparator);
 
-		if (!pathNodes) {
+		if (!Array.isArray(pathNodes)) {
 			return;
 		}
 
@@ -241,7 +239,8 @@ export class DefaultTree extends Tree {
 		const node = this.getNodeByProperty(propertyValue, propertyName);
 
 		if (node) {
-			return this.getPathString(node.pathLocator || node.path, pathProperty, pathStringSeparator);
+			const path = node.pathLocator || node.path;
+			return this.getPathString(path, pathProperty, pathStringSeparator);
 		}
 	}
 

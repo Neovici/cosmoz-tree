@@ -25,7 +25,7 @@ suite('basic', () => {
 
 	test('getNodeByProperty', () => {
 		const
-			root	= basicTree.getNodeByProperty('11111111-1111-1111-1111-111111111111', 'id'),
+			root = basicTree.getNodeByProperty('11111111-1111-1111-1111-111111111111', 'id'),
 			node2 = basicTree.getNodeByProperty('167d1485-7d4f-4c7d-86cd-a4fb00f31245', 'id'),
 			node3 = basicTree.getNodeByProperty('3a7654f1-e3e6-49c7-b6a8-a4fb00f31245', 'id'),
 			node4 = basicTree.getNodeByProperty('2b547550-b874-4228-9395-a4fb00f31245', 'id'),
@@ -37,6 +37,7 @@ suite('basic', () => {
 		assert.isOk(node4);
 		assert.deepEqual(node4, node5);
 		assert.deepEqual(node2, node6);
+		assert.isUndefined(basicTree.getNodeByProperty());
 	});
 
 	test('searchNodes', () => {
@@ -69,6 +70,7 @@ suite('basic', () => {
 	test('getNodeByPathLocator', () => {
 		const node3 = basicTree.getNodeByPathLocator('1.2.3');
 		assert.isOk(node3);
+		assert.equal(basicTree.getNodeByPathLocator(), basicTree._roots);
 	});
 
 	test('getPathNodes', () => {
@@ -93,18 +95,25 @@ suite('basic', () => {
 		assert.deepEqual(nodes3.slice().pop(), node3);
 		assert.equal(nodes3X3.length, nodes3.length);
 		assert.deepEqual(nodes3X3.slice().pop(), nodes3.slice().pop());
+		assert.equal(basicTree.getPathNodes(), basicTree._treeData);
 	});
 
 	test('getPathString', () => {
 		const node3 = basicTree.getNodeByPathLocator('1.2.3'),
 			pathString = basicTree.getPathString(node3.pathLocator);
 		assert.equal(pathString.split('/').pop(), node3.name);
+		assert.isUndefined(basicTree.getPathString());
+		const node301 = basicTree.getNodeByPathLocator('1.2.3.301'),
+			node301PathString = basicTree.getPathString(node301.pathLocator, 'name', '/');
+		assert.equal(node301PathString, 'Root/Node2/Node3/Node301');
 	});
 
 	test('getPathStringByProperty', () => {
 		const node3 = basicTree.getNodeByPathLocator('1.2.3'),
 			pathString = basicTree.getPathStringByProperty(node3.id, 'id');
 		assert.equal(pathString.split('/').pop(), node3.name);
+		assert.isUndefined(basicTree.getPathStringByProperty());
+		assert.equal(basicTree.getPathStringByProperty('1.2.3', 'pathLocator'), basicTree.getPathString('1.2.3'));
 	});
 
 	test('hasChildren', () => {
@@ -112,13 +121,7 @@ suite('basic', () => {
 			node301 = basicTree.getNodeByPathLocator('1.2.3.301');
 		assert(basicTree.hasChildren(node3));
 		assert(!basicTree.hasChildren(node301));
-
-	});
-
-	test('getPathString', () => {
-		const node301 = basicTree.getNodeByPathLocator('1.2.3.301'),
-			node301PathString = basicTree.getPathString(node301.pathLocator, 'name', '/');
-		assert.equal(node301PathString, 'Root/Node2/Node3/Node301');
+		assert.isFalse(basicTree.hasChildren());
 	});
 });
 
