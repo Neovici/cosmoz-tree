@@ -20,6 +20,9 @@
 	"directories": {
 		"test": "test"
 	},
+	"files": [
+		"cosmoz-*.js"
+	],
 	"scripts": {
 		"lint": "eslint --cache --ext .js,.html .",
 		"start": "es-dev-server",
@@ -57,7 +60,6 @@
 		"@commitlint/cli": "^8.3.5",
 		"@commitlint/config-conventional": "^8.3.4",
 		"@neovici/eslint-config": "^1.2.1",
-		"@neovici/github-actions-eslint-annotator": "^0.4.0",
 		"@open-wc/testing": "^2.5.11",
 		"@open-wc/testing-karma": "^3.3.12",
 		"@semantic-release/changelog": "^5.0.1",
