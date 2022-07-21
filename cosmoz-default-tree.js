@@ -161,7 +161,7 @@ export class DefaultTree extends Tree {
 
 	_getPathNodes(pathLocator, nodeObj = this._treeData, pathLocatorSeparator = this.pathLocatorSeparator) {
 		const path = pathLocator.split(pathLocatorSeparator),
-			nodes = this._pathToNodes(path, nodeObj);
+			nodes = this._pathToNodes(path, nodeObj, pathLocatorSeparator);
 
 		// Filter out undefined items of the start
 		while (nodes.length > 0 && nodes[0] === undefined) {
@@ -171,14 +171,14 @@ export class DefaultTree extends Tree {
 		return nodes;
 	}
 
-	_pathToNodes(path, nodes) {
+	_pathToNodes(path, nodes, separator) {
 		let pathSegment = nodes;
-		return path.map(nodeKey => {
+		return path.map((nodeKey, i) => {
 			// Get the nodes on the path
 			if (!pathSegment) {
 				return false;
 			}
-			const node = pathSegment[nodeKey];
+			const node = pathSegment[nodeKey] ?? pathSegment[path.slice(0, i + 1).join(separator)];
 			if (node) {
 				pathSegment = node[this.childProperty];
 			}
