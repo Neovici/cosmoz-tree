@@ -3,6 +3,7 @@ import { DefaultTree } from '../cosmoz-default-tree.js';
 
 const treeBaseUrl = '/test/data',
 	basicTreeUrl = `${treeBaseUrl}/basicTree.json`,
+	basicTreePlUrl = `${treeBaseUrl}/basicTreePL.json`,
 	multiRootTreeUrl = `${treeBaseUrl}/multiRootTree.json`,
 	missingAncestorTreeUrl = `${treeBaseUrl}/missingAncestorTree.json`,
 	treeFromJsonUrl = async (url) => {
@@ -179,6 +180,35 @@ suite('basic', () => {
 		assert.isFalse(basicTree.hasChildren());
 	});
 });
+
+suite('basicPL', () => {
+	let basicTree;
+
+	suiteSetup(async () => {
+		basicTree = await treeFromJsonUrl(basicTreePlUrl);
+	});
+
+	test('instantiating a Cosmoz.Tree', () => {
+		assert.isOk(basicTree);
+	});
+
+
+	test('findNode', () => {
+		const node1 = basicTree.searchNodes(
+				'1.2.3',
+				undefined,
+				undefined,
+				'pathLocator'
+			)[0],
+			node2 = basicTree.findNode('1.2.3', 'pathLocator'),
+			node3 = basicTree.findNode('3a7654f1-e3e6-49c7-b6a8-a4fb00f31245', 'id');
+		assert.equal(node1.id, '3a7654f1-e3e6-49c7-b6a8-a4fb00f31245');
+		assert.equal(node2.id, '3a7654f1-e3e6-49c7-b6a8-a4fb00f31245');
+		assert.equal(node3.pathLocator, '1.2.3');
+	});
+});
+
+
 
 suite('multiRoot', () => {
 	let multiRootTree;
