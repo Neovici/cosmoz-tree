@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/neovici/cosmoz-tree/compare/v3.0.4...v3.1.0) (2022-07-21)
+
+
+### Features
+
+* allow pathLocator as key in nodeObj ([ddae639](https://github.com/neovici/cosmoz-tree/commit/ddae639b84784c60a3c531a7e607daba12e4709a))
+
 ## [3.0.4](https://github.com/neovici/cosmoz-tree/compare/v3.0.3...v3.0.4) (2020-03-02)
 
 
