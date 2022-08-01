@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/neovici/cosmoz-tree/compare/v3.1.0...v3.1.1) (2022-08-01)
+
+
+### Bug Fixes
+
+* **perf:** improve performance ([a9aaad1](https://github.com/neovici/cosmoz-tree/commit/a9aaad1ed94e156e338f8ecf7f80344eb9f7e345))
+
 # [3.1.0](https://github.com/neovici/cosmoz-tree/compare/v3.0.4...v3.1.0) (2022-07-21)
 
 
