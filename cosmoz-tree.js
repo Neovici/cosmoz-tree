@@ -1,11 +1,12 @@
 /**
-* Navigator through object with treelike datastructure.
-*/
+ * Navigator through object with treelike datastructure.
+ */
 export class Tree {
-
 	constructor() {
 		// Abstract
 	}
+
+	/* eslint-disable no-unused-vars */
 
 	/**
 	 * Should return the first node found.
@@ -15,7 +16,7 @@ export class Tree {
 	 * @param {Boolean} exact (If the search should be executed exact or flaw. true wouldn't match "Pet")
 	 * @param {Object} nodeObj (The object the search should be based on.) or on default this._treeData
 	 */
-	getNodeByProperty(propertyName, propertyValue, exact, nodeObj) { // eslint-disable-line no-unused-vars
+	getNodeByProperty(propertyName, propertyValue, exact, nodeObj) {
 		throw new Error('Must be implemented in derived object');
 	}
 
@@ -25,8 +26,8 @@ export class Tree {
 	 * @param {String} pathLocator (The string which describes the path. e.g. "1.2.9")
 	 * @param {Object} nodeObj (The object the search should be based on.) Default: this._treeData
 	 * @param {String} separatorSign (The string which separates the path. e.g ".") Default: "."
-	*/
-	getPathNodes(pathLocator, nodeObj, separatorSign) { // eslint-disable-line no-unused-vars
+	 */
+	getPathNodes(pathLocator, nodeObj, separatorSign) {
 		throw new Error('Must be implemented in derived object');
 	}
 
@@ -37,8 +38,8 @@ export class Tree {
 	 * @param {String} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
 	 * @param {String} pathSeparator (The string the path should get separated with.)
 	 * @param {String} separatorSign (The string which separates the path. e.g ".")
-	*/
-	getPathString(pathLocator, pathProperty, pathSeparator, separatorSign) { // eslint-disable-line no-unused-vars
+	 */
+	getPathString(pathLocator, pathProperty, pathSeparator, separatorSign) {
 		throw new Error('Must be implemented in derived object');
 	}
 
@@ -50,8 +51,14 @@ export class Tree {
 	 * @param {String} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
 	 * @param {String} pathSeparator (The string the path should get separated with.)
 	 * @param {String} separatorSign (The string which separates the path. e.g ".")
-	*/
-	getPathStringByProperty(propertyName, propertyValue, pathProperty, pathSeparator, separatorSign) { // eslint-disable-line no-unused-vars
+	 */
+	getPathStringByProperty(
+		propertyName,
+		propertyValue,
+		pathProperty,
+		pathSeparator,
+		separatorSign
+	) {
 		throw new Error('Must be implemented in derived object');
 	}
 
@@ -59,8 +66,8 @@ export class Tree {
 	 * Should return the children of a node in form of an array.
 	 * @returns {Array} The node's children
 	 * @param {node} node (The node of which the children should be returned of.)
-	*/
-	getChildren(node) { // eslint-disable-line no-unused-vars
+	 */
+	getChildren(node) {
 		throw new Error('Must be implemented in derived object');
 	}
 
@@ -68,8 +75,8 @@ export class Tree {
 	 * Returns true if a node has children.
 	 * @returns {Boolean} True if node has children
 	 * @param {node} node (The node of which the children check should be applied on.)
-	*/
-	hasChildren(node) { // eslint-disable-line no-unused-vars
+	 */
+	hasChildren(node) {
 		throw new Error('Must be implemented in derived object');
 	}
 
@@ -78,10 +85,12 @@ export class Tree {
 	 * @returns {Array|Object|String} The value of the property
 	 * @param {node} node (The node of which the property value should be returned of.)
 	 * @param {String} propertyName (The name of the property. e.g. "name")
-	*/
-	getProperty(node, propertyName) { // eslint-disable-line no-unused-vars
+	 */
+	getProperty(node, propertyName) {
 		throw new Error('Must be implemented in derived object');
 	}
+
+	/* eslint-enable no-unused-vars */
 
 	/**
 	 * Checks if a node matches the search criteria.
@@ -91,7 +100,7 @@ export class Tree {
 	 * @param {Object} options (Comparison options)
 	 * @param {String} options.propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {Boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
-	*/
+	 */
 	nodeConformsSearch(node, propertyValue, options) {
 		const property = options ? node[options.propertyName] : undefined;
 
@@ -116,7 +125,7 @@ export class Tree {
 	 * @param {String} options.propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {Boolean} options.exact [false] (If false, the propertyValue is matched fuzzy)
 	 * @param {Array} results (The array search results get added to.) Default: []
-	*/
+	 */
 	search(node, propertyValue, options, results = []) {
 		const nodeConforms = this.nodeConformsSearch(node, propertyValue, options),
 			children = this.getChildren(node);
