@@ -27,7 +27,8 @@
 		"lint": "eslint --cache --ext .js,.html .",
 		"start": "wds",
 		"test": "wtr --coverage",
-		"test:watch": "wtr --watch"
+		"test:watch": "wtr --watch",
+		"prepare": "husky install"
 	},
 	"release": {
 		"plugins": [
@@ -48,11 +49,6 @@
 			"@commitlint/config-conventional"
 		]
 	},
-	"husky": {
-		"hooks": {
-			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-		}
-	},
 	"devDependencies": {
 		"@commitlint/cli": "^17.0.0",
 		"@commitlint/config-conventional": "^17.0.0",
@@ -60,7 +56,7 @@
 		"@open-wc/testing": "^3.0.0",
 		"@semantic-release/changelog": "^6.0.0",
 		"@semantic-release/git": "^10.0.0",
-		"husky": "^4.2.5",
+		"husky": "^8.0.0",
 		"lit-html": "^2.0.0",
 		"semantic-release": "^19.0.0"
 	}

@@ -298,8 +298,15 @@ export class DefaultTree extends Tree {
 		if (!node) {
 			return false;
 		}
-		const children = this.getChildren(node);
-		return children && children.length > 0;
+		const childMap = node[this.childProperty];
+		if (!childMap) {
+			return false;
+		}
+		// eslint-disable-next-line guard-for-in
+		for (const key in childMap){
+			return true
+		}
+		return false;
 	}
 
 	/**
