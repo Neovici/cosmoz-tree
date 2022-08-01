@@ -6,7 +6,6 @@ Navigator through object with treelike datastructure and default settings.
 @demo demo/index.html
 */
 export class DefaultTree extends Tree {
-
 	/**
 	 * @param {Object} treeData (The tree object.)
 	 * @param {Object} options (Tree options.)
@@ -14,7 +13,7 @@ export class DefaultTree extends Tree {
 	 * @param {String} options.propertyName ["name"] (The name of the property a search should be based on. e.g. "name")
 	 * @param {String} options.pathStringSeparator ["/"] (The string the path should get separated with.)
 	 * @param {String} options.pathLocatorSeparator ["."] (The string which separates the path segments of a path locator.)
-	*/
+	 */
 	constructor(treeData, options = {}) {
 		super();
 		this._treeData = treeData;
@@ -27,8 +26,8 @@ export class DefaultTree extends Tree {
 	}
 
 	static _sortPathNodes(a, b) {
-		const undefCounter = item => item === undefined,
-			defCounter = item => item,
+		const undefCounter = (item) => item === undefined,
+			defCounter = (item) => item,
 			aUndefCount = a.filter(undefCounter).length,
 			bUndefCount = b.filter(undefCounter).length,
 			aDefCount = a.filter(defCounter).length,
@@ -53,7 +52,11 @@ export class DefaultTree extends Tree {
 	 * @param {String} propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {Array} nodes [this._roots] (The objects the search should be based on.)
 	 */
-	getNodeByProperty(propertyValue, propertyName = this.searchProperty, nodes = this._roots) {
+	getNodeByProperty(
+		propertyValue,
+		propertyName = this.searchProperty,
+		nodes = this._roots
+	) {
 		if (propertyValue === undefined) {
 			return;
 		}
@@ -68,12 +71,12 @@ export class DefaultTree extends Tree {
 	 * @param {Object} nodes [this._treeData] (The nodes the search should be based on.)
 	 * @param {Boolean} exact [true] (If the search should be executed exact or flaw. true wouldn't match "Pet")
 	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
-	*/
+	 */
 	searchNodes(propertyValue, nodes, exact, propertyName = this.searchProperty) {
 		const options = {
 			propertyName,
 			exact: exact !== undefined ? exact : true,
-			firstHitOnly: false
+			firstHitOnly: false,
 		};
 		return this._searchNodes(propertyValue, options, nodes);
 	}
@@ -84,12 +87,12 @@ export class DefaultTree extends Tree {
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
 	 * @param {Object} nodes [this._treeData] (The nodes the search should be based on.)
-	*/
+	 */
 	findNode(propertyValue, propertyName = this.searchProperty, nodes) {
 		const options = {
 			propertyName,
 			exact: true,
-			firstHitOnly: true
+			firstHitOnly: true,
 		};
 		return this._searchNodes(propertyValue, options, nodes).shift();
 	}
@@ -103,14 +106,17 @@ export class DefaultTree extends Tree {
 	 * @param {Boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
 	 * @param {Boolean} options.firstHitOnly [false] (If the search should only return the first found node.)
 	 * @param {Object} nodes [this._roots] (The nodes the search should be based on.)
-	*/
+	 */
 	_searchNodes(propertyValue, options, nodes = this._roots) {
-		let results = [];
+		const results = [];
 
-		nodes.some(node => {
-			results = results.concat(this.search(node, propertyValue, options));
-			return options.firstHitOnly && results.length > 0;
-		});
+		for (const node of nodes) {
+			const res = this.search(node, propertyValue, options);
+			if (options.firstHitOnly && res.length > 0) {
+				return res;
+			}
+			results.push(...res);
+		}
 
 		return results;
 	}
@@ -121,13 +127,21 @@ export class DefaultTree extends Tree {
 	 * @param {String} pathLocator (The string which describes the path. e.g. "1.2.9")
 	 * @param {Object} nodeObj [this._treeData] (The object the search should be based on.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
-	*/
-	getNodeByPathLocator(pathLocator, nodeObj = this._treeData, pathLocatorSeparator = this.pathLocatorSeparator) {
+	 */
+	getNodeByPathLocator(
+		pathLocator,
+		nodeObj = this._treeData,
+		pathLocatorSeparator = this.pathLocatorSeparator
+	) {
 		if (!pathLocator) {
 			return this._roots;
 		}
 
-		const pathNodes = this.getPathNodes(pathLocator, nodeObj, pathLocatorSeparator);
+		const pathNodes = this.getPathNodes(
+			pathLocator,
+			nodeObj,
+			pathLocatorSeparator
+		);
 		return pathNodes && pathNodes.pop();
 	}
 
@@ -141,25 +155,33 @@ export class DefaultTree extends Tree {
 	 * @param {String} pathLocator (The string which describes the path. e.g. "1.2.9")
 	 * @param {Object} nodeObj [this._treeData] (The object the search should be based on.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path.)
-	*/
-	getPathNodes(pathLocator, nodeObj = this._treeData, pathLocatorSeparator = this.pathLocatorSeparator) {
+	 */
+	getPathNodes(
+		pathLocator,
+		nodeObj = this._treeData,
+		pathLocatorSeparator = this.pathLocatorSeparator
+	) {
 		if (!pathLocator) {
 			return nodeObj;
 		}
 
 		return Object.keys(nodeObj)
-			.map(key => {
+			.map((key) => {
 				const subTree = {};
 				subTree[key] = nodeObj[key];
 				return this._getPathNodes(pathLocator, subTree, pathLocatorSeparator);
 			})
-			.filter(item => {
+			.filter((item) => {
 				return item && item.length > 0;
 			})
 			.sort(this.constructor._sortPathNodes)[0];
 	}
 
-	_getPathNodes(pathLocator, nodeObj = this._treeData, pathLocatorSeparator = this.pathLocatorSeparator) {
+	_getPathNodes(
+		pathLocator,
+		nodeObj = this._treeData,
+		pathLocatorSeparator = this.pathLocatorSeparator
+	) {
 		const path = pathLocator.split(pathLocatorSeparator),
 			nodes = this._pathToNodes(path, nodeObj, pathLocatorSeparator);
 
@@ -178,7 +200,9 @@ export class DefaultTree extends Tree {
 			if (!pathSegment) {
 				return false;
 			}
-			const node = pathSegment[nodeKey] ?? pathSegment[path.slice(0, i + 1).join(separator)];
+			const node =
+				pathSegment[nodeKey] ??
+				pathSegment[path.slice(0, i + 1).join(separator)];
 			if (node) {
 				pathSegment = node[this.childProperty];
 			}
@@ -193,22 +217,26 @@ export class DefaultTree extends Tree {
 	 * @param {String} pathProperty (The property of a node on which the path should be build on. e.g "location" with node = {"location": "home", ..})
 	 * @param {String} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path segments of pathLocator.)
-	*/
+	 */
 	getPathString(
 		pathLocator,
 		pathProperty = this.searchProperty,
 		pathStringSeparator = this.pathStringSeparator,
 		pathLocatorSeparator = this.pathLocatorSeparator
 	) {
-		const pathNodes = this.getPathNodes(pathLocator, this._treeData, pathLocatorSeparator);
+		const pathNodes = this.getPathNodes(
+			pathLocator,
+			this._treeData,
+			pathLocatorSeparator
+		);
 
 		if (!Array.isArray(pathNodes)) {
 			return;
 		}
 
 		return pathNodes
-			.filter(node => node != null)
-			.map(node => node[pathProperty])
+			.filter((node) => node != null)
+			.map((node) => node[pathProperty])
 			.join(pathStringSeparator);
 	}
 
@@ -220,20 +248,25 @@ export class DefaultTree extends Tree {
 	 * @param {String} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
 	 * @param {String} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
-	*/
+	 */
 	getPathStringByProperty(
 		propertyValue,
 		propertyName = this.searchProperty,
 		pathProperty = this.searchProperty,
 		pathStringSeparator = this.pathStringSeparator,
-		pathLocatorSeparator =	 this.pathLocatorSeparator
+		pathLocatorSeparator = this.pathLocatorSeparator
 	) {
 		if (propertyValue === undefined) {
 			return;
 		}
 
 		if (propertyName === 'pathLocator') {
-			return this.getPathString(propertyValue, pathProperty, pathStringSeparator, pathLocatorSeparator);
+			return this.getPathString(
+				propertyValue,
+				pathProperty,
+				pathStringSeparator,
+				pathLocatorSeparator
+			);
 		}
 
 		const node = this.getNodeByProperty(propertyValue, propertyName);
