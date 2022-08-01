@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/neovici/cosmoz-tree/compare/v3.1.1...v3.2.0) (2022-08-01)
+
+
+### Features
+
+* **cosmoz-default-tree:** improve hasChildren performance ([1b51071](https://github.com/neovici/cosmoz-tree/commit/1b5107163a0cfe9929030465c8c66a7ac1faeecc))
+
 ## [3.1.1](https://github.com/neovici/cosmoz-tree/compare/v3.1.0...v3.1.1) (2022-08-01)
 
 
