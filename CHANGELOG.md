@@ -1,3 +1,10 @@
+## [3.2.1](https://github.com/neovici/cosmoz-tree/compare/v3.2.0...v3.2.1) (2022-10-04)
+
+
+### Bug Fixes
+
+* add demo files ([201eb62](https://github.com/neovici/cosmoz-tree/commit/201eb6297600c8da5058e5fc0680411035b02f3b))
+
 # [3.2.0](https://github.com/neovici/cosmoz-tree/compare/v3.1.1...v3.2.0) (2022-08-01)
 
 
