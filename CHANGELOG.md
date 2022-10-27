@@ -1,3 +1,10 @@
+## [3.2.2](https://github.com/neovici/cosmoz-tree/compare/v3.2.1...v3.2.2) (2022-10-27)
+
+
+### Bug Fixes
+
+* include test data json ([7fd13a6](https://github.com/neovici/cosmoz-tree/commit/7fd13a6df2ed7365ac4756f760fa2b2bede58a6c))
+
 ## [3.2.1](https://github.com/neovici/cosmoz-tree/compare/v3.2.0...v3.2.1) (2022-10-04)
 
 
