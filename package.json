@@ -22,7 +22,8 @@
 	},
 	"files": [
 		"demo/*.json",
-		"cosmoz-*.js"
+		"cosmoz-*.js",
+		"test/data/"
 	],
 	"scripts": {
 		"lint": "eslint --cache --ext .js,.html .",
