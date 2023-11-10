@@ -1,3 +1,17 @@
+# [3.3.0](https://github.com/neovici/cosmoz-tree/compare/v3.2.2...v3.3.0) (2023-11-10)
+
+
+### Bug Fixes
+
+* installed packages after manually updating ([f9f34ef](https://github.com/neovici/cosmoz-tree/commit/f9f34efb4542226e2ea2b69cfe62647d1d53c088))
+
+
+### Features
+
+* dependencies and workflows update ([9c4e81f](https://github.com/neovici/cosmoz-tree/commit/9c4e81f4d12d16aa3f4d5fb43035d5bdc2147a34))
+* renaming and exporting scripts ([24c93b5](https://github.com/neovici/cosmoz-tree/commit/24c93b5c322fd7ce41b45ad9b9a54c8876fd840d))
+* updating of cosmoz tree into storybook ([90203b5](https://github.com/neovici/cosmoz-tree/commit/90203b5ccf88039c8f7618b9b275b7b366fed153))
+
 ## [3.2.2](https://github.com/neovici/cosmoz-tree/compare/v3.2.1...v3.2.2) (2022-10-27)
 
 
