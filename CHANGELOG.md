@@ -1,3 +1,10 @@
+# [3.4.0](https://github.com/neovici/cosmoz-tree/compare/v3.3.0...v3.4.0) (2024-01-13)
+
+
+### Features
+
+* update deps and exampples ([3d5054f](https://github.com/neovici/cosmoz-tree/commit/3d5054f5d2fab65cead3f6bedfe37154b1c8df25))
+
 # [3.3.0](https://github.com/neovici/cosmoz-tree/compare/v3.2.2...v3.3.0) (2023-11-10)
 
 
