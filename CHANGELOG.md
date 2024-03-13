@@ -1,3 +1,21 @@
+# [3.5.0](https://github.com/neovici/cosmoz-tree/compare/v3.4.0...v3.5.0) (2024-03-13)
+
+
+### Bug Fixes
+
+* reset package.json ([7b311d9](https://github.com/neovici/cosmoz-tree/commit/7b311d994b14f82cbb1247d1d1b2516bdcb0ede3))
+* run npm install to sync package.json and lock ([abc24c0](https://github.com/neovici/cosmoz-tree/commit/abc24c001664977f86658ea3fa157662abae3076))
+* updated examples ([590fee1](https://github.com/neovici/cosmoz-tree/commit/590fee14664cde604f44edd80d29f44c6c50767e))
+* use spaces for .json files ([2f10cbe](https://github.com/neovici/cosmoz-tree/commit/2f10cbe3be9d85093ff17380a8fda0d0cb474971))
+
+
+### Features
+
+* copied the 2 methods to TreeDefault ([0719ae3](https://github.com/neovici/cosmoz-tree/commit/0719ae34053e92fbe5e6b3649a7bf27f3ed94a39))
+* created a single Tree class ([c8b0480](https://github.com/neovici/cosmoz-tree/commit/c8b04803bf08aefdc2661671436887ded5ec96ed))
+* preserve backwards compatibility ([5281df0](https://github.com/neovici/cosmoz-tree/commit/5281df0bc9c03ad23838d4a3654e5f8fa8c357d1))
+* update dependencies ([ad8f9a9](https://github.com/neovici/cosmoz-tree/commit/ad8f9a9d07a5192d518cf618a116dcfc1426b012))
+
 # [3.4.0](https://github.com/neovici/cosmoz-tree/compare/v3.3.0...v3.4.0) (2024-01-13)
 
 
