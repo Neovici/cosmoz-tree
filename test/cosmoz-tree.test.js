@@ -1,5 +1,5 @@
 import { assert } from '@open-wc/testing';
-import { DefaultTree } from '../cosmoz-default-tree.js';
+import { Tree } from '../cosmoz-tree.js';
 
 const treeBaseUrl = '/test/data',
 	basicTreeUrl = `${treeBaseUrl}/basicTree.json`,
@@ -8,7 +8,7 @@ const treeBaseUrl = '/test/data',
 	missingAncestorTreeUrl = `${treeBaseUrl}/missingAncestorTree.json`,
 	treeFromJsonUrl = async (url) => {
 		const json = await fetch(url).then((r) => r.json());
-		return new DefaultTree(json);
+		return new Tree(json);
 	};
 
 suite('basic', () => {
@@ -25,25 +25,25 @@ suite('basic', () => {
 	test('getNodeByProperty', () => {
 		const root = basicTree.getNodeByProperty(
 				'11111111-1111-1111-1111-111111111111',
-				'id'
+				'id',
 			),
 			node2 = basicTree.getNodeByProperty(
 				'167d1485-7d4f-4c7d-86cd-a4fb00f31245',
-				'id'
+				'id',
 			),
 			node3 = basicTree.getNodeByProperty(
 				'3a7654f1-e3e6-49c7-b6a8-a4fb00f31245',
-				'id'
+				'id',
 			),
 			node4 = basicTree.getNodeByProperty(
 				'2b547550-b874-4228-9395-a4fb00f31245',
-				'id'
+				'id',
 			),
 			node5 = basicTree.getNodeByProperty(node4.name),
 			node6 = basicTree.getNodeByProperty(
 				node2.pathLocator,
 				'pathLocator',
-				basicTree._roots
+				basicTree._roots,
 			);
 		assert.isOk(root);
 		assert.isOk(node2);
@@ -59,27 +59,27 @@ suite('basic', () => {
 				'1',
 				undefined,
 				undefined,
-				'pathLocator'
+				'pathLocator',
 			)[0],
 			node2 = basicTree.searchNodes(
 				'1',
 				undefined,
 				undefined,
 				'pathLocator',
-				root
+				root,
 			)[0],
 			node3 = basicTree.searchNodes(
 				'2b547550-b874-4228-9395-a4fb00f31245',
 				undefined,
 				undefined,
-				'id'
+				'id',
 			)[0],
 			node4 = basicTree.searchNodes(node3.name),
 			node5 = basicTree.searchNodes(
 				'2b547550-b874-4228-9395-',
 				undefined,
 				false,
-				'id'
+				'id',
 			),
 			node6 = basicTree.searchNodes('Node', basicTree._roots, false, 'name');
 
@@ -89,12 +89,12 @@ suite('basic', () => {
 		assert.isAbove(
 			node4.indexOf(node3),
 			-1,
-			'Search by name & id creates no overlap in results.'
+			'Search by name & id creates no overlap in results.',
 		);
 		assert.isAbove(
 			node5.indexOf(node3),
 			-1,
-			'There is no overlab in results. "exact" attribute fails.'
+			'There is no overlab in results. "exact" attribute fails.',
 		);
 		assert.isOk(node6);
 	});
@@ -104,7 +104,7 @@ suite('basic', () => {
 				'1',
 				undefined,
 				undefined,
-				'pathLocator'
+				'pathLocator',
 			)[0],
 			node = basicTree.findNode('1'),
 			node2 = basicTree.findNode('2b547550-b874-4228-9395-a4fb00f31245', 'id');
@@ -135,7 +135,7 @@ suite('basic', () => {
 			nodes3X2.filter((n) => {
 				return n;
 			}).length,
-			3
+			3,
 		);
 
 		assert.equal(nodes3.length, 3);
@@ -156,7 +156,7 @@ suite('basic', () => {
 			node301PathString = basicTree.getPathString(
 				node301.pathLocator,
 				'name',
-				'/'
+				'/',
 			);
 		assert.equal(node301PathString, 'Root/Node2/Node3/Node301');
 	});
@@ -168,7 +168,7 @@ suite('basic', () => {
 		assert.isUndefined(basicTree.getPathStringByProperty());
 		assert.equal(
 			basicTree.getPathStringByProperty('1.2.3', 'pathLocator'),
-			basicTree.getPathString('1.2.3')
+			basicTree.getPathString('1.2.3'),
 		);
 	});
 
@@ -192,13 +192,12 @@ suite('basicPL', () => {
 		assert.isOk(basicTree);
 	});
 
-
 	test('findNode', () => {
 		const node1 = basicTree.searchNodes(
 				'1.2.3',
 				undefined,
 				undefined,
-				'pathLocator'
+				'pathLocator',
 			)[0],
 			node2 = basicTree.findNode('1.2.3', 'pathLocator'),
 			node3 = basicTree.findNode('3a7654f1-e3e6-49c7-b6a8-a4fb00f31245', 'id');
@@ -207,8 +206,6 @@ suite('basicPL', () => {
 		assert.equal(node3.pathLocator, '1.2.3');
 	});
 });
-
-
 
 suite('multiRoot', () => {
 	let multiRootTree;
@@ -224,15 +221,15 @@ suite('multiRoot', () => {
 	test('getNodeByProperty', () => {
 		const node2 = multiRootTree.getNodeByProperty(
 				'167d1485-7d4f-4c7d-86cd-a4fb00f31245',
-				'id'
+				'id',
 			),
 			node3 = multiRootTree.getNodeByProperty(
 				'3a7654f1-e3e6-49c7-b6a8-a4fb00f31245',
-				'id'
+				'id',
 			),
 			node4 = multiRootTree.getNodeByProperty(
 				'2b547550-b874-4228-9395-a4fb00f31245',
-				'id'
+				'id',
 			);
 		assert.isOk(node2);
 		assert.isOk(node3);
@@ -252,7 +249,7 @@ suite('multiRoot', () => {
 			nodes3X2.filter((n) => {
 				return n;
 			}).length,
-			2
+			2,
 		);
 		assert.isAbove(nodes3.length, 0);
 		assert.isAbove(nodes14.length, 0);
@@ -280,15 +277,15 @@ suite('missingAncestor', () => {
 	test('getNodeByProperty', () => {
 		const node2 = missingAncestorTree.getNodeByProperty(
 				'167d1485-7d4f-4c7d-86cd-a4fb00f31245',
-				'id'
+				'id',
 			),
 			node301 = missingAncestorTree.getNodeByProperty(
 				'3a7654f1-e3e6-49c7-b6a8-a4fb00f31245',
-				'id'
+				'id',
 			),
 			node401 = missingAncestorTree.getNodeByProperty(
 				'865065da-f44c-472e-a8df-a4fb00f3124b',
-				'id'
+				'id',
 			);
 		assert.isOk(node2);
 		assert.isOk(node301);
@@ -299,11 +296,11 @@ suite('missingAncestor', () => {
 	test('getPathNodes', () => {
 		const node301 = missingAncestorTree.getNodeByProperty(
 				'3a7654f1-e3e6-49c7-b6a8-a4fb00f31245',
-				'id'
+				'id',
 			),
 			node401 = missingAncestorTree.getNodeByProperty(
 				'865065da-f44c-472e-a8df-a4fb00f3124b',
-				'id'
+				'id',
 			),
 			node301Path = missingAncestorTree.getPathNodes(node301.pathLocator),
 			node401Path = missingAncestorTree.getPathNodes(node401.pathLocator),
@@ -370,7 +367,7 @@ suite('missingAncestor', () => {
 			n_601_301.filter((n) => {
 				return n;
 			}).length,
-			2
+			2,
 		);
 
 		// 1.2.7.301 - impossible case ?
