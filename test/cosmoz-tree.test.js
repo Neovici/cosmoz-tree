@@ -180,6 +180,14 @@ suite('basic', () => {
 		assert(!basicTree.hasChildren(node301));
 		assert.isFalse(basicTree.hasChildren());
 	});
+
+	test('getProperty', () => {
+		const rootNode = basicTree.getNodeByPathLocator('1');
+
+		assert.equal(basicTree.getProperty(rootNode, 'name'), 'Root');
+		assert.equal(basicTree.getProperty(rootNode), undefined);
+		assert.equal(basicTree.getProperty(null, 'name'), undefined);
+	});
 });
 
 suite('basicPL', () => {
