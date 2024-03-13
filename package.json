@@ -1,66 +1,66 @@
 {
-  "name": "@neovici/cosmoz-tree",
-  "version": "3.4.0",
-  "description": "Element and helper classes to manage tree data structure.",
-  "keywords": [
-    "polymer",
-    "web-components"
-  ],
-  "homepage": "https://github.com/neovici/cosmoz-tree#readme",
-  "bugs": {
-    "url": "https://github.com/neovici/cosmoz-tree/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/neovici/cosmoz-tree.git"
-  },
-  "license": "Apache-2.0",
-  "author": "",
-  "main": "cosmoz-tree.js",
-  "directories": {
-    "test": "test"
-  },
-  "files": [
-    "demo/*.json",
-    "cosmoz-*.js",
-    "test/data/",
-    "examples"
-  ],
-  "scripts": {
-    "lint": "eslint --cache --ext .js,.html .",
-    "start": "wds",
-    "test": "wtr --coverage",
-    "test:watch": "wtr --watch",
-    "prepare": "husky install"
-  },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      "@semantic-release/github",
-      "@semantic-release/npm",
-      "@semantic-release/git"
-    ],
-    "branch": "master"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^18.2.0",
-    "@commitlint/config-conventional": "^18.1.0",
-    "@neovici/cfg": "^1.0.0",
-    "@open-wc/testing": "^4.0.0",
-    "@semantic-release/changelog": "^6.0.0",
-    "@semantic-release/git": "^10.0.0",
-    "husky": "^8.0.0",
-    "lit-html": "^3.0.2",
-    "semantic-release": "^23.0.0"
-  }
+	"name": "@neovici/cosmoz-tree",
+	"version": "3.4.0",
+	"description": "Element and helper classes to manage tree data structure.",
+	"keywords": [
+		"polymer",
+		"web-components"
+	],
+	"homepage": "https://github.com/neovici/cosmoz-tree#readme",
+	"bugs": {
+		"url": "https://github.com/neovici/cosmoz-tree/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/neovici/cosmoz-tree.git"
+	},
+	"license": "Apache-2.0",
+	"author": "",
+	"main": "cosmoz-tree.js",
+	"directories": {
+		"test": "test"
+	},
+	"files": [
+		"demo/*.json",
+		"cosmoz-*.js",
+		"test/data/",
+		"examples"
+	],
+	"scripts": {
+		"lint": "eslint --cache --ext .js,.html .",
+		"start": "wds",
+		"test": "wtr --coverage",
+		"test:watch": "wtr --watch",
+		"prepare": "husky install"
+	},
+	"release": {
+		"plugins": [
+			"@semantic-release/commit-analyzer",
+			"@semantic-release/release-notes-generator",
+			"@semantic-release/changelog",
+			"@semantic-release/github",
+			"@semantic-release/npm",
+			"@semantic-release/git"
+		],
+		"branch": "master"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^19.0.0",
+		"@commitlint/config-conventional": "^19.0.0",
+		"@neovici/cfg": "^1.0.0",
+		"@open-wc/testing": "^4.0.0",
+		"@semantic-release/changelog": "^6.0.0",
+		"@semantic-release/git": "^10.0.0",
+		"husky": "^9.0.0",
+		"lit-html": "^3.0.2",
+		"semantic-release": "^23.0.0"
+	}
 }
