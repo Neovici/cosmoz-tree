@@ -6,9 +6,9 @@ const treeBaseUrl = '/test/data',
 	basicTreePlUrl = `${treeBaseUrl}/basicTreePL.json`,
 	multiRootTreeUrl = `${treeBaseUrl}/multiRootTree.json`,
 	missingAncestorTreeUrl = `${treeBaseUrl}/missingAncestorTree.json`,
-	treeFromJsonUrl = async (url) => {
+	treeFromJsonUrl = async (url, options = {}) => {
 		const json = await fetch(url).then((r) => r.json());
-		return new Tree(json);
+		return new Tree(json, options);
 	};
 
 suite('basic', () => {
@@ -175,6 +175,7 @@ suite('basic', () => {
 	test('hasChildren', () => {
 		const node3 = basicTree.getNodeByPathLocator('1.2.3'),
 			node301 = basicTree.getNodeByPathLocator('1.2.3.301');
+
 		assert(basicTree.hasChildren(node3));
 		assert(!basicTree.hasChildren(node301));
 		assert.isFalse(basicTree.hasChildren());
@@ -382,4 +383,25 @@ suite('missingAncestor', () => {
 		assert.equal(n_2_301[0].name, 'Node301');
 	});
 	/* eslint-enable camelcase */
+});
+
+suite('basicWithOptions', () => {
+	let basicTreeWithOptions;
+
+	suiteSetup(async () => {
+		basicTreeWithOptions = await treeFromJsonUrl(basicTreeUrl, {
+			// set the childProperty to something that doesn't exist in the tree
+			childProperty: 'noChildren',
+		});
+	});
+
+	test('instantiating a Cosmoz.Tree', () => {
+		assert.isOk(basicTreeWithOptions);
+	});
+
+	test('hasChildren is false when the childProperty doesnt exist', () => {
+		const rootNode = basicTreeWithOptions.getNodeByPathLocator('1');
+
+		assert.isFalse(basicTreeWithOptions.hasChildren(rootNode));
+	});
 });
