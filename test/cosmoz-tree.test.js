@@ -412,4 +412,19 @@ suite('basicWithOptions', () => {
 
 		assert.isFalse(basicTreeWithOptions.hasChildren(rootNode));
 	});
+
+	test('nodeConformsSearch returns undefined when theres no property', () => {
+		const rootNode = basicTreeWithOptions.getNodeByPathLocator('1');
+
+		assert.equal(
+			basicTreeWithOptions.nodeConformsSearch(rootNode, 'Root'),
+			undefined,
+		);
+		assert.equal(
+			basicTreeWithOptions.nodeConformsSearch(rootNode, 'Root', {
+				propertyName: 'noProperty',
+			}),
+			undefined,
+		);
+	});
 });
