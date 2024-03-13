@@ -55,7 +55,7 @@ export class DefaultTree extends Tree {
 	getNodeByProperty(
 		propertyValue,
 		propertyName = this.searchProperty,
-		nodes = this._roots
+		nodes = this._roots,
 	) {
 		if (propertyValue === undefined) {
 			return;
@@ -131,7 +131,7 @@ export class DefaultTree extends Tree {
 	getNodeByPathLocator(
 		pathLocator,
 		nodeObj = this._treeData,
-		pathLocatorSeparator = this.pathLocatorSeparator
+		pathLocatorSeparator = this.pathLocatorSeparator,
 	) {
 		if (!pathLocator) {
 			return this._roots;
@@ -140,7 +140,7 @@ export class DefaultTree extends Tree {
 		const pathNodes = this.getPathNodes(
 			pathLocator,
 			nodeObj,
-			pathLocatorSeparator
+			pathLocatorSeparator,
 		);
 		return pathNodes && pathNodes.pop();
 	}
@@ -159,7 +159,7 @@ export class DefaultTree extends Tree {
 	getPathNodes(
 		pathLocator,
 		nodeObj = this._treeData,
-		pathLocatorSeparator = this.pathLocatorSeparator
+		pathLocatorSeparator = this.pathLocatorSeparator,
 	) {
 		if (!pathLocator) {
 			return nodeObj;
@@ -180,7 +180,7 @@ export class DefaultTree extends Tree {
 	_getPathNodes(
 		pathLocator,
 		nodeObj = this._treeData,
-		pathLocatorSeparator = this.pathLocatorSeparator
+		pathLocatorSeparator = this.pathLocatorSeparator,
 	) {
 		const path = pathLocator.split(pathLocatorSeparator),
 			nodes = this._pathToNodes(path, nodeObj, pathLocatorSeparator);
@@ -222,12 +222,12 @@ export class DefaultTree extends Tree {
 		pathLocator,
 		pathProperty = this.searchProperty,
 		pathStringSeparator = this.pathStringSeparator,
-		pathLocatorSeparator = this.pathLocatorSeparator
+		pathLocatorSeparator = this.pathLocatorSeparator,
 	) {
 		const pathNodes = this.getPathNodes(
 			pathLocator,
 			this._treeData,
-			pathLocatorSeparator
+			pathLocatorSeparator,
 		);
 
 		if (!Array.isArray(pathNodes)) {
@@ -254,7 +254,7 @@ export class DefaultTree extends Tree {
 		propertyName = this.searchProperty,
 		pathProperty = this.searchProperty,
 		pathStringSeparator = this.pathStringSeparator,
-		pathLocatorSeparator = this.pathLocatorSeparator
+		pathLocatorSeparator = this.pathLocatorSeparator,
 	) {
 		if (propertyValue === undefined) {
 			return;
@@ -265,7 +265,7 @@ export class DefaultTree extends Tree {
 				propertyValue,
 				pathProperty,
 				pathStringSeparator,
-				pathLocatorSeparator
+				pathLocatorSeparator,
 			);
 		}
 
@@ -303,8 +303,8 @@ export class DefaultTree extends Tree {
 			return false;
 		}
 		// eslint-disable-next-line guard-for-in
-		for (const key in childMap){
-			return true
+		for (const key in childMap) {
+			return true;
 		}
 		return false;
 	}
@@ -320,5 +320,57 @@ export class DefaultTree extends Tree {
 			return;
 		}
 		return node[propertyName];
+	}
+
+	/**
+	 * Checks if a node matches the search criteria.
+	 * @returns {Boolean} True if node matches
+	 * @param {node} node (The node the check should be based on.)
+	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+	 * @param {Object} options (Comparison options)
+	 * @param {String} options.propertyName (The name of the property the match should be based on. e.g. "name")
+	 * @param {Boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
+	 */
+	nodeConformsSearch(node, propertyValue, options) {
+		const property = options ? node[options.propertyName] : undefined;
+
+		if (!property) {
+			// eslint-disable-next-line no-console
+			console.error('options.propertyName needs to be specified.');
+			return;
+		}
+
+		if (options.exact) {
+			return property === propertyValue;
+		}
+		return property.toLowerCase().indexOf(propertyValue.toLowerCase()) > -1;
+	}
+
+	/**
+	 * Searches a (multi root) node and matches nodes based on a property and a value.
+	 * @returns {Array} The nodes found
+	 * @param {node} node	 The node to search in.
+	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+	 * @param {Object} options (Search options)
+	 * @param {String} options.propertyName (The name of the property the match should be based on. e.g. "name")
+	 * @param {Boolean} options.exact [false] (If false, the propertyValue is matched fuzzy)
+	 * @param {Array} results (The array search results get added to.) Default: []
+	 */
+	search(node, propertyValue, options, results = []) {
+		const nodeConforms = this.nodeConformsSearch(node, propertyValue, options),
+			children = this.getChildren(node);
+
+		if (nodeConforms) {
+			results.push(node);
+		}
+
+		for (const child of children) {
+			const result = this.search(child, propertyValue, options, results);
+			if (!Array.isArray(result)) {
+				return [result];
+			}
+		}
+
+		return results;
 	}
 }
