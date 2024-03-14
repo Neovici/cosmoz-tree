@@ -51,7 +51,9 @@
 	},
 	"exports": {
 		"./cosmoz-tree": "./dist/cosmoz-tree.js",
-		"./cosmoz-default-tree": "./dist/cosmoz-default-tree.js"
+		"./cosmoz-tree.js": "./dist/cosmoz-tree.js",
+		"./cosmoz-default-tree": "./dist/cosmoz-default-tree.js",
+		"./cosmoz-default-tree.js": "./dist/cosmoz-default-tree.js"
 	},
 	"commitlint": {
 		"extends": [
