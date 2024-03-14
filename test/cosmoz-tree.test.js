@@ -1,5 +1,5 @@
 import { assert } from '@open-wc/testing';
-import { Tree } from '../cosmoz-tree.js';
+import { Tree } from '../src/cosmoz-tree';
 
 const treeBaseUrl = '/test/data',
 	basicTreeUrl = `${treeBaseUrl}/basicTree.json`,
