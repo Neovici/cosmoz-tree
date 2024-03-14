@@ -28,7 +28,7 @@
 		"dist/*"
 	],
 	"scripts": {
-		"lint": "tsc && eslint --cache --ext .js,.html .",
+		"lint": "tsc && eslint --cache .",
 		"build": "tsc -p tsconfig.build.json",
 		"start": "wds",
 		"test": "wtr --coverage",
