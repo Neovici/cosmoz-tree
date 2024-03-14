@@ -4,7 +4,7 @@ Navigator through object with treelike datastructure and default settings.
 @demo demo/index.html
 */
 
-export type TreeOptions = {
+export type Options = {
 	childProperty?: string;
 	searchProperty?: string;
 	pathLocatorSeparator?: string;
@@ -32,7 +32,7 @@ export class Tree {
 	 * @param {String} options.pathStringSeparator ["/"] (The string the path should get separated with.)
 	 * @param {String} options.pathLocatorSeparator ["."] (The string which separates the path segments of a path locator.)
 	 */
-	constructor(treeData: object, options: TreeOptions = {}) {
+	constructor(treeData: object, options: Options = {}) {
 		this._treeData = treeData;
 		this._roots = Object.values(treeData);
 
