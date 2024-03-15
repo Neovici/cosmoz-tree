@@ -4,19 +4,46 @@ Navigator through object with treelike datastructure and default settings.
 @demo demo/index.html
 */
 
-export type Options = {
+export interface Options {
 	childProperty?: string;
 	searchProperty?: string;
 	pathLocatorSeparator?: string;
 	pathStringSeparator?: string;
-};
+}
 
 export interface Node {
 	pathLocator: string;
+	path?: string;
+	children?: Record<string, Node>;
 }
 
+export type TreeData = Record<string, Node>;
+
+const _sortPathNodes = (a: Node[], b: Node[]): number => {
+	const undefCounter = <Type>(item: Type) => item === undefined,
+		defCounter = <Type>(item: Type) => item,
+		aUndefCount = a.filter(undefCounter).length,
+		bUndefCount = b.filter(undefCounter).length,
+		aDefCount = a.filter(defCounter).length,
+		bDefCount = b.filter(defCounter).length;
+
+	if (aUndefCount < bUndefCount) {
+		return -1;
+	}
+
+	if (aUndefCount > bUndefCount || aDefCount < bDefCount) {
+		return 1;
+	}
+
+	if (aDefCount > bDefCount) {
+		return -1;
+	}
+
+	return 0;
+};
+
 export class Tree {
-	_treeData: object;
+	_treeData: TreeData;
 
 	_roots: Node[];
 
@@ -36,7 +63,7 @@ export class Tree {
 	 * @param {String} options.pathStringSeparator ["/"] (The string the path should get separated with.)
 	 * @param {String} options.pathLocatorSeparator ["."] (The string which separates the path segments of a path locator.)
 	 */
-	constructor(treeData: object, options: Options = {}) {
+	constructor(treeData: TreeData, options: Options = {}) {
 		this._treeData = treeData;
 		this._roots = Object.values(treeData);
 
@@ -44,29 +71,6 @@ export class Tree {
 		this.pathStringSeparator = options.pathStringSeparator || '/';
 		this.childProperty = options.childProperty || 'children';
 		this.searchProperty = options.searchProperty || 'name';
-	}
-
-	static _sortPathNodes(a: Node[], b: Node[]): number {
-		const undefCounter = (item) => item === undefined,
-			defCounter = (item) => item,
-			aUndefCount = a.filter(undefCounter).length,
-			bUndefCount = b.filter(undefCounter).length,
-			aDefCount = a.filter(defCounter).length,
-			bDefCount = b.filter(defCounter).length;
-
-		if (aUndefCount < bUndefCount) {
-			return -1;
-		}
-
-		if (aUndefCount > bUndefCount || aDefCount < bDefCount) {
-			return 1;
-		}
-
-		if (aDefCount > bDefCount) {
-			return -1;
-		}
-
-		return 0;
 	}
 
 	/**
@@ -201,7 +205,7 @@ export class Tree {
 	 */
 	getPathNodes(
 		pathLocator?: string,
-		nodeObj = this._treeData,
+		nodeObj: TreeData = this._treeData,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
 	) {
 		if (!pathLocator) {
@@ -210,15 +214,14 @@ export class Tree {
 
 		return Object.keys(nodeObj)
 			.map((key) => {
-				const subTree = {};
-				subTree[key as keyof typeof subTree] =
-					nodeObj[key as keyof typeof nodeObj];
+				const subTree: TreeData = {};
+				subTree[key] = nodeObj[key];
 				return this._getPathNodes(pathLocator, subTree, pathLocatorSeparator);
 			})
 			.filter((item) => {
 				return item && item.length > 0;
 			})
-			.sort(this.constructor._sortPathNodes)[0];
+			.sort(_sortPathNodes)[0];
 	}
 
 	_getPathNodes(
@@ -237,16 +240,18 @@ export class Tree {
 		return nodes;
 	}
 
-	_pathToNodes(path, nodes: Node[], separator: string) {
+	_pathToNodes(path: string[], nodes: Node[], separator: string) {
 		let pathSegment = nodes;
-		return path.map((nodeKey, i) => {
+		return path.map(<NodeType>(nodeKey: NodeType, i: number) => {
 			// Get the nodes on the path
 			if (!pathSegment) {
 				return false;
 			}
 			const node =
-				pathSegment[nodeKey] ??
-				pathSegment[path.slice(0, i + 1).join(separator)];
+				pathSegment[nodeKey as keyof typeof pathSegment] ??
+				pathSegment[
+					path.slice(0, i + 1).join(separator) as keyof typeof pathSegment
+				];
 			if (node) {
 				pathSegment = node[this.childProperty as keyof typeof node];
 			}
@@ -263,7 +268,7 @@ export class Tree {
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path segments of pathLocator.)
 	 */
 	getPathString(
-		pathLocator: string,
+		pathLocator?: string,
 		pathProperty: string = this.searchProperty,
 		pathStringSeparator: string = this.pathStringSeparator,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
