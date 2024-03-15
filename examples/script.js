@@ -1,4 +1,4 @@
-import { Tree } from '../cosmoz-tree.js';
+import { Tree } from '../src/cosmoz-tree';
 
 fetch('tree.json').then(async (response) => {
 	const json = await response.json(),
