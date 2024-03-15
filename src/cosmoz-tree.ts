@@ -189,7 +189,7 @@ export class Tree {
 			nodeObj,
 			pathLocatorSeparator,
 		);
-		return pathNodes && pathNodes.pop();
+		return pathNodes && Array.isArray(pathNodes) && pathNodes.pop();
 	}
 
 	/**
@@ -216,7 +216,13 @@ export class Tree {
 			.map((key) => {
 				const subTree: TreeData = {};
 				subTree[key] = nodeObj[key];
-				return this._getPathNodes(pathLocator, subTree, pathLocatorSeparator);
+				const pathNodes = this._getPathNodes(
+					pathLocator,
+					subTree,
+					pathLocatorSeparator,
+				);
+
+				return pathNodes;
 			})
 			.filter((item) => {
 				return item && item.length > 0;
@@ -226,7 +232,7 @@ export class Tree {
 
 	_getPathNodes(
 		pathLocator: string,
-		nodeObj = this._treeData,
+		nodeObj: TreeData = this._treeData,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
 	) {
 		const path = pathLocator.split(pathLocatorSeparator),
@@ -240,23 +246,22 @@ export class Tree {
 		return nodes;
 	}
 
-	_pathToNodes(path: string[], nodes: Node[], separator: string) {
+	_pathToNodes(path: string[], nodes: TreeData, separator: string) {
 		let pathSegment = nodes;
-		return path.map(<NodeType>(nodeKey: NodeType, i: number) => {
+		return path.map((nodeKey: string, i: number) => {
 			// Get the nodes on the path
 			if (!pathSegment) {
 				return false;
 			}
 			const node =
-				pathSegment[nodeKey as keyof typeof pathSegment] ??
-				pathSegment[
-					path.slice(0, i + 1).join(separator) as keyof typeof pathSegment
-				];
+				pathSegment[nodeKey] ??
+				pathSegment[path.slice(0, i + 1).join(separator)];
 			if (node) {
-				pathSegment = node[this.childProperty as keyof typeof node];
+				pathSegment = node[this.childProperty as 'children']!;
 			}
 			return node;
-		});
+			// TODO: fix next line
+		}) as unknown as Node[];
 	}
 
 	/**
@@ -285,7 +290,7 @@ export class Tree {
 
 		return pathNodes
 			.filter((node) => node != null)
-			.map((node) => node[pathProperty])
+			.map((node) => node[pathProperty as 'pathLocator'])
 			.join(pathStringSeparator);
 	}
 
@@ -331,12 +336,12 @@ export class Tree {
 	 * @param {Object} node The object to return children from
 	 * @returns {Object|Array} The node's children
 	 */
-	getChildren(node: Node): Node[] {
-		if (!node || !node[this.childProperty as keyof typeof node]) {
+	getChildren(node: Node) {
+		if (!node || !node[this.childProperty as 'children']) {
 			return [];
 		}
 
-		return Object.values(node[this.childProperty as keyof typeof node]);
+		return Object.values(node[this.childProperty as 'children']!);
 	}
 
 	/**
@@ -348,7 +353,7 @@ export class Tree {
 		if (!node) {
 			return false;
 		}
-		const childMap = node[this.childProperty as keyof typeof node];
+		const childMap = node[this.childProperty as 'children'];
 		if (!childMap) {
 			return false;
 		}
@@ -389,10 +394,10 @@ export class Tree {
 			propertyName: string;
 			exact: boolean;
 		},
-	): boolean | undefined {
-		const property = options
+	) {
+		const property = (options
 			? node[options.propertyName as keyof typeof node]
-			: undefined;
+			: undefined) as unknown as string;
 
 		if (!property) {
 			// eslint-disable-next-line no-console
