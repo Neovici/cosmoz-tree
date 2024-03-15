@@ -11,10 +11,14 @@ export type Options = {
 	pathStringSeparator?: string;
 };
 
+export interface Node {
+	pathLocator: string;
+}
+
 export class Tree {
 	_treeData: object;
 
-	_roots: object;
+	_roots: Node[];
 
 	childProperty: string;
 
@@ -42,7 +46,7 @@ export class Tree {
 		this.searchProperty = options.searchProperty || 'name';
 	}
 
-	static _sortPathNodes(a, b): number {
+	static _sortPathNodes(a: Node[], b: Node[]): number {
 		const undefCounter = (item) => item === undefined,
 			defCounter = (item) => item,
 			aUndefCount = a.filter(undefCounter).length,
@@ -75,8 +79,8 @@ export class Tree {
 	getNodeByProperty(
 		propertyValue?: string,
 		propertyName: string = this.searchProperty,
-		nodes: object = this._roots,
-	): object | undefined {
+		nodes: Node[] = this._roots,
+	): Node | undefined {
 		if (propertyValue === undefined) {
 			return;
 		}
@@ -94,10 +98,10 @@ export class Tree {
 	 */
 	searchNodes(
 		propertyValue: string,
-		nodes,
+		nodes: Node[],
 		exact: boolean | undefined,
 		propertyName: string = this.searchProperty,
-	): object[] {
+	): Node[] {
 		const options = {
 			propertyName,
 			exact: exact !== undefined ? exact : true,
@@ -117,8 +121,8 @@ export class Tree {
 	findNode(
 		propertyValue: string,
 		propertyName: string = this.searchProperty,
-		nodes,
-	) {
+		nodes: Node[],
+	): Node | undefined {
 		const options = {
 			propertyName,
 			exact: true,
@@ -207,7 +211,8 @@ export class Tree {
 		return Object.keys(nodeObj)
 			.map((key) => {
 				const subTree = {};
-				subTree[key] = nodeObj[key];
+				subTree[key as keyof typeof subTree] =
+					nodeObj[key as keyof typeof nodeObj];
 				return this._getPathNodes(pathLocator, subTree, pathLocatorSeparator);
 			})
 			.filter((item) => {
@@ -232,7 +237,7 @@ export class Tree {
 		return nodes;
 	}
 
-	_pathToNodes(path, nodes, separator) {
+	_pathToNodes(path, nodes: Node[], separator: string) {
 		let pathSegment = nodes;
 		return path.map((nodeKey, i) => {
 			// Get the nodes on the path
@@ -243,7 +248,7 @@ export class Tree {
 				pathSegment[nodeKey] ??
 				pathSegment[path.slice(0, i + 1).join(separator)];
 			if (node) {
-				pathSegment = node[this.childProperty];
+				pathSegment = node[this.childProperty as keyof typeof node];
 			}
 			return node;
 		});
@@ -321,11 +326,12 @@ export class Tree {
 	 * @param {Object} node The object to return children from
 	 * @returns {Object|Array} The node's children
 	 */
-	getChildren(node: object) {
-		if (!node || !node[this.childProperty]) {
+	getChildren(node: Node): Node[] {
+		if (!node || !node[this.childProperty as keyof typeof node]) {
 			return [];
 		}
-		return Object.values(node[this.childProperty]);
+
+		return Object.values(node[this.childProperty as keyof typeof node]);
 	}
 
 	/**
@@ -333,11 +339,11 @@ export class Tree {
 	 * @param {Object} node The object to get children from
 	 * @returns {Boolean} True if node has children
 	 */
-	hasChildren(node: object): boolean {
+	hasChildren(node: Node): boolean {
 		if (!node) {
 			return false;
 		}
-		const childMap = node[this.childProperty];
+		const childMap = node[this.childProperty as keyof typeof node];
 		if (!childMap) {
 			return false;
 		}
@@ -354,11 +360,12 @@ export class Tree {
 	 * @param {String} propertyName The name of property
 	 * @returns {*} The value of the property
 	 */
-	getProperty(node: object, propertyName: string) {
+	getProperty(node: Node, propertyName: string) {
 		if (!node || !propertyName) {
 			return;
 		}
-		return node[propertyName];
+
+		return node[propertyName as keyof typeof node];
 	}
 
 	/**
@@ -371,14 +378,16 @@ export class Tree {
 	 * @param {Boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
 	 */
 	nodeConformsSearch(
-		node: object,
+		node: Node,
 		propertyValue: string,
 		options?: {
 			propertyName: string;
 			exact: boolean;
 		},
 	): boolean | undefined {
-		const property = options ? node[options.propertyName] : undefined;
+		const property = options
+			? node[options.propertyName as keyof typeof node]
+			: undefined;
 
 		if (!property) {
 			// eslint-disable-next-line no-console
@@ -386,7 +395,7 @@ export class Tree {
 			return;
 		}
 
-		if (options.exact) {
+		if (options?.exact) {
 			return property === propertyValue;
 		}
 
@@ -404,14 +413,14 @@ export class Tree {
 	 * @param {Array} results (The array search results get added to.) Default: []
 	 */
 	search(
-		node,
+		node: Node,
 		propertyValue: string,
 		options: {
 			propertyName: string;
-			exact: string;
+			exact: boolean;
 		},
-		results = [],
-	) {
+		results: Node[] = [],
+	): Node[] {
 		const nodeConforms = this.nodeConformsSearch(node, propertyValue, options),
 			children = this.getChildren(node);
 
