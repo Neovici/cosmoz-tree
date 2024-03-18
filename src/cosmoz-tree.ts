@@ -14,6 +14,7 @@ export interface Options {
 export interface Node {
 	pathLocator: string;
 	path?: string;
+	name?: string;
 	children?: Record<string, Node>;
 }
 
@@ -84,7 +85,7 @@ export class Tree {
 		propertyValue?: string,
 		propertyName: string = this.searchProperty,
 		nodes: Node[] = this._roots,
-	): Node | undefined {
+	) {
 		if (propertyValue === undefined) {
 			return;
 		}
@@ -101,11 +102,11 @@ export class Tree {
 	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
 	 */
 	searchNodes(
-		propertyValue: string,
-		nodes: Node[],
-		exact: boolean | undefined,
+		propertyValue?: string,
+		nodes?: Node[],
+		exact?: boolean,
 		propertyName: string = this.searchProperty,
-	): Node[] {
+	) {
 		const options = {
 			propertyName,
 			exact: exact !== undefined ? exact : true,
@@ -125,8 +126,8 @@ export class Tree {
 	findNode(
 		propertyValue: string,
 		propertyName: string = this.searchProperty,
-		nodes: Node[],
-	): Node | undefined {
+		nodes?: Node[],
+	) {
 		const options = {
 			propertyName,
 			exact: true,
@@ -147,7 +148,7 @@ export class Tree {
 	 * @param {Object} nodes [this._roots] (The nodes the search should be based on.)
 	 */
 	_searchNodes(
-		propertyValue: string,
+		propertyValue: string | undefined,
 		options: {
 			propertyName: string;
 			exact: boolean;
@@ -348,7 +349,7 @@ export class Tree {
 	 * @param {Object} node The object to get children from
 	 * @returns {Boolean} True if node has children
 	 */
-	hasChildren(node: Node): boolean {
+	hasChildren(node: Node) {
 		if (!node) {
 			return false;
 		}
@@ -369,7 +370,7 @@ export class Tree {
 	 * @param {String} propertyName The name of property
 	 * @returns {*} The value of the property
 	 */
-	getProperty(node: Node, propertyName: string) {
+	getProperty(node: Node | null, propertyName?: string) {
 		if (!node || !propertyName) {
 			return;
 		}
@@ -388,7 +389,7 @@ export class Tree {
 	 */
 	nodeConformsSearch(
 		node: Node,
-		propertyValue: string,
+		propertyValue: string | undefined,
 		options?: {
 			propertyName: string;
 			exact: boolean;
@@ -408,6 +409,10 @@ export class Tree {
 			return property === propertyValue;
 		}
 
+		if (propertyValue === undefined) {
+			return false;
+		}
+
 		return property.toLowerCase().indexOf(propertyValue.toLowerCase()) > -1;
 	}
 
@@ -423,7 +428,7 @@ export class Tree {
 	 */
 	search(
 		node: Node,
-		propertyValue: string,
+		propertyValue: string | undefined,
 		options: {
 			propertyName: string;
 			exact: boolean;

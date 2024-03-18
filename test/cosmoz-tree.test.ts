@@ -1,18 +1,19 @@
 import { assert } from '@open-wc/testing';
-import { Tree } from '../src/cosmoz-tree';
+import { Tree, TreeData, Node } from '../src/cosmoz-tree';
 
 const treeBaseUrl = '/test/data',
 	basicTreeUrl = `${treeBaseUrl}/basicTree.json`,
 	basicTreePlUrl = `${treeBaseUrl}/basicTreePL.json`,
 	multiRootTreeUrl = `${treeBaseUrl}/multiRootTree.json`,
 	missingAncestorTreeUrl = `${treeBaseUrl}/missingAncestorTree.json`,
-	treeFromJsonUrl = async (url, options = {}) => {
+	treeFromJsonUrl = async (url: string, options = {}) => {
 		const json = await fetch(url).then((r) => r.json());
+
 		return new Tree(json, options);
 	};
 
 suite('basic', () => {
-	let basicTree;
+	let basicTree: Tree;
 
 	suiteSetup(async () => {
 		basicTree = await treeFromJsonUrl(basicTreeUrl);
@@ -39,9 +40,9 @@ suite('basic', () => {
 				'2b547550-b874-4228-9395-a4fb00f31245',
 				'id',
 			),
-			node5 = basicTree.getNodeByProperty(node4.name),
+			node5 = basicTree.getNodeByProperty(node4?.name),
 			node6 = basicTree.getNodeByProperty(
-				node2.pathLocator,
+				node2?.pathLocator,
 				'pathLocator',
 				basicTree._roots,
 			);
@@ -66,7 +67,6 @@ suite('basic', () => {
 				undefined,
 				undefined,
 				'pathLocator',
-				root,
 			)[0],
 			node3 = basicTree.searchNodes(
 				'2b547550-b874-4228-9395-a4fb00f31245',
@@ -100,21 +100,22 @@ suite('basic', () => {
 	});
 
 	test('findNode', () => {
-		const root = basicTree.searchNodes(
+		const root: Node = basicTree.searchNodes(
 				'1',
 				undefined,
 				undefined,
 				'pathLocator',
 			)[0],
-			node = basicTree.findNode('1'),
+			node = basicTree.findNode('Root'),
 			node2 = basicTree.findNode('2b547550-b874-4228-9395-a4fb00f31245', 'id');
 
-		assert.deepEqual(root[0], node);
+		assert.deepEqual(root, node);
 		assert.isOk(node2);
 	});
 
 	test('getNodeByPathLocator', () => {
 		const node3 = basicTree.getNodeByPathLocator('1.2.3');
+
 		assert.isOk(node3);
 		assert.equal(basicTree.getNodeByPathLocator(), basicTree._roots);
 	});
@@ -191,7 +192,7 @@ suite('basic', () => {
 });
 
 suite('basicPL', () => {
-	let basicTree;
+	let basicTree: Tree;
 
 	suiteSetup(async () => {
 		basicTree = await treeFromJsonUrl(basicTreePlUrl);
@@ -217,7 +218,7 @@ suite('basicPL', () => {
 });
 
 suite('multiRoot', () => {
-	let multiRootTree;
+	let multiRootTree: Tree;
 
 	suiteSetup(async () => {
 		multiRootTree = await treeFromJsonUrl(multiRootTreeUrl);
@@ -273,7 +274,7 @@ suite('multiRoot', () => {
 });
 
 suite('missingAncestor', () => {
-	let missingAncestorTree;
+	let missingAncestorTree: Tree;
 
 	suiteSetup(async () => {
 		missingAncestorTree = await treeFromJsonUrl(missingAncestorTreeUrl);
@@ -394,7 +395,7 @@ suite('missingAncestor', () => {
 });
 
 suite('basicWithOptions', () => {
-	let basicTreeWithOptions;
+	let basicTreeWithOptions: Tree;
 
 	suiteSetup(async () => {
 		basicTreeWithOptions = await treeFromJsonUrl(basicTreeUrl, {
@@ -416,15 +417,13 @@ suite('basicWithOptions', () => {
 	test('nodeConformsSearch returns undefined when theres no property', () => {
 		const rootNode = basicTreeWithOptions.getNodeByPathLocator('1');
 
-		assert.equal(
+		assert.isUndefined(
 			basicTreeWithOptions.nodeConformsSearch(rootNode, 'Root'),
-			undefined,
 		);
-		assert.equal(
+		assert.isUndefined(
 			basicTreeWithOptions.nodeConformsSearch(rootNode, 'Root', {
 				propertyName: 'noProperty',
 			}),
-			undefined,
 		);
 	});
 });
