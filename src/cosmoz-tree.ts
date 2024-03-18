@@ -208,9 +208,9 @@ export class Tree {
 		pathLocator?: string,
 		nodeObj: TreeData = this._treeData,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
-	) {
+	): Node[] {
 		if (!pathLocator) {
-			return nodeObj;
+			return this.getPathNodes('Root');
 		}
 
 		return Object.keys(nodeObj)
