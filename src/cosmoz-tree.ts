@@ -260,8 +260,7 @@ export class Tree {
 				pathSegment = node[this.childProperty as 'children']!;
 			}
 			return node;
-			// TODO: fix next line
-		}) as unknown as Node[];
+		}) as unknown as Node[]; // TODO: update the code to not use `as unknown as Node[]`
 	}
 
 	/**
