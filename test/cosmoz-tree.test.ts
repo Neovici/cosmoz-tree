@@ -1,5 +1,5 @@
 import { assert } from '@open-wc/testing';
-import { Tree, TreeData, Node } from '../src/cosmoz-tree';
+import { Tree, Node } from '../src/cosmoz-tree';
 
 const treeBaseUrl = '/test/data',
 	basicTreeUrl = `${treeBaseUrl}/basicTree.json`,
@@ -150,12 +150,12 @@ suite('basic', () => {
 
 	test('getPathString', () => {
 		const node3 = basicTree.getNodeByPathLocator('1.2.3'),
-			pathString = basicTree.getPathString(node3.pathLocator);
-		assert.equal(pathString.split('/').pop(), node3.name);
+			pathString = basicTree.getPathString(node3?.pathLocator);
+		assert.equal(pathString?.split('/').pop(), node3?.name);
 		assert.isUndefined(basicTree.getPathString());
 		const node301 = basicTree.getNodeByPathLocator('1.2.3.301'),
 			node301PathString = basicTree.getPathString(
-				node301.pathLocator,
+				node301?.pathLocator,
 				'name',
 				'/',
 			);
@@ -164,8 +164,8 @@ suite('basic', () => {
 
 	test('getPathStringByProperty', () => {
 		const node3 = basicTree.getNodeByPathLocator('1.2.3'),
-			pathString = basicTree.getPathStringByProperty(node3.id, 'id');
-		assert.equal(pathString.split('/').pop(), node3.name);
+			pathString = basicTree.getPathStringByProperty(node3!.id, 'id');
+		assert.equal(pathString!.split('/').pop(), node3!.name);
 		assert.isUndefined(basicTree.getPathStringByProperty());
 		assert.equal(
 			basicTree.getPathStringByProperty('1.2.3', 'pathLocator'),
@@ -212,8 +212,8 @@ suite('basicPL', () => {
 			node2 = basicTree.findNode('1.2.3', 'pathLocator'),
 			node3 = basicTree.findNode('3a7654f1-e3e6-49c7-b6a8-a4fb00f31245', 'id');
 		assert.equal(node1.id, '3a7654f1-e3e6-49c7-b6a8-a4fb00f31245');
-		assert.equal(node2.id, '3a7654f1-e3e6-49c7-b6a8-a4fb00f31245');
-		assert.equal(node3.pathLocator, '1.2.3');
+		assert.equal(node2!.id, '3a7654f1-e3e6-49c7-b6a8-a4fb00f31245');
+		assert.equal(node3!.pathLocator, '1.2.3');
 	});
 });
 
@@ -312,21 +312,21 @@ suite('missingAncestor', () => {
 				'865065da-f44c-472e-a8df-a4fb00f3124b',
 				'id',
 			),
-			node301Path = missingAncestorTree.getPathNodes(node301.pathLocator),
-			node401Path = missingAncestorTree.getPathNodes(node401.pathLocator),
+			node301Path = missingAncestorTree.getPathNodes(node301!.pathLocator),
+			node401Path = missingAncestorTree.getPathNodes(node401!.pathLocator),
 			n_1_2_3_301 = missingAncestorTree.getPathNodes('1.2.3.301'),
 			n_1_2_301 = missingAncestorTree.getPathNodes('1.2.301'),
 			n_1_2 = missingAncestorTree.getPathNodes('1.2'),
 			n_1_2_2 = missingAncestorTree.getPathNodes('1.2.2'),
 			n_1_4_4 = missingAncestorTree.getPathNodes('1.4.4'),
 			n_1_2_7_8 = missingAncestorTree.getPathNodes('1.2.7.8'),
-			n_1_2_7_301 = missingAncestorTree.getPathNodes('1.2.7.301'),
+			//n_1_2_7_301 = missingAncestorTree.getPathNodes('1.2.7.301'),
 			n_2_301 = missingAncestorTree.getPathNodes('2.301'),
 			n_601_301 = missingAncestorTree.getPathNodes('601.301.10.11');
 
 		// since 301 is its own root, it should be the only node returned
 		assert.equal(node301Path.length, 1);
-		assert.equal(node301.name, 'Node301');
+		assert.equal(node301!.name, 'Node301');
 		assert.deepEqual(node301Path[0], node301);
 
 		// node401 is directly under 301, should only be two nodes returned
@@ -335,37 +335,37 @@ suite('missingAncestor', () => {
 		assert.equal(node401Path[1], node401);
 
 		// 1.2.3.301
-		assert.equal(n_1_2_3_301[0].name, 'Node301');
+		assert.equal(n_1_2_3_301[0]!.name, 'Node301');
 
 		// 1.2.301
 		// make sure we don't get stuck in the first root
-		assert.equal(n_1_2_301[0].name, 'Node301');
+		assert.equal(n_1_2_301[0]!.name, 'Node301');
 		assert.equal(n_1_2_301.length, 1);
 
 		// 1.2
 		assert.equal(n_1_2.length, 2);
-		assert.equal(n_1_2[0].name, 'Node1');
-		assert.equal(n_1_2[1].name, 'Node2');
+		assert.equal(n_1_2[0]!.name, 'Node1');
+		assert.equal(n_1_2[1]!.name, 'Node2');
 
 		// 1.2.2
 		// make sure we don't pick the same node twice at the end
 		assert.equal(n_1_2_2.length, 3);
-		assert.equal(n_1_2_2[0].name, 'Node1');
-		assert.equal(n_1_2_2[1].name, 'Node2');
+		assert.equal(n_1_2_2[0]!.name, 'Node1');
+		assert.equal(n_1_2_2[1]!.name, 'Node2');
 		assert.isNotOk(n_1_2_2[2]);
 
 		// 1.4.4
 		// make sure we handle nodes without 'children' property
 		assert.equal(n_1_4_4.length, 3);
-		assert.equal(n_1_4_4[0].name, 'Node1');
-		assert.equal(n_1_4_4[1].name, 'Nochildren');
+		assert.equal(n_1_4_4[0]!.name, 'Node1');
+		assert.equal(n_1_4_4[1]!.name, 'Nochildren');
 		assert.isNotOk(n_1_4_4[2]);
 
 		// 1.2.7.8
 		// make sure we handle multiple undefineds at the end
 		assert.equal(n_1_2_7_8.length, 4);
-		assert.equal(n_1_2_7_8[0].name, 'Node1');
-		assert.equal(n_1_2_7_8[1].name, 'Node2');
+		assert.equal(n_1_2_7_8[0]!.name, 'Node1');
+		assert.equal(n_1_2_7_8[1]!.name, 'Node2');
 		assert.isNotOk(n_1_2_7_8[2]);
 		assert.isNotOk(n_1_2_7_8[3]);
 
@@ -389,7 +389,7 @@ suite('missingAncestor', () => {
 
 		// 2.301
 		assert.equal(n_2_301.length, 1);
-		assert.equal(n_2_301[0].name, 'Node301');
+		assert.equal(n_2_301[0]!.name, 'Node301');
 	});
 	/* eslint-enable camelcase */
 });
@@ -418,10 +418,10 @@ suite('basicWithOptions', () => {
 		const rootNode = basicTreeWithOptions.getNodeByPathLocator('1');
 
 		assert.isUndefined(
-			basicTreeWithOptions.nodeConformsSearch(rootNode, 'Root'),
+			basicTreeWithOptions.nodeConformsSearch(rootNode!, 'Root'),
 		);
 		assert.isUndefined(
-			basicTreeWithOptions.nodeConformsSearch(rootNode, 'Root', {
+			basicTreeWithOptions.nodeConformsSearch(rootNode!, 'Root', {
 				propertyName: 'noProperty',
 			}),
 		);

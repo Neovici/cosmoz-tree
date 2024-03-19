@@ -12,6 +12,7 @@ export interface Options {
 }
 
 export interface Node {
+	id: string;
 	pathLocator: string;
 	path?: string;
 	name?: string;
@@ -20,7 +21,7 @@ export interface Node {
 
 export type TreeData = Record<string, Node>;
 
-const _sortPathNodes = (a: Node[], b: Node[]): number => {
+const _sortPathNodes = (a: (Node | undefined)[], b: (Node | undefined)[]) => {
 	const undefCounter = <Type>(item: Type) => item === undefined,
 		defCounter = <Type>(item: Type) => item,
 		aUndefCount = a.filter(undefCounter).length,
@@ -177,10 +178,25 @@ export class Tree {
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	 */
 	getNodeByPathLocator(
+		pathLocator: undefined,
+		nodeObj?: TreeData,
+		pathLocatorSeparator?: string,
+	): Node[];
+	getNodeByPathLocator(
+		pathLocator: string,
+		nodeObj?: TreeData,
+		pathLocatorSeparator?: string,
+	): Node | undefined;
+	getNodeByPathLocator(
 		pathLocator?: string,
-		nodeObj = this._treeData,
+		nodeObj?: TreeData,
+		pathLocatorSeparator?: string,
+	): Node[] | Node | undefined;
+	getNodeByPathLocator(
+		pathLocator?: string,
+		nodeObj: TreeData = this._treeData,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
-	) {
+	): Node[] | Node | undefined {
 		if (!pathLocator) {
 			return this._roots;
 		}
@@ -190,7 +206,8 @@ export class Tree {
 			nodeObj,
 			pathLocatorSeparator,
 		);
-		return pathNodes && Array.isArray(pathNodes) && pathNodes.pop();
+
+		return pathNodes.pop();
 	}
 
 	/**
@@ -205,12 +222,27 @@ export class Tree {
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path.)
 	 */
 	getPathNodes(
+		pathLocator: undefined,
+		nodeObj?: TreeData,
+		pathLocatorSeparator?: string,
+	): TreeData;
+	getPathNodes(
+		pathLocator: string,
+		nodeObj?: TreeData,
+		pathLocatorSeparator?: string,
+	): (Node | undefined)[];
+	getPathNodes(
+		pathLocator?: string,
+		nodeObj?: TreeData,
+		pathLocatorSeparator?: string,
+	): TreeData | (Node | undefined)[];
+	getPathNodes(
 		pathLocator?: string,
 		nodeObj: TreeData = this._treeData,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
-	): Node[] {
+	) {
 		if (!pathLocator) {
-			return this.getPathNodes('Root');
+			return nodeObj;
 		}
 
 		return Object.keys(nodeObj)
@@ -252,8 +284,9 @@ export class Tree {
 		return path.map((nodeKey: string, i: number) => {
 			// Get the nodes on the path
 			if (!pathSegment) {
-				return false;
+				return undefined;
 			}
+
 			const node =
 				pathSegment[nodeKey] ??
 				pathSegment[path.slice(0, i + 1).join(separator)];
@@ -261,7 +294,7 @@ export class Tree {
 				pathSegment = node[this.childProperty as 'children']!;
 			}
 			return node;
-		}) as unknown as Node[]; // TODO: update the code to not use `as unknown as Node[]`
+		});
 	}
 
 	/**
@@ -290,7 +323,7 @@ export class Tree {
 
 		return pathNodes
 			.filter((node) => node != null)
-			.map((node) => node[pathProperty as 'pathLocator'])
+			.map((node) => node![pathProperty as 'pathLocator'])
 			.join(pathStringSeparator);
 	}
 
@@ -304,7 +337,7 @@ export class Tree {
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	 */
 	getPathStringByProperty(
-		propertyValue: string,
+		propertyValue?: string,
 		propertyName: string = this.searchProperty,
 		pathProperty: string = this.searchProperty,
 		pathStringSeparator: string = this.pathStringSeparator,
@@ -349,7 +382,7 @@ export class Tree {
 	 * @param {Object} node The object to get children from
 	 * @returns {Boolean} True if node has children
 	 */
-	hasChildren(node: Node) {
+	hasChildren(node?: Node) {
 		if (!node) {
 			return false;
 		}
@@ -370,7 +403,7 @@ export class Tree {
 	 * @param {String} propertyName The name of property
 	 * @returns {*} The value of the property
 	 */
-	getProperty(node: Node | null, propertyName?: string) {
+	getProperty(node?: Node | null, propertyName?: string) {
 		if (!node || !propertyName) {
 			return;
 		}
@@ -392,7 +425,7 @@ export class Tree {
 		propertyValue: string | undefined,
 		options?: {
 			propertyName: string;
-			exact: boolean;
+			exact?: boolean;
 		},
 	) {
 		const property = (options
