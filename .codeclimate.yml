@@ -1,24 +1,24 @@
 ---
-version: "2"
+version: '2'
 checks:
   argument-count:
-    enabled: false  # handled by eslint rule "max-params"
+    enabled: false # handled by eslint rule "max-params"
   complex-logic:
     enabled: true
     config:
       threshold: 4
   file-lines:
-    enabled: false  # handled by eslint rule "max-lines"
+    enabled: false # handled by eslint rule "max-lines"
   method-complexity:
-    enabled: false  # handled by eslint rule "complexity"
+    enabled: false # handled by eslint rule "complexity"
   method-count:
     enabled: true
     config:
       threshold: 20
   method-lines:
-    enabled: false  # handled by eslint rule "max-lines-per-function"
+    enabled: false # handled by eslint rule "max-lines-per-function"
   nested-control-flow:
-    enabled: false  # handled by eslint rule "max-depth"
+    enabled: false # handled by eslint rule "max-depth"
   return-statements:
     enabled: true
     config:
@@ -33,5 +33,6 @@ plugins:
     enabled: true
 
 exclude_patterns:
-  - "**/node_modules/"
-  - "coverage/"
+  - '**/node_modules/'
+  - 'coverage/'
+  - 'test/'

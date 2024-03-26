@@ -3,7 +3,60 @@ Navigator through object with treelike datastructure and default settings.
 
 @demo demo/index.html
 */
+
+export interface Options {
+	childProperty?: string;
+	searchProperty?: string;
+	pathLocatorSeparator?: string;
+	pathStringSeparator?: string;
+}
+
+export interface Node {
+	id: string;
+	pathLocator: string;
+	path?: string;
+	name?: string;
+	children?: Record<string, Node>;
+}
+
+export type TreeData = Record<string, Node>;
+
+const _sortPathNodes = (a: (Node | undefined)[], b: (Node | undefined)[]) => {
+	const undefCounter = <Type>(item: Type) => item === undefined,
+		defCounter = <Type>(item: Type) => item,
+		aUndefCount = a.filter(undefCounter).length,
+		bUndefCount = b.filter(undefCounter).length,
+		aDefCount = a.filter(defCounter).length,
+		bDefCount = b.filter(defCounter).length;
+
+	if (aUndefCount < bUndefCount) {
+		return -1;
+	}
+
+	if (aUndefCount > bUndefCount || aDefCount < bDefCount) {
+		return 1;
+	}
+
+	if (aDefCount > bDefCount) {
+		return -1;
+	}
+
+	return 0;
+};
+
 export class Tree {
+	_treeData: TreeData;
+
+	_roots: Node[];
+
+	childProperty: string;
+
+	searchProperty: string;
+
+	pathLocatorSeparator: string;
+
+	pathStringSeparator: string;
+
 	/**
 	 * @param {Object} treeData (The tree object.)
 	 * @param {Object} options (Tree options.)
@@ -12,7 +65,7 @@ export class Tree {
 	 * @param {String} options.pathStringSeparator ["/"] (The string the path should get separated with.)
 	 * @param {String} options.pathLocatorSeparator ["."] (The string which separates the path segments of a path locator.)
 	 */
-	constructor(treeData, options = {}) {
+	constructor(treeData: TreeData, options: Options = {}) {
 		this._treeData = treeData;
 		this._roots = Object.values(treeData);
 
@@ -20,26 +73,6 @@ export class Tree {
 		this.pathStringSeparator = options.pathStringSeparator || '/';
 		this.childProperty = options.childProperty || 'children';
 		this.searchProperty = options.searchProperty || 'name';
-	}
-
-	static _sortPathNodes(a, b) {
-		const undefCounter = (item) => item === undefined,
-			defCounter = (item) => item,
-			aUndefCount = a.filter(undefCounter).length,
-			bUndefCount = b.filter(undefCounter).length,
-			aDefCount = a.filter(defCounter).length,
-			bDefCount = b.filter(defCounter).length;
-
-		if (aUndefCount < bUndefCount) {
-			return -1;
-		}
-		if (aUndefCount > bUndefCount || aDefCount < bDefCount) {
-			return 1;
-		}
-		if (aDefCount > bDefCount) {
-			return -1;
-		}
-		return 0;
 	}
 
 	/**
@@ -50,9 +83,9 @@ export class Tree {
 	 * @param {Array} nodes [this._roots] (The objects the search should be based on.)
 	 */
 	getNodeByProperty(
-		propertyValue,
-		propertyName = this.searchProperty,
-		nodes = this._roots,
+		propertyValue?: string,
+		propertyName: string = this.searchProperty,
+		nodes: Node[] = this._roots,
 	) {
 		if (propertyValue === undefined) {
 			return;
@@ -69,12 +102,18 @@ export class Tree {
 	 * @param {Boolean} exact [true] (If the search should be executed exact or flaw. true wouldn't match "Pet")
 	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
 	 */
-	searchNodes(propertyValue, nodes, exact, propertyName = this.searchProperty) {
+	searchNodes(
+		propertyValue?: string,
+		nodes?: Node[],
+		exact?: boolean,
+		propertyName: string = this.searchProperty,
+	) {
 		const options = {
 			propertyName,
 			exact: exact !== undefined ? exact : true,
 			firstHitOnly: false,
 		};
+
 		return this._searchNodes(propertyValue, options, nodes);
 	}
 
@@ -85,12 +124,17 @@ export class Tree {
 	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
 	 * @param {Object} nodes [this._treeData] (The nodes the search should be based on.)
 	 */
-	findNode(propertyValue, propertyName = this.searchProperty, nodes) {
+	findNode(
+		propertyValue: string,
+		propertyName: string = this.searchProperty,
+		nodes?: Node[],
+	) {
 		const options = {
 			propertyName,
 			exact: true,
 			firstHitOnly: true,
 		};
+
 		return this._searchNodes(propertyValue, options, nodes).shift();
 	}
 
@@ -104,7 +148,15 @@ export class Tree {
 	 * @param {Boolean} options.firstHitOnly [false] (If the search should only return the first found node.)
 	 * @param {Object} nodes [this._roots] (The nodes the search should be based on.)
 	 */
-	_searchNodes(propertyValue, options, nodes = this._roots) {
+	_searchNodes(
+		propertyValue: string | undefined,
+		options: {
+			propertyName: string;
+			exact: boolean;
+			firstHitOnly: boolean;
+		},
+		nodes = this._roots,
+	) {
 		const results = [];
 
 		for (const node of nodes) {
@@ -126,10 +178,25 @@ export class Tree {
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	 */
 	getNodeByPathLocator(
-		pathLocator,
-		nodeObj = this._treeData,
-		pathLocatorSeparator = this.pathLocatorSeparator,
-	) {
+		pathLocator: undefined,
+		nodeObj?: TreeData,
+		pathLocatorSeparator?: string,
+	): Node[];
+	getNodeByPathLocator(
+		pathLocator: string,
+		nodeObj?: TreeData,
+		pathLocatorSeparator?: string,
+	): Node | undefined;
+	getNodeByPathLocator(
+		pathLocator?: string,
+		nodeObj?: TreeData,
+		pathLocatorSeparator?: string,
+	): Node[] | Node | undefined;
+	getNodeByPathLocator(
+		pathLocator?: string,
+		nodeObj: TreeData = this._treeData,
+		pathLocatorSeparator: string = this.pathLocatorSeparator,
+	): Node[] | Node | undefined {
 		if (!pathLocator) {
 			return this._roots;
 		}
@@ -139,7 +206,8 @@ export class Tree {
 			nodeObj,
 			pathLocatorSeparator,
 		);
-		return pathNodes && pathNodes.pop();
+
+		return pathNodes.pop();
 	}
 
 	/**
@@ -154,9 +222,24 @@ export class Tree {
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path.)
 	 */
 	getPathNodes(
-		pathLocator,
-		nodeObj = this._treeData,
-		pathLocatorSeparator = this.pathLocatorSeparator,
+		pathLocator: undefined,
+		nodeObj?: TreeData,
+		pathLocatorSeparator?: string,
+	): TreeData;
+	getPathNodes(
+		pathLocator: string,
+		nodeObj?: TreeData,
+		pathLocatorSeparator?: string,
+	): (Node | undefined)[];
+	getPathNodes(
+		pathLocator?: string,
+		nodeObj?: TreeData,
+		pathLocatorSeparator?: string,
+	): TreeData | (Node | undefined)[];
+	getPathNodes(
+		pathLocator?: string,
+		nodeObj: TreeData = this._treeData,
+		pathLocatorSeparator: string = this.pathLocatorSeparator,
 	) {
 		if (!pathLocator) {
 			return nodeObj;
@@ -164,20 +247,26 @@ export class Tree {
 
 		return Object.keys(nodeObj)
 			.map((key) => {
-				const subTree = {};
+				const subTree: TreeData = {};
 				subTree[key] = nodeObj[key];
-				return this._getPathNodes(pathLocator, subTree, pathLocatorSeparator);
+				const pathNodes = this._getPathNodes(
+					pathLocator,
+					subTree,
+					pathLocatorSeparator,
+				);
+
+				return pathNodes;
 			})
 			.filter((item) => {
 				return item && item.length > 0;
 			})
-			.sort(this.constructor._sortPathNodes)[0];
+			.sort(_sortPathNodes)[0];
 	}
 
 	_getPathNodes(
-		pathLocator,
-		nodeObj = this._treeData,
-		pathLocatorSeparator = this.pathLocatorSeparator,
+		pathLocator: string,
+		nodeObj: TreeData = this._treeData,
+		pathLocatorSeparator: string = this.pathLocatorSeparator,
 	) {
 		const path = pathLocator.split(pathLocatorSeparator),
 			nodes = this._pathToNodes(path, nodeObj, pathLocatorSeparator);
@@ -190,18 +279,19 @@ export class Tree {
 		return nodes;
 	}
 
-	_pathToNodes(path, nodes, separator) {
+	_pathToNodes(path: string[], nodes: TreeData, separator: string) {
 		let pathSegment = nodes;
-		return path.map((nodeKey, i) => {
+		return path.map((nodeKey: string, i: number) => {
 			// Get the nodes on the path
 			if (!pathSegment) {
-				return false;
+				return undefined;
 			}
+
 			const node =
 				pathSegment[nodeKey] ??
 				pathSegment[path.slice(0, i + 1).join(separator)];
 			if (node) {
-				pathSegment = node[this.childProperty];
+				pathSegment = node[this.childProperty as 'children']!;
 			}
 			return node;
 		});
@@ -216,10 +306,10 @@ export class Tree {
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path segments of pathLocator.)
 	 */
 	getPathString(
-		pathLocator,
-		pathProperty = this.searchProperty,
-		pathStringSeparator = this.pathStringSeparator,
-		pathLocatorSeparator = this.pathLocatorSeparator,
+		pathLocator?: string,
+		pathProperty: string = this.searchProperty,
+		pathStringSeparator: string = this.pathStringSeparator,
+		pathLocatorSeparator: string = this.pathLocatorSeparator,
 	) {
 		const pathNodes = this.getPathNodes(
 			pathLocator,
@@ -233,7 +323,7 @@ export class Tree {
 
 		return pathNodes
 			.filter((node) => node != null)
-			.map((node) => node[pathProperty])
+			.map((node) => node![pathProperty as 'pathLocator'])
 			.join(pathStringSeparator);
 	}
 
@@ -247,11 +337,11 @@ export class Tree {
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	 */
 	getPathStringByProperty(
-		propertyValue,
-		propertyName = this.searchProperty,
-		pathProperty = this.searchProperty,
-		pathStringSeparator = this.pathStringSeparator,
-		pathLocatorSeparator = this.pathLocatorSeparator,
+		propertyValue?: string,
+		propertyName: string = this.searchProperty,
+		pathProperty: string = this.searchProperty,
+		pathStringSeparator: string = this.pathStringSeparator,
+		pathLocatorSeparator: string = this.pathLocatorSeparator,
 	) {
 		if (propertyValue === undefined) {
 			return;
@@ -279,11 +369,12 @@ export class Tree {
 	 * @param {Object} node The object to return children from
 	 * @returns {Object|Array} The node's children
 	 */
-	getChildren(node) {
-		if (!node || !node[this.childProperty]) {
+	getChildren(node: Node) {
+		if (!node || !node[this.childProperty as 'children']) {
 			return [];
 		}
-		return Object.values(node[this.childProperty]);
+
+		return Object.values(node[this.childProperty as 'children']!);
 	}
 
 	/**
@@ -291,11 +382,11 @@ export class Tree {
 	 * @param {Object} node The object to get children from
 	 * @returns {Boolean} True if node has children
 	 */
-	hasChildren(node) {
+	hasChildren(node?: Node) {
 		if (!node) {
 			return false;
 		}
-		const childMap = node[this.childProperty];
+		const childMap = node[this.childProperty as 'children'];
 		if (!childMap) {
 			return false;
 		}
@@ -312,11 +403,12 @@ export class Tree {
 	 * @param {String} propertyName The name of property
 	 * @returns {*} The value of the property
 	 */
-	getProperty(node, propertyName) {
+	getProperty(node?: Node | null, propertyName?: string) {
 		if (!node || !propertyName) {
 			return;
 		}
-		return node[propertyName];
+
+		return node[propertyName as keyof typeof node];
 	}
 
 	/**
@@ -328,8 +420,17 @@ export class Tree {
 	 * @param {String} options.propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {Boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
 	 */
-	nodeConformsSearch(node, propertyValue, options) {
-		const property = options ? node[options.propertyName] : undefined;
+	nodeConformsSearch(
+		node: Node,
+		propertyValue: string | undefined,
+		options?: {
+			propertyName: string;
+			exact?: boolean;
+		},
+	) {
+		const property = (options
+			? node[options.propertyName as keyof typeof node]
+			: undefined) as unknown as string;
 
 		if (!property) {
 			// eslint-disable-next-line no-console
@@ -337,9 +438,14 @@ export class Tree {
 			return;
 		}
 
-		if (options.exact) {
+		if (options?.exact) {
 			return property === propertyValue;
 		}
+
+		if (propertyValue === undefined) {
+			return false;
+		}
+
 		return property.toLowerCase().indexOf(propertyValue.toLowerCase()) > -1;
 	}
 
@@ -353,7 +459,15 @@ export class Tree {
 	 * @param {Boolean} options.exact [false] (If false, the propertyValue is matched fuzzy)
 	 * @param {Array} results (The array search results get added to.) Default: []
 	 */
-	search(node, propertyValue, options, results = []) {
+	search(
+		node: Node,
+		propertyValue: string | undefined,
+		options: {
+			propertyName: string;
+			exact: boolean;
+		},
+		results: Node[] = [],
+	): Node[] {
 		const nodeConforms = this.nodeConformsSearch(node, propertyValue, options),
 			children = this.getChildren(node);
 

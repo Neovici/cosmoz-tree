@@ -1,6 +1,7 @@
 node_modules/
 coverage/
 debug.log
+dist
 yarn-error.log
 .DS_Store
 .eslintcache

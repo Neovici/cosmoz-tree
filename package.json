@@ -24,10 +24,12 @@
 		"demo/*.json",
 		"cosmoz-*.js",
 		"test/data/",
-		"examples"
+		"examples",
+		"dist/*"
 	],
 	"scripts": {
-		"lint": "eslint --cache --ext .js,.html .",
+		"lint": "tsc && eslint --cache .",
+		"build": "tsc -p tsconfig.build.json",
 		"start": "wds",
 		"test": "wtr --coverage",
 		"test:watch": "wtr --watch",
@@ -47,6 +49,12 @@
 	"publishConfig": {
 		"access": "public"
 	},
+	"exports": {
+		"./cosmoz-tree": "./dist/cosmoz-tree.js",
+		"./cosmoz-tree.js": "./dist/cosmoz-tree.js",
+		"./cosmoz-default-tree": "./dist/cosmoz-default-tree.js",
+		"./cosmoz-default-tree.js": "./dist/cosmoz-default-tree.js"
+	},
 	"commitlint": {
 		"extends": [
 			"@commitlint/config-conventional"
@@ -60,6 +68,7 @@
 		"@semantic-release/changelog": "^6.0.0",
 		"@semantic-release/git": "^10.0.0",
 		"husky": "^9.0.0",
+		"@types/mocha": "^10.0.3",
 		"lit-html": "^3.0.2",
 		"semantic-release": "^23.0.0"
 	}
