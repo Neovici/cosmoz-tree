@@ -1,3 +1,10 @@
+## [3.6.1](https://github.com/neovici/cosmoz-tree/compare/v3.6.0...v3.6.1) (2024-03-26)
+
+
+### Bug Fixes
+
+* add default export ([#68](https://github.com/neovici/cosmoz-tree/issues/68)) ([2929b36](https://github.com/neovici/cosmoz-tree/commit/2929b364bbe756c2b6e4fb5458b544e13e7db44d))
+
 # [3.6.0](https://github.com/neovici/cosmoz-tree/compare/v3.5.0...v3.6.0) (2024-03-26)
 
 
