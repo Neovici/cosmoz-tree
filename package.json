@@ -50,6 +50,7 @@
 		"access": "public"
 	},
 	"exports": {
+		".": "./dist/cosmoz-tree",
 		"./cosmoz-tree": "./dist/cosmoz-tree.js",
 		"./cosmoz-tree.js": "./dist/cosmoz-tree.js",
 		"./cosmoz-default-tree": "./dist/cosmoz-default-tree.js",
