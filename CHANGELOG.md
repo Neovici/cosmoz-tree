@@ -1,3 +1,28 @@
+# [3.6.0](https://github.com/neovici/cosmoz-tree/compare/v3.5.0...v3.6.0) (2024-03-26)
+
+
+### Bug Fixes
+
+* reset lint script to cosmoz-router ([bf0cd5a](https://github.com/neovici/cosmoz-tree/commit/bf0cd5a8f5203463e952d4cb1a687595196561b6))
+* update Tree import in examples script ([9415539](https://github.com/neovici/cosmoz-tree/commit/9415539892ce8e285416d755fae20b91085a6adf))
+
+
+### Features
+
+* add @types/mocha to prevent linting errors ([bc174f9](https://github.com/neovici/cosmoz-tree/commit/bc174f9f8addf6c3e37d9be77f8482949fe31ac3))
+* add dist dir to .eslintignore ([c0731d0](https://github.com/neovici/cosmoz-tree/commit/c0731d096bf19814dd32d57a248bb9db1ecfb426))
+* add Node interface ([1f7c6b9](https://github.com/neovici/cosmoz-tree/commit/1f7c6b93cc709835bccc340d4feda2a61837fe11))
+* add primitive types ([89de004](https://github.com/neovici/cosmoz-tree/commit/89de0044dcb8d053d106356d5816ab4dbb8ac748))
+* add test dir to exclude_patterns ([7f39fe6](https://github.com/neovici/cosmoz-tree/commit/7f39fe6aed565ef54d485852c8986e143e543bf3))
+* create src directoy ([a962af0](https://github.com/neovici/cosmoz-tree/commit/a962af01c0abb1f7568f1277d0cefe48f01048bd))
+* further work on converting typescript ([35c5df8](https://github.com/neovici/cosmoz-tree/commit/35c5df82427c9c05bbe431dc0e1d173d456fd3cc))
+* move _sortPathNodes to a separate function ([4225911](https://github.com/neovici/cosmoz-tree/commit/42259111cf562fd0dfda961e91cee40869641cb4))
+* remove Tree files from root dir ([66e8bdc](https://github.com/neovici/cosmoz-tree/commit/66e8bdc7099d8a7b035bcccc4002c56ce1eb4fa0))
+* rename TreeOptions to Options ([3006f0b](https://github.com/neovici/cosmoz-tree/commit/3006f0b2022533f0a08bcec0496c3d7b922c1300))
+* update getPathNodes to return only Node[] ([3a8b73d](https://github.com/neovici/cosmoz-tree/commit/3a8b73dc82725fdb629a3d9d9bfbb8b858cddaa8))
+* update TODO comment ([e2910f2](https://github.com/neovici/cosmoz-tree/commit/e2910f2c5a019f2e6eca11a67273671264987776))
+* wip - convert tests to typescript ([d85d8a6](https://github.com/neovici/cosmoz-tree/commit/d85d8a67755be988c358716f0c6a8fa0431dacd6))
+
 # [3.5.0](https://github.com/neovici/cosmoz-tree/compare/v3.4.0...v3.5.0) (2024-03-13)
 
 
