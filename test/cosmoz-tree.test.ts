@@ -1,16 +1,11 @@
 import { assert } from '@open-wc/testing';
 import { Tree, Node } from '../src/cosmoz-tree';
+import { treeBaseUrl, treeFromJsonUrl } from './base-data';
 
-const treeBaseUrl = '/test/data',
-	basicTreeUrl = `${treeBaseUrl}/basicTree.json`,
+const basicTreeUrl = `${treeBaseUrl}/basicTree.json`,
 	basicTreePlUrl = `${treeBaseUrl}/basicTreePL.json`,
 	multiRootTreeUrl = `${treeBaseUrl}/multiRootTree.json`,
-	missingAncestorTreeUrl = `${treeBaseUrl}/missingAncestorTree.json`,
-	treeFromJsonUrl = async (url: string, options = {}) => {
-		const json = await fetch(url).then((r) => r.json());
-
-		return new Tree(json, options);
-	};
+	missingAncestorTreeUrl = `${treeBaseUrl}/missingAncestorTree.json`;
 
 suite('basic', () => {
 	let basicTree: Tree;

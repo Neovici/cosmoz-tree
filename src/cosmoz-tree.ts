@@ -148,7 +148,7 @@ export class Tree {
 	 * @param {Boolean} options.firstHitOnly [false] (If the search should only return the first found node.)
 	 * @param {Object} nodes [this._roots] (The nodes the search should be based on.)
 	 */
-	_searchNodes(
+	private _searchNodes(
 		propertyValue: string | undefined,
 		options: {
 			propertyName: string;
@@ -263,7 +263,7 @@ export class Tree {
 			.sort(_sortPathNodes)[0];
 	}
 
-	_getPathNodes(
+	private _getPathNodes(
 		pathLocator: string,
 		nodeObj: TreeData = this._treeData,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
@@ -279,7 +279,7 @@ export class Tree {
 		return nodes;
 	}
 
-	_pathToNodes(path: string[], nodes: TreeData, separator: string) {
+	private _pathToNodes(path: string[], nodes: TreeData, separator: string) {
 		let pathSegment = nodes;
 		return path.map((nodeKey: string, i: number) => {
 			// Get the nodes on the path
@@ -415,14 +415,14 @@ export class Tree {
 	 * Checks if a node matches the search criteria.
 	 * @returns {Boolean} True if node matches
 	 * @param {node} node (The node the check should be based on.)
-	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
+	 * @param {String} searchValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {Object} options (Comparison options)
 	 * @param {String} options.propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {Boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
 	 */
 	nodeConformsSearch(
 		node: Node,
-		propertyValue: string | undefined,
+		searchValue: string | undefined,
 		options?: {
 			propertyName: string;
 			exact?: boolean;
@@ -439,14 +439,17 @@ export class Tree {
 		}
 
 		if (options?.exact) {
-			return property === propertyValue;
+			return property === searchValue;
 		}
 
-		if (propertyValue === undefined) {
+		if (searchValue === undefined) {
 			return false;
 		}
 
-		return property.toLowerCase().indexOf(propertyValue.toLowerCase()) > -1;
+		const normalizedPropertyValue = property.normalize('NFD').replace(/\p{Diacritic}/gu, '').toUpperCase();
+		const normalizedSearchValue = searchValue.normalize('NFD').replace(/\p{Diacritic}/gu, '').toUpperCase();
+
+		return normalizedPropertyValue.indexOf(normalizedSearchValue) > -1;
 	}
 
 	/**
