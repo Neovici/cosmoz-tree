@@ -1,3 +1,10 @@
+## [3.6.2](https://github.com/neovici/cosmoz-tree/compare/v3.6.1...v3.6.2) (2024-08-20)
+
+
+### Bug Fixes
+
+* fix diacritics and special unicode characters handling ([e3c45c4](https://github.com/neovici/cosmoz-tree/commit/e3c45c478f4bf3ce4dec8944a468ef3a18022cbb))
+
 ## [3.6.1](https://github.com/neovici/cosmoz-tree/compare/v3.6.0...v3.6.1) (2024-03-26)
 
 
