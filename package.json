@@ -56,11 +56,6 @@
 		"./cosmoz-default-tree": "./dist/cosmoz-default-tree.js",
 		"./cosmoz-default-tree.js": "./dist/cosmoz-default-tree.js"
 	},
-	"commitlint": {
-		"extends": [
-			"@commitlint/config-conventional"
-		]
-	},
 	"devDependencies": {
 		"@commitlint/cli": "^19.0.0",
 		"@commitlint/config-conventional": "^19.0.0",
