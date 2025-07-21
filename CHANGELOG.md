@@ -1,3 +1,10 @@
+# [3.7.0](https://github.com/neovici/cosmoz-tree/compare/v3.6.2...v3.7.0) (2025-07-21)
+
+
+### Features
+
+* new automerge workflow ([c97be30](https://github.com/neovici/cosmoz-tree/commit/c97be302b1904267368efc1deff8c8de545ce7c2))
+
 ## [3.6.2](https://github.com/neovici/cosmoz-tree/compare/v3.6.1...v3.6.2) (2024-08-20)
 
 
