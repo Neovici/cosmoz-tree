@@ -1,3 +1,10 @@
+## [3.7.2](https://github.com/Neovici/cosmoz-tree/compare/v3.7.1...v3.7.2) (2026-01-28)
+
+
+### Bug Fixes
+
+* repository URL case sensitivity ([c7891d9](https://github.com/Neovici/cosmoz-tree/commit/c7891d9d3bc9cb48f858fa499a0fcf8ff0b30cc9))
+
 ## [3.7.1](https://github.com/neovici/cosmoz-tree/compare/v3.7.0...v3.7.1) (2025-08-04)
 
 
