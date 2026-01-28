@@ -1,5 +1,5 @@
 import { assert } from '@open-wc/testing';
-import { Tree, Node } from '../src/cosmoz-tree';
+import { Node, Tree } from '../src/cosmoz-tree';
 import { treeBaseUrl, treeFromJsonUrl } from './base-data';
 
 const basicTreeUrl = `${treeBaseUrl}/basicTree.json`,
@@ -297,7 +297,7 @@ suite('missingAncestor', () => {
 		assert.isOk(node401);
 	});
 
-	/* eslint-disable camelcase,no-unused-vars */
+	/* eslint-disable camelcase */
 	test('getPathNodes', () => {
 		const node301 = missingAncestorTree.getNodeByProperty(
 				'3a7654f1-e3e6-49c7-b6a8-a4fb00f31245',
