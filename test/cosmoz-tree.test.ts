@@ -116,12 +116,12 @@ suite('basic', () => {
 	});
 
 	test('getPathNodes', () => {
-		const nodes3 = basicTree.getPathNodes('1.2.3'),
-			node3 = basicTree.getNodeByPathLocator('1.2.3'),
-			nodes301 = basicTree.getPathNodes('1.2.3.301'),
-			nodes3X1 = basicTree.getPathNodes('1.2.33'),
-			nodes3X2 = basicTree.getPathNodes('1.2.3.3'),
-			nodes3X3 = basicTree.getPathNodes('0.1.2.3');
+		const nodes3 = basicTree.getPathNodes('1.2.3')!,
+			node3 = basicTree.getNodeByPathLocator('1.2.3')!,
+			nodes301 = basicTree.getPathNodes('1.2.3.301')!,
+			nodes3X1 = basicTree.getPathNodes('1.2.33')!,
+			nodes3X2 = basicTree.getPathNodes('1.2.3.3')!,
+			nodes3X3 = basicTree.getPathNodes('0.1.2.3')!;
 
 		assert.isOk(nodes3);
 		assert.isOk(nodes301);
@@ -242,12 +242,12 @@ suite('multiRoot', () => {
 	});
 
 	test('getPathNodes', () => {
-		const nodes3 = multiRootTree.getPathNodes('1.2.3'),
-			node3 = multiRootTree.getNodeByPathLocator('1.2.3'),
-			nodes14 = multiRootTree.getPathNodes('1.4'),
-			nodes3X1 = multiRootTree.getPathNodes('1.2.33'),
-			nodes3X2 = multiRootTree.getPathNodes('1.2.3.3'),
-			nodes3X3 = multiRootTree.getPathNodes('0.1.2.3');
+		const nodes3 = multiRootTree.getPathNodes('1.2.3')!,
+			node3 = multiRootTree.getNodeByPathLocator('1.2.3')!,
+			nodes14 = multiRootTree.getPathNodes('1.4')!,
+			nodes3X1 = multiRootTree.getPathNodes('1.2.33')!,
+			nodes3X2 = multiRootTree.getPathNodes('1.2.3.3')!,
+			nodes3X3 = multiRootTree.getPathNodes('0.1.2.3')!;
 
 		assert.equal(nodes3X1.indexOf(undefined), 1);
 		assert.equal(
@@ -302,22 +302,22 @@ suite('missingAncestor', () => {
 		const node301 = missingAncestorTree.getNodeByProperty(
 				'3a7654f1-e3e6-49c7-b6a8-a4fb00f31245',
 				'id',
-			),
+			)!,
 			node401 = missingAncestorTree.getNodeByProperty(
 				'865065da-f44c-472e-a8df-a4fb00f3124b',
 				'id',
-			),
-			node301Path = missingAncestorTree.getPathNodes(node301!.pathLocator),
-			node401Path = missingAncestorTree.getPathNodes(node401!.pathLocator),
-			n_1_2_3_301 = missingAncestorTree.getPathNodes('1.2.3.301'),
-			n_1_2_301 = missingAncestorTree.getPathNodes('1.2.301'),
-			n_1_2 = missingAncestorTree.getPathNodes('1.2'),
-			n_1_2_2 = missingAncestorTree.getPathNodes('1.2.2'),
-			n_1_4_4 = missingAncestorTree.getPathNodes('1.4.4'),
-			n_1_2_7_8 = missingAncestorTree.getPathNodes('1.2.7.8'),
+			)!,
+			node301Path = missingAncestorTree.getPathNodes(node301!.pathLocator)!,
+			node401Path = missingAncestorTree.getPathNodes(node401!.pathLocator)!,
+			n_1_2_3_301 = missingAncestorTree.getPathNodes('1.2.3.301')!,
+			n_1_2_301 = missingAncestorTree.getPathNodes('1.2.301')!,
+			n_1_2 = missingAncestorTree.getPathNodes('1.2')!,
+			n_1_2_2 = missingAncestorTree.getPathNodes('1.2.2')!,
+			n_1_4_4 = missingAncestorTree.getPathNodes('1.4.4')!,
+			n_1_2_7_8 = missingAncestorTree.getPathNodes('1.2.7.8')!,
 			//n_1_2_7_301 = missingAncestorTree.getPathNodes('1.2.7.301'),
-			n_2_301 = missingAncestorTree.getPathNodes('2.301'),
-			n_601_301 = missingAncestorTree.getPathNodes('601.301.10.11');
+			n_2_301 = missingAncestorTree.getPathNodes('2.301')!,
+			n_601_301 = missingAncestorTree.getPathNodes('601.301.10.11')!;
 
 		// since 301 is its own root, it should be the only node returned
 		assert.equal(node301Path.length, 1);
