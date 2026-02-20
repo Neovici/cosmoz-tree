@@ -1,3 +1,10 @@
+## [3.7.3](https://github.com/Neovici/cosmoz-tree/compare/v3.7.2...v3.7.3) (2026-02-20)
+
+
+### Bug Fixes
+
+* unhandled exception when path does not exist ([#93](https://github.com/Neovici/cosmoz-tree/issues/93)) ([5db04bf](https://github.com/Neovici/cosmoz-tree/commit/5db04bf14a247232531b0786b1c58e1d4f1564fb))
+
 ## [3.7.2](https://github.com/Neovici/cosmoz-tree/compare/v3.7.1...v3.7.2) (2026-01-28)
 
 
