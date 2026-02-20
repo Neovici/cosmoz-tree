@@ -207,7 +207,7 @@ export class Tree {
 			pathLocatorSeparator,
 		);
 
-		return pathNodes.pop();
+		return pathNodes?.pop();
 	}
 
 	/**
@@ -230,17 +230,17 @@ export class Tree {
 		pathLocator: string,
 		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
-	): (Node | undefined)[];
+	): (Node | undefined)[] | undefined;
 	getPathNodes(
 		pathLocator?: string,
 		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
-	): TreeData | (Node | undefined)[];
+	): TreeData | (Node | undefined)[] | undefined;
 	getPathNodes(
 		pathLocator?: string,
 		nodeObj: TreeData = this._treeData,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
-	) {
+	): TreeData | (Node | undefined)[] | undefined {
 		if (!pathLocator) {
 			return nodeObj;
 		}
