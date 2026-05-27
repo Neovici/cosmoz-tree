@@ -1,3 +1,10 @@
+## [3.7.4](https://github.com/Neovici/cosmoz-tree/compare/v3.7.3...v3.7.4) (2026-05-27)
+
+
+### Bug Fixes
+
+* pass path locator separator for property paths ([#110](https://github.com/Neovici/cosmoz-tree/issues/110)) ([6f15c4d](https://github.com/Neovici/cosmoz-tree/commit/6f15c4d2854513eee0f8177bf942066b4d3bbe85))
+
 ## [3.7.3](https://github.com/Neovici/cosmoz-tree/compare/v3.7.2...v3.7.3) (2026-02-20)
 
 
