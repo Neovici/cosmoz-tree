@@ -360,7 +360,12 @@ export class Tree {
 
 		if (node) {
 			const path = node.pathLocator || node.path;
-			return this.getPathString(path, pathProperty, pathStringSeparator);
+			return this.getPathString(
+				path,
+				pathProperty,
+				pathStringSeparator,
+				pathLocatorSeparator,
+			);
 		}
 	}
 
@@ -446,8 +451,14 @@ export class Tree {
 			return false;
 		}
 
-		const normalizedPropertyValue = property.normalize('NFD').replace(/\p{Diacritic}/gu, '').toUpperCase();
-		const normalizedSearchValue = searchValue.normalize('NFD').replace(/\p{Diacritic}/gu, '').toUpperCase();
+		const normalizedPropertyValue = property
+			.normalize('NFD')
+			.replace(/\p{Diacritic}/gu, '')
+			.toUpperCase();
+		const normalizedSearchValue = searchValue
+			.normalize('NFD')
+			.replace(/\p{Diacritic}/gu, '')
+			.toUpperCase();
 
 		return normalizedPropertyValue.indexOf(normalizedSearchValue) > -1;
 	}
