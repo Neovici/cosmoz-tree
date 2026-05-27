@@ -1,3 +1,10 @@
+# [3.8.0](https://github.com/Neovici/cosmoz-tree/compare/v3.7.4...v3.8.0) (2026-05-27)
+
+
+### Features
+
+* optimize id lookups and add local perf tests ([#109](https://github.com/Neovici/cosmoz-tree/issues/109)) ([febf35a](https://github.com/Neovici/cosmoz-tree/commit/febf35af1a41a27324f9aa58ac4552eb6ce7c6a5))
+
 ## [3.7.4](https://github.com/Neovici/cosmoz-tree/compare/v3.7.3...v3.7.4) (2026-05-27)
 
 
