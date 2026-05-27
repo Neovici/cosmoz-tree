@@ -108,6 +108,28 @@ suite('basic', () => {
 		assert.isOk(node2);
 	});
 
+	test('search public API returns matches and supports provided results array', () => {
+		const root = basicTree.getNodeByPathLocator('1')!;
+		const exactResults = basicTree.search(root, 'Root', {
+			propertyName: 'name',
+			exact: true,
+		});
+		assert.isAbove(exactResults.length, 0);
+
+		const providedResults: Node[] = [];
+		const fuzzyResults = basicTree.search(
+			root,
+			'Node',
+			{
+				propertyName: 'name',
+				exact: false,
+			},
+			providedResults,
+		);
+		assert.strictEqual(fuzzyResults, providedResults);
+		assert.isAbove(fuzzyResults.length, 0);
+	});
+
 	test('getNodeByPathLocator', () => {
 		const node3 = basicTree.getNodeByPathLocator('1.2.3');
 

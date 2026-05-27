@@ -1,5 +1,4 @@
-cosmoz-tree
-===========
+# cosmoz-tree
 
 [![Build Status](https://github.com/Neovici/cosmoz-tree/workflows/Github%20CI/badge.svg)](https://github.com/Neovici/cosmoz-tree/actions?workflow=Github+CI)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/Neovici/cosmoz-tree)
@@ -46,3 +45,27 @@ $ polymer test
 
 Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run
 your application's test suite locally.
+
+## Running Performance Tests (Local Only)
+
+The repository includes a local-only Node performance suite for large immutable trees.
+
+```
+$ npm run test:perf
+```
+
+By default it runs with tree sizes `10k`, `100k`, and `500k` nodes and prints human-readable benchmark lines.
+
+Example output:
+
+```
+PERF_RESULT api=getNodeByProperty(id) size=10000 coldMs=4.8123 warmMedianMs=0.0008 warmP95Ms=0.0053 speedup=6163.2x
+```
+
+To output JSON rows and summary instead, run:
+
+```
+$ npm run test:perf:json
+```
+
+This suite is reporting-only and not intended for CI thresholds, since local hardware and runtime conditions vary.

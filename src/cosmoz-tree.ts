@@ -57,6 +57,8 @@ export class Tree {
 
 	pathStringSeparator: string;
 
+	_nodeById: Map<string, Node>;
+
 	/**
 	 * @param {Object} treeData (The tree object.)
 	 * @param {Object} options (Tree options.)
@@ -68,6 +70,7 @@ export class Tree {
 	constructor(treeData: TreeData, options: Options = {}) {
 		this._treeData = treeData;
 		this._roots = Object.values(treeData);
+		this._nodeById = new Map();
 
 		this.pathLocatorSeparator = options.pathLocatorSeparator || '.';
 		this.pathStringSeparator = options.pathStringSeparator || '/';
@@ -91,7 +94,53 @@ export class Tree {
 			return;
 		}
 
+		if (propertyName === 'id' && nodes === this._roots) {
+			return this._getNodeById(propertyValue);
+		}
+
 		return this.findNode(propertyValue, propertyName, nodes);
+	}
+
+	private _getNodeById(id: string) {
+		const cached = this._nodeById.get(id);
+		if (cached) {
+			return cached;
+		}
+
+		const stack = this._roots.slice().reverse();
+
+		while (stack.length > 0) {
+			const node = stack.pop();
+			if (!node) {
+				continue;
+			}
+
+			this._cacheNodeId(node);
+
+			if (node.id === id) {
+				return node;
+			}
+
+			const children = this.getChildren(node);
+			for (let i = children.length - 1; i >= 0; i -= 1) {
+				stack.push(children[i]);
+			}
+		}
+
+		return undefined;
+	}
+
+	private _cacheNodeId(node: Node) {
+		if (!this._nodeById.has(node.id)) {
+			this._nodeById.set(node.id, node);
+		}
+	}
+
+	private _normalizeValue(value: string) {
+		return value
+			.normalize('NFD')
+			.replace(/\p{Diacritic}/gu, '')
+			.toUpperCase();
 	}
 
 	/**
@@ -158,13 +207,34 @@ export class Tree {
 		nodes = this._roots,
 	) {
 		const results = [];
+		const stack = nodes.slice().reverse();
+		const normalizedSearchValue =
+			!options.exact && propertyValue !== undefined
+				? this._normalizeValue(propertyValue)
+				: undefined;
 
-		for (const node of nodes) {
-			const res = this.search(node, propertyValue, options);
-			if (options.firstHitOnly && res.length > 0) {
-				return res;
+		while (stack.length > 0) {
+			const node = stack.pop();
+			if (!node) {
+				continue;
 			}
-			results.push(...res);
+
+			const nodeConforms = this.nodeConformsSearch(node, propertyValue, {
+				...options,
+				normalizedSearchValue,
+			});
+
+			if (nodeConforms) {
+				results.push(node);
+				if (options.firstHitOnly) {
+					return results;
+				}
+			}
+
+			const children = this.getChildren(node);
+			for (let i = children.length - 1; i >= 0; i -= 1) {
+				stack.push(children[i]);
+			}
 		}
 
 		return results;
@@ -424,6 +494,7 @@ export class Tree {
 	 * @param {Object} options (Comparison options)
 	 * @param {String} options.propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {Boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
+	 * @param {String} [options.normalizedSearchValue] @internal Pre-computed normalized search value for internal use only.
 	 */
 	nodeConformsSearch(
 		node: Node,
@@ -431,6 +502,7 @@ export class Tree {
 		options?: {
 			propertyName: string;
 			exact?: boolean;
+			normalizedSearchValue?: string;
 		},
 	) {
 		const property = (options
@@ -451,16 +523,11 @@ export class Tree {
 			return false;
 		}
 
-		const normalizedPropertyValue = property
-			.normalize('NFD')
-			.replace(/\p{Diacritic}/gu, '')
-			.toUpperCase();
-		const normalizedSearchValue = searchValue
-			.normalize('NFD')
-			.replace(/\p{Diacritic}/gu, '')
-			.toUpperCase();
+		const normalizedPropertyValue = this._normalizeValue(property);
+		const comparableSearchValue =
+			options?.normalizedSearchValue || this._normalizeValue(searchValue);
 
-		return normalizedPropertyValue.indexOf(normalizedSearchValue) > -1;
+		return normalizedPropertyValue.indexOf(comparableSearchValue) > -1;
 	}
 
 	/**
@@ -478,21 +545,34 @@ export class Tree {
 		propertyValue: string | undefined,
 		options: {
 			propertyName: string;
-			exact: boolean;
+			exact?: boolean;
 		},
 		results: Node[] = [],
 	): Node[] {
-		const nodeConforms = this.nodeConformsSearch(node, propertyValue, options),
-			children = this.getChildren(node);
+		const normalizedSearchValue =
+			!options.exact && propertyValue !== undefined
+				? this._normalizeValue(propertyValue)
+				: undefined;
+		const stack = [node];
 
-		if (nodeConforms) {
-			results.push(node);
-		}
+		while (stack.length > 0) {
+			const currentNode = stack.pop();
+			if (!currentNode) {
+				continue;
+			}
 
-		for (const child of children) {
-			const result = this.search(child, propertyValue, options, results);
-			if (!Array.isArray(result)) {
-				return [result];
+			const nodeConforms = this.nodeConformsSearch(currentNode, propertyValue, {
+				...options,
+				normalizedSearchValue,
+			});
+
+			if (nodeConforms) {
+				results.push(currentNode);
+			}
+
+			const children = this.getChildren(currentNode);
+			for (let i = children.length - 1; i >= 0; i -= 1) {
+				stack.push(children[i]);
 			}
 		}
 
