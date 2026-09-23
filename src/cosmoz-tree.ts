@@ -80,16 +80,16 @@ export class Tree {
 
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
-	 * @returns {Object} - The first found node.
+	 * @returns {Promise<Object>} - The first found node.
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {String} propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {Array} nodes [this._roots] (The objects the search should be based on.)
 	 */
-	getNodeByProperty(
+	async getNodeByProperty(
 		propertyValue?: string,
 		propertyName: string = this.searchProperty,
 		nodes: Node[] = this._roots,
-	) {
+	): Promise<Node | undefined> {
 		if (propertyValue === undefined) {
 			return;
 		}
@@ -101,7 +101,7 @@ export class Tree {
 		return this.findNode(propertyValue, propertyName, nodes);
 	}
 
-	private _getNodeById(id: string) {
+	private async _getNodeById(id: string) {
 		const cached = this._nodeById.get(id);
 		if (cached) {
 			return cached;
@@ -121,7 +121,7 @@ export class Tree {
 				return node;
 			}
 
-			const children = this.getChildren(node);
+			const children = await this.getChildren(node);
 			for (let i = children.length - 1; i >= 0; i -= 1) {
 				stack.push(children[i]);
 			}
@@ -145,18 +145,18 @@ export class Tree {
 
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
-	 * @returns {Array} - All found nodes.
+	 * @returns {Promise<Array>} - All found nodes.
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {Object} nodes [this._treeData] (The nodes the search should be based on.)
 	 * @param {Boolean} exact [true] (If the search should be executed exact or flaw. true wouldn't match "Pet")
 	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
 	 */
-	searchNodes(
+	async searchNodes(
 		propertyValue?: string,
 		nodes?: Node[],
 		exact?: boolean,
 		propertyName: string = this.searchProperty,
-	) {
+	): Promise<Node[]> {
 		const options = {
 			propertyName,
 			exact: exact !== undefined ? exact : true,
@@ -168,28 +168,28 @@ export class Tree {
 
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
-	 * @returns {Object} - The first found node.
+	 * @returns {Promise<Object>} - The first found node.
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
 	 * @param {Object} nodes [this._treeData] (The nodes the search should be based on.)
 	 */
-	findNode(
+	async findNode(
 		propertyValue: string,
 		propertyName: string = this.searchProperty,
 		nodes?: Node[],
-	) {
+	): Promise<Node | undefined> {
 		const options = {
 			propertyName,
 			exact: true,
 			firstHitOnly: true,
 		};
 
-		return this._searchNodes(propertyValue, options, nodes).shift();
+		return (await this._searchNodes(propertyValue, options, nodes)).shift();
 	}
 
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
-	 * @returns {Array} - The found node(s).
+	 * @returns {Promise<Array>} - The found node(s).
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {Object} options (Matching options)
 	 * @param {String} options.propertyName (The name of the property the match should be based on. e.g. "name")
@@ -197,7 +197,7 @@ export class Tree {
 	 * @param {Boolean} options.firstHitOnly [false] (If the search should only return the first found node.)
 	 * @param {Object} nodes [this._roots] (The nodes the search should be based on.)
 	 */
-	private _searchNodes(
+	private async _searchNodes(
 		propertyValue: string | undefined,
 		options: {
 			propertyName: string;
@@ -205,8 +205,8 @@ export class Tree {
 			firstHitOnly: boolean;
 		},
 		nodes = this._roots,
-	) {
-		const results = [];
+	): Promise<Node[]> {
+		const results: Node[] = [];
 		const stack = nodes.slice().reverse();
 		const normalizedSearchValue =
 			!options.exact && propertyValue !== undefined
@@ -219,7 +219,7 @@ export class Tree {
 				continue;
 			}
 
-			const nodeConforms = this.nodeConformsSearch(node, propertyValue, {
+			const nodeConforms = await this.nodeConformsSearch(node, propertyValue, {
 				...options,
 				normalizedSearchValue,
 			});
@@ -231,7 +231,7 @@ export class Tree {
 				}
 			}
 
-			const children = this.getChildren(node);
+			const children = await this.getChildren(node);
 			for (let i = children.length - 1; i >= 0; i -= 1) {
 				stack.push(children[i]);
 			}
@@ -242,42 +242,42 @@ export class Tree {
 
 	/**
 	 * Returns the node of a given path.
-	 * @returns {Object} The node object
+	 * @returns {Promise<Object>} The node object
 	 * @param {String} pathLocator (The string which describes the path. e.g. "1.2.9")
 	 * @param {Object} nodeObj [this._treeData] (The object the search should be based on.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	 */
-	getNodeByPathLocator(
+	async getNodeByPathLocator(
 		pathLocator: undefined,
 		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
-	): Node[];
-	getNodeByPathLocator(
+	): Promise<Node[]>;
+	async getNodeByPathLocator(
 		pathLocator: string,
 		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
-	): Node | undefined;
-	getNodeByPathLocator(
+	): Promise<Node | undefined>;
+	async getNodeByPathLocator(
 		pathLocator?: string,
 		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
-	): Node[] | Node | undefined;
-	getNodeByPathLocator(
+	): Promise<Node[] | Node | undefined>;
+	async getNodeByPathLocator(
 		pathLocator?: string,
 		nodeObj: TreeData = this._treeData,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
-	): Node[] | Node | undefined {
+	): Promise<Node[] | Node | undefined> {
 		if (!pathLocator) {
 			return this._roots;
 		}
 
-		const pathNodes = this.getPathNodes(
+		const pathNodes = await this.getPathNodes(
 			pathLocator,
 			nodeObj,
 			pathLocatorSeparator,
 		);
 
-		return pathNodes?.pop();
+		return Array.isArray(pathNodes) ? pathNodes.pop() : undefined;
 	}
 
 	/**
@@ -286,31 +286,31 @@ export class Tree {
 	 * - path 1.2.3.3 should return [1, 2, 3, undefined]
 	 * - path 0.1.2.3 should return [1, 2, 3]
 	 * - path 0.1.5.3 should return [1, undefined, undefined]
-	 * @returns {Array} The node array
+	 * @returns {Promise<Array>} The node array
 	 * @param {String} pathLocator (The string which describes the path. e.g. "1.2.9")
 	 * @param {Object} nodeObj [this._treeData] (The object the search should be based on.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path.)
 	 */
-	getPathNodes(
+	async getPathNodes(
 		pathLocator: undefined,
 		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
-	): TreeData;
-	getPathNodes(
+	): Promise<TreeData>;
+	async getPathNodes(
 		pathLocator: string,
 		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
-	): (Node | undefined)[] | undefined;
-	getPathNodes(
+	): Promise<(Node | undefined)[] | undefined>;
+	async getPathNodes(
 		pathLocator?: string,
 		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
-	): TreeData | (Node | undefined)[] | undefined;
-	getPathNodes(
+	): Promise<TreeData | (Node | undefined)[] | undefined>;
+	async getPathNodes(
 		pathLocator?: string,
 		nodeObj: TreeData = this._treeData,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
-	): TreeData | (Node | undefined)[] | undefined {
+	): Promise<TreeData | (Node | undefined)[] | undefined> {
 		if (!pathLocator) {
 			return nodeObj;
 		}
@@ -369,19 +369,19 @@ export class Tree {
 
 	/**
 	 * Returns a string which describes the path of a node (found by its path locator).
-	 * @returns {String} e.g. home/computer/desktop
+	 * @returns {Promise<String>} e.g. home/computer/desktop
 	 * @param {String} pathLocator (The string which describes the path. e.g. "1.2.9")
 	 * @param {String} pathProperty (The property of a node on which the path should be build on. e.g "location" with node = {"location": "home", ..})
 	 * @param {String} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path segments of pathLocator.)
 	 */
-	getPathString(
+	async getPathString(
 		pathLocator?: string,
 		pathProperty: string = this.searchProperty,
 		pathStringSeparator: string = this.pathStringSeparator,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
 	) {
-		const pathNodes = this.getPathNodes(
+		const pathNodes = await this.getPathNodes(
 			pathLocator,
 			this._treeData,
 			pathLocatorSeparator,
@@ -399,14 +399,14 @@ export class Tree {
 
 	/**
 	 * Returns a string which describes the path of a node (found by a node's property and value).
-	 * @returns {String} e.g. home/computer/desktop
+	 * @returns {Promise<String>} e.g. home/computer/desktop
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {String} propertyName (The name of the property the match should be based on. e.g. "name")
 	 * @param {String} pathProperty (The property of a node on which the path should be build on. e.g "location" if node = {"location": "home"})
 	 * @param {String} pathStringSeparator [this.pathStringSeparator] (The string the path should get separated with.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	 */
-	getPathStringByProperty(
+	async getPathStringByProperty(
 		propertyValue?: string,
 		propertyName: string = this.searchProperty,
 		pathProperty: string = this.searchProperty,
@@ -426,7 +426,7 @@ export class Tree {
 			);
 		}
 
-		const node = this.getNodeByProperty(propertyValue, propertyName);
+		const node = await this.getNodeByProperty(propertyValue, propertyName);
 
 		if (node) {
 			const path = node.pathLocator || node.path;
@@ -442,9 +442,9 @@ export class Tree {
 	/**
 	 * Returns an Object or an Array representing the children of a node.
 	 * @param {Object} node The object to return children from
-	 * @returns {Object|Array} The node's children
+	 * @returns {Promise<Object|Array>} The node's children
 	 */
-	getChildren(node: Node) {
+	async getChildren(node: Node): Promise<Node[]> {
 		if (!node || !node[this.childProperty as 'children']) {
 			return [];
 		}
@@ -455,9 +455,9 @@ export class Tree {
 	/**
 	 * Returns true if a node has children.
 	 * @param {Object} node The object to get children from
-	 * @returns {Boolean} True if node has children
+	 * @returns {Promise<Boolean>} True if node has children
 	 */
-	hasChildren(node?: Node) {
+	async hasChildren(node?: Node): Promise<boolean> {
 		if (!node) {
 			return false;
 		}
@@ -476,9 +476,9 @@ export class Tree {
 	 * Returns the property of a Node based on a given property name.
 	 * @param {Object} node The object to get property from
 	 * @param {String} propertyName The name of property
-	 * @returns {*} The value of the property
+	 * @returns {Promise<*>} The value of the property
 	 */
-	getProperty(node?: Node | null, propertyName?: string) {
+	async getProperty(node?: Node | null, propertyName?: string) {
 		if (!node || !propertyName) {
 			return;
 		}
@@ -488,7 +488,7 @@ export class Tree {
 
 	/**
 	 * Checks if a node matches the search criteria.
-	 * @returns {Boolean} True if node matches
+	 * @returns {Promise<Boolean>} True if node matches
 	 * @param {node} node (The node the check should be based on.)
 	 * @param {String} searchValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {Object} options (Comparison options)
@@ -496,7 +496,7 @@ export class Tree {
 	 * @param {Boolean} options.exact [false] (If the search should be executed exact or fuzzy. true wouldn't match "Pet")
 	 * @param {String} [options.normalizedSearchValue] @internal Pre-computed normalized search value for internal use only.
 	 */
-	nodeConformsSearch(
+	async nodeConformsSearch(
 		node: Node,
 		searchValue: string | undefined,
 		options?: {
@@ -532,7 +532,7 @@ export class Tree {
 
 	/**
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
-	 * @returns {Array} The nodes found
+	 * @returns {Promise<Array>} The nodes found
 	 * @param {node} node	 The node to search in.
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {Object} options (Search options)
@@ -540,7 +540,7 @@ export class Tree {
 	 * @param {Boolean} options.exact [false] (If false, the propertyValue is matched fuzzy)
 	 * @param {Array} results (The array search results get added to.) Default: []
 	 */
-	search(
+	async search(
 		node: Node,
 		propertyValue: string | undefined,
 		options: {
@@ -548,7 +548,7 @@ export class Tree {
 			exact?: boolean;
 		},
 		results: Node[] = [],
-	): Node[] {
+	): Promise<Node[]> {
 		const normalizedSearchValue =
 			!options.exact && propertyValue !== undefined
 				? this._normalizeValue(propertyValue)
@@ -561,16 +561,20 @@ export class Tree {
 				continue;
 			}
 
-			const nodeConforms = this.nodeConformsSearch(currentNode, propertyValue, {
-				...options,
-				normalizedSearchValue,
-			});
+			const nodeConforms = await this.nodeConformsSearch(
+				currentNode,
+				propertyValue,
+				{
+					...options,
+					normalizedSearchValue,
+				},
+			);
 
 			if (nodeConforms) {
 				results.push(currentNode);
 			}
 
-			const children = this.getChildren(currentNode);
+			const children = await this.getChildren(currentNode);
 			for (let i = children.length - 1; i >= 0; i -= 1) {
 				stack.push(children[i]);
 			}

@@ -23,8 +23,8 @@ suite('diacritics', () => {
 	] as const;
 
 	valuesToCheck.forEach(([value, exactMatches, nonExactMatches]) => {
-		test(`should matter when doing an exact search (${value})`, () => {
-			const results = diacriticsTree.searchNodes(
+		test(`should matter when doing an exact search (${value})`, async () => {
+			const results = await diacriticsTree.searchNodes(
 				value,
 				undefined,
 				true,
@@ -34,8 +34,8 @@ suite('diacritics', () => {
 			assert.equal(results.length, exactMatches);
 		});
 
-		test(`should NOT matter when doing a non-exact search (${value})`, () => {
-			const results = diacriticsTree.searchNodes(
+		test(`should NOT matter when doing a non-exact search (${value})`, async () => {
+			const results = await diacriticsTree.searchNodes(
 				value,
 				undefined,
 				false,
