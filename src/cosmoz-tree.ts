@@ -83,22 +83,20 @@ export class Tree {
 	 * @returns {Promise<Object>} - The first found node.
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {String} propertyName (The name of the property the match should be based on. e.g. "name")
-	 * @param {Array} nodes [this._roots] (The objects the search should be based on.)
 	 */
 	async getNodeByProperty(
 		propertyValue?: string,
 		propertyName: string = this.searchProperty,
-		nodes: Node[] = this._roots,
 	): Promise<Node | undefined> {
 		if (propertyValue === undefined) {
 			return;
 		}
 
-		if (propertyName === 'id' && nodes === this._roots) {
+		if (propertyName === 'id') {
 			return this._getNodeById(propertyValue);
 		}
 
-		return this.findNode(propertyValue, propertyName, nodes);
+		return this.findNode(propertyValue, propertyName);
 	}
 
 	private async _getNodeById(id: string) {
@@ -147,13 +145,11 @@ export class Tree {
 	 * Searches a (multi root) node and matches nodes based on a property and a value.
 	 * @returns {Promise<Array>} - All found nodes.
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
-	 * @param {Object} nodes [this._treeData] (The nodes the search should be based on.)
 	 * @param {Boolean} exact [true] (If the search should be executed exact or flaw. true wouldn't match "Pet")
 	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
 	 */
 	async searchNodes(
 		propertyValue?: string,
-		nodes?: Node[],
 		exact?: boolean,
 		propertyName: string = this.searchProperty,
 	): Promise<Node[]> {
@@ -163,7 +159,7 @@ export class Tree {
 			firstHitOnly: false,
 		};
 
-		return this._searchNodes(propertyValue, options, nodes);
+		return this._searchNodes(propertyValue, options);
 	}
 
 	/**
@@ -171,12 +167,10 @@ export class Tree {
 	 * @returns {Promise<Object>} - The first found node.
 	 * @param {String} propertyValue (The value of the property the match should be based on. e.g. "Peter")
 	 * @param {String} propertyName [this.searchProperty] (The name of the property the match should be based on. e.g. "name")
-	 * @param {Object} nodes [this._treeData] (The nodes the search should be based on.)
 	 */
 	async findNode(
 		propertyValue: string,
 		propertyName: string = this.searchProperty,
-		nodes?: Node[],
 	): Promise<Node | undefined> {
 		const options = {
 			propertyName,
@@ -184,7 +178,7 @@ export class Tree {
 			firstHitOnly: true,
 		};
 
-		return (await this._searchNodes(propertyValue, options, nodes)).shift();
+		return (await this._searchNodes(propertyValue, options)).shift();
 	}
 
 	/**
@@ -244,27 +238,22 @@ export class Tree {
 	 * Returns the node of a given path.
 	 * @returns {Promise<Object>} The node object
 	 * @param {String} pathLocator (The string which describes the path. e.g. "1.2.9")
-	 * @param {Object} nodeObj [this._treeData] (The object the search should be based on.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path. e.g ".")
 	 */
 	async getNodeByPathLocator(
 		pathLocator: undefined,
-		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
 	): Promise<Node[]>;
 	async getNodeByPathLocator(
 		pathLocator: string,
-		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
 	): Promise<Node | undefined>;
 	async getNodeByPathLocator(
 		pathLocator?: string,
-		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
 	): Promise<Node[] | Node | undefined>;
 	async getNodeByPathLocator(
 		pathLocator?: string,
-		nodeObj: TreeData = this._treeData,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
 	): Promise<Node[] | Node | undefined> {
 		if (!pathLocator) {
@@ -273,7 +262,6 @@ export class Tree {
 
 		const pathNodes = await this.getPathNodes(
 			pathLocator,
-			nodeObj,
 			pathLocatorSeparator,
 		);
 
@@ -288,37 +276,32 @@ export class Tree {
 	 * - path 0.1.5.3 should return [1, undefined, undefined]
 	 * @returns {Promise<Array>} The node array
 	 * @param {String} pathLocator (The string which describes the path. e.g. "1.2.9")
-	 * @param {Object} nodeObj [this._treeData] (The object the search should be based on.)
 	 * @param {String} pathLocatorSeparator [this.pathLocatorSeparator] (The string which separates the path.)
 	 */
 	async getPathNodes(
 		pathLocator: undefined,
-		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
 	): Promise<TreeData>;
 	async getPathNodes(
 		pathLocator: string,
-		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
 	): Promise<(Node | undefined)[] | undefined>;
 	async getPathNodes(
 		pathLocator?: string,
-		nodeObj?: TreeData,
 		pathLocatorSeparator?: string,
 	): Promise<TreeData | (Node | undefined)[] | undefined>;
 	async getPathNodes(
 		pathLocator?: string,
-		nodeObj: TreeData = this._treeData,
 		pathLocatorSeparator: string = this.pathLocatorSeparator,
 	): Promise<TreeData | (Node | undefined)[] | undefined> {
 		if (!pathLocator) {
-			return nodeObj;
+			return this._treeData;
 		}
 
-		return Object.keys(nodeObj)
+		return Object.keys(this._treeData)
 			.map((key) => {
 				const subTree: TreeData = {};
-				subTree[key] = nodeObj[key];
+				subTree[key] = this._treeData[key];
 				const pathNodes = this._getPathNodes(
 					pathLocator,
 					subTree,
@@ -383,7 +366,6 @@ export class Tree {
 	) {
 		const pathNodes = await this.getPathNodes(
 			pathLocator,
-			this._treeData,
 			pathLocatorSeparator,
 		);
 

@@ -39,7 +39,6 @@ suite('basic', () => {
 			node6 = await basicTree.getNodeByProperty(
 				node2?.pathLocator,
 				'pathLocator',
-				basicTree._roots,
 			);
 		assert.isOk(root);
 		assert.isOk(node2);
@@ -52,15 +51,12 @@ suite('basic', () => {
 
 	test('searchNodes', async () => {
 		const root = (
-				await basicTree.searchNodes('1', undefined, undefined, 'pathLocator')
+				await basicTree.searchNodes('1', undefined, 'pathLocator')
 			)[0],
-			node2 = (
-				await basicTree.searchNodes('1', undefined, undefined, 'pathLocator')
-			)[0],
+			node2 = (await basicTree.searchNodes('1', undefined, 'pathLocator'))[0],
 			node3 = (
 				await basicTree.searchNodes(
 					'2b547550-b874-4228-9395-a4fb00f31245',
-					undefined,
 					undefined,
 					'id',
 				)
@@ -68,16 +64,10 @@ suite('basic', () => {
 			node4 = await basicTree.searchNodes(node3.name),
 			node5 = await basicTree.searchNodes(
 				'2b547550-b874-4228-9395-',
-				undefined,
 				false,
 				'id',
 			),
-			node6 = await basicTree.searchNodes(
-				'Node',
-				basicTree._roots,
-				false,
-				'name',
-			);
+			node6 = await basicTree.searchNodes('Node', false, 'name');
 
 		assert.isOk(root);
 		assert.deepEqual(root, node2);
@@ -97,7 +87,7 @@ suite('basic', () => {
 
 	test('findNode', async () => {
 		const root: Node = (
-				await basicTree.searchNodes('1', undefined, undefined, 'pathLocator')
+				await basicTree.searchNodes('1', undefined, 'pathLocator')
 			)[0],
 			node = await basicTree.findNode('Root'),
 			node2 = await basicTree.findNode(
@@ -222,12 +212,7 @@ suite('basicPL', () => {
 
 	test('findNode', async () => {
 		const node1 = (
-				await basicTree.searchNodes(
-					'1.2.3',
-					undefined,
-					undefined,
-					'pathLocator',
-				)
+				await basicTree.searchNodes('1.2.3', undefined, 'pathLocator')
 			)[0],
 			node2 = await basicTree.findNode('1.2.3', 'pathLocator'),
 			node3 = await basicTree.findNode(
