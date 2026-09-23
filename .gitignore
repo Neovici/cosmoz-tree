@@ -10,3 +10,4 @@ yarn-error.log
 codecov
 codecov.SHA256SUM
 codecov.SHA256SUM.sig
+/.envrc
