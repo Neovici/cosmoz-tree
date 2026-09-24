@@ -1,5 +1,38 @@
 # [3.8.0](https://github.com/Neovici/cosmoz-tree/compare/v3.7.4...v3.8.0) (2026-05-27)
 
+## 4.0.0
+
+### Major Changes
+
+- f54feb6: Make the Tree API async
+
+  All public methods of `Tree` now return promises. For an in-memory tree the
+  work itself is unchanged, so an `await` resolves in a microtask, but every
+  call site has to await.
+
+  This is the groundwork for `OnDemandTree`, which fetches nodes on demand and
+  cannot answer synchronously.
+
+- dc18494: Remove the `nodes` / `nodeObj` parameters from the `Tree` API
+
+  All public methods now always operate on the tree's own roots. The following
+  parameters are gone:
+  - `searchNodes(propertyValue, nodes, exact, propertyName)` ->
+    `searchNodes(propertyValue, exact, propertyName)`
+  - `findNode(propertyValue, propertyName, nodes)` ->
+    `findNode(propertyValue, propertyName)`
+  - `getNodeByProperty(propertyValue, propertyName, nodes)` ->
+    `getNodeByProperty(propertyValue, propertyName)`
+  - `getNodeByPathLocator(pathLocator, nodeObj, pathLocatorSeparator)` ->
+    `getNodeByPathLocator(pathLocator, pathLocatorSeparator)`
+  - `getPathNodes(pathLocator, nodeObj, pathLocatorSeparator)` ->
+    `getPathNodes(pathLocator, pathLocatorSeparator)`
+
+  Because these were positional arguments, call sites that passed them must also
+  drop the argument, otherwise the remaining arguments shift into the wrong
+  parameters. Callers that passed a subset of the tree must instead use `search`
+  or filter the returned nodes themselves.
+
 ## 3.8.1
 
 ### Patch Changes
