@@ -69,3 +69,23 @@ $ npm run test:perf:json
 ```
 
 This suite is reporting-only and not intended for CI thresholds, since local hardware and runtime conditions vary.
+
+## Sparse Trees
+
+The `exactPathLookup` option makes the tree safe for sparse data, where only a
+part of the organization is kept in memory:
+
+```ts
+const tree = new Tree(data, { exactPathLookup: true, pathStringSeparator: ' / ' });
+```
+
+In this mode a path answers only when every segment of it is present:
+`getPathNodes`, `getNodeByPathLocator` and `getPathString` answer `undefined`
+when a segment is unknown, instead of the loose nearest-match behavior
+(skip unknown ancestors, keep the deepest match). A path string never skips an
+unknown ancestor silently.
+
+In-place updates are safe: completing a node's `children` on a held node object
+is visible to all reads without a rebuild. Replacing a stored node object is
+not; the `id` cache keys on identity, so reset `_nodeById` or keep node
+identity while merging.
