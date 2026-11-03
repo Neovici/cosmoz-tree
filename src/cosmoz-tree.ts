@@ -9,6 +9,12 @@ export interface Options {
 	searchProperty?: string;
 	pathLocatorSeparator?: string;
 	pathStringSeparator?: string;
+	/**
+	 * A sparse tree answers only full-chain matches. A path with an unknown
+	 * segment answers with `undefined`, also for path strings. Loose mode
+	 * keeps the nearest-match behavior for dense trees.
+	 */
+	exactPathLookup?: boolean;
 }
 
 export interface Node {
@@ -53,6 +59,8 @@ export class Tree {
 
 	searchProperty: string;
 
+	exactPathLookup: boolean;
+
 	pathLocatorSeparator: string;
 
 	pathStringSeparator: string;
@@ -76,6 +84,7 @@ export class Tree {
 		this.pathStringSeparator = options.pathStringSeparator || '/';
 		this.childProperty = options.childProperty || 'children';
 		this.searchProperty = options.searchProperty || 'name';
+		this.exactPathLookup = options.exactPathLookup ?? false;
 	}
 
 	/**
@@ -313,7 +322,12 @@ export class Tree {
 			.filter((item) => {
 				return item && item.length > 0;
 			})
-			.sort(_sortPathNodes)[0];
+			.filter((item) => {
+			// A sparse tree only answers full chains: a hole anywhere
+			// disqualifies the candidate.
+			return !this.exactPathLookup || item.every((node) => node != null);
+		})
+		.sort(_sortPathNodes)[0];
 	}
 
 	private _getPathNodes(
@@ -324,9 +338,12 @@ export class Tree {
 		const path = pathLocator.split(pathLocatorSeparator),
 			nodes = this._pathToNodes(path, nodeObj, pathLocatorSeparator);
 
-		// Filter out undefined items of the start
-		while (nodes.length > 0 && nodes[0] === undefined) {
-			nodes.shift();
+		// Filter out undefined items of the start. Exact lookups keep holes
+		// so the selection can reject a partial chain.
+		if (!this.exactPathLookup) {
+			while (nodes.length > 0 && nodes[0] === undefined) {
+				nodes.shift();
+			}
 		}
 
 		return nodes;
@@ -370,6 +387,11 @@ export class Tree {
 		);
 
 		if (!Array.isArray(pathNodes)) {
+			return;
+		}
+
+		// A sparse tree gives no path string with an unknown ancestor today.
+		if (this.exactPathLookup && pathNodes.some((node) => node == null)) {
 			return;
 		}
 
