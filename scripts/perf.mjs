@@ -63,16 +63,16 @@ const quantile = (values, q) => {
 	return sorted[index];
 };
 
-const measure = async (run, iterations, warmup = DEFAULT_WARMUP) => {
+const measure = (run, iterations, warmup = DEFAULT_WARMUP) => {
 	for (let i = 0; i < warmup; i += 1) {
-		await run();
+		run();
 	}
 
 	const samples = [];
 
 	for (let i = 0; i < iterations; i += 1) {
 		const start = performance.now();
-		await run();
+		run();
 		samples.push(performance.now() - start);
 	}
 
@@ -82,11 +82,11 @@ const measure = async (run, iterations, warmup = DEFAULT_WARMUP) => {
 	};
 };
 
-const runBench = async ({ label, size, runCold, runWarm, warmup, iterations }) => {
+const runBench = ({ label, size, runCold, runWarm, warmup, iterations }) => {
 	const coldStart = performance.now();
-	await runCold();
+	runCold();
 	const coldMs = performance.now() - coldStart;
-	const warm = await measure(runWarm, iterations, warmup);
+	const warm = measure(runWarm, iterations, warmup);
 
 	return {
 		label,
@@ -111,7 +111,7 @@ const formatHuman = (row) => {
 	].join(' ');
 };
 
-const createIsolatedTreeBench = async ({
+const createIsolatedTreeBench = ({
 	label,
 	size,
 	treeData,
@@ -124,14 +124,18 @@ const createIsolatedTreeBench = async ({
 	return runBench({
 		label,
 		size,
-		runCold: () => run(tree),
-		runWarm: () => run(tree),
+		runCold: () => {
+			run(tree);
+		},
+		runWarm: () => {
+			run(tree);
+		},
 		warmup,
 		iterations,
 	});
 };
 
-const run = async () => {
+const run = () => {
 	const results = [];
 
 	for (const size of SIZES) {
@@ -146,44 +150,53 @@ const run = async () => {
 		}
 
 		results.push(
-			await createIsolatedTreeBench({
+			createIsolatedTreeBench({
 				label: 'getNodeByProperty(id)',
 				size,
 				treeData,
-				run: (tree) => tree.getNodeByProperty(targetId, 'id'),
+				run: (tree) => {
+					tree.getNodeByProperty(targetId, 'id');
+				},
 				warmup: DEFAULT_WARMUP,
 				iterations: DEFAULT_ITERATIONS,
 			}),
-			await createIsolatedTreeBench({
+			createIsolatedTreeBench({
 				label: 'getNodeByPathLocator',
 				size,
 				treeData,
-				run: (tree) => tree.getNodeByPathLocator(targetPath),
+				run: (tree) => {
+					tree.getNodeByPathLocator(targetPath);
+				},
 				warmup: DEFAULT_WARMUP,
 				iterations: DEFAULT_ITERATIONS,
 			}),
-			await createIsolatedTreeBench({
+			createIsolatedTreeBench({
 				label: 'getPathNodes',
 				size,
 				treeData,
-				run: (tree) => tree.getPathNodes(targetPath),
+				run: (tree) => {
+					tree.getPathNodes(targetPath);
+				},
 				warmup: DEFAULT_WARMUP,
 				iterations: DEFAULT_ITERATIONS,
 			}),
-			await createIsolatedTreeBench({
+			createIsolatedTreeBench({
 				label: 'searchNodes exact id',
 				size,
 				treeData,
-				run: (tree) => tree.searchNodes(targetId, undefined, true, 'id'),
+				run: (tree) => {
+					tree.searchNodes(targetId, undefined, true, 'id');
+				},
 				warmup: DEFAULT_WARMUP,
 				iterations: DEFAULT_ITERATIONS,
 			}),
-			await createIsolatedTreeBench({
+			createIsolatedTreeBench({
 				label: 'searchNodes fuzzy name',
 				size,
 				treeData,
-				run: (tree) =>
-					tree.searchNodes(targetNamePrefix, undefined, false, 'name'),
+				run: (tree) => {
+					tree.searchNodes(targetNamePrefix, undefined, false, 'name');
+				},
 				warmup: FUZZY_WARMUP,
 				iterations: FUZZY_ITERATIONS,
 			}),
